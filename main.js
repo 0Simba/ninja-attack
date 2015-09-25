@@ -18,9 +18,31 @@ require.config({
 
 require([
     'babylon',
-    'jquery'
-], function (BABYLON, $) {
+    'jquery',
+
+    './scripts/camera',
+    './scripts/player',
+
+    './scripts/inputs'
+], function (BABYLON, $, camera, player) {
     'use strict';
 
-    
+    $(function () {
+        var canvas = document.getElementById("canvas");
+        var engine = new BABYLON.Engine(canvas);
+        var scene  = new BABYLON.Scene(engine);
+
+        player.init(scene);
+        camera.init(scene, player.mesh); // nota -> camera et player son des instances récupérés ligne 25
+
+
+        engine.runRenderLoop(function() {
+            var deltaTime = engine.getDeltaTime() / 1000;
+
+            player.update(deltaTime);
+            camera.update(deltaTime);
+            scene.render();
+        });
+
+    });
 });
