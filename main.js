@@ -22,10 +22,12 @@ require([
 
     './scripts/camera',
     './scripts/player',
+    './scripts/main_light',
 
     './scripts/inputs'
-], function (BABYLON, $, camera, player) {
+], function (BABYLON, $, camera, player, mainLight) {
     'use strict';
+
 
     $(function () {
         var canvas = document.getElementById("canvas");
@@ -34,7 +36,7 @@ require([
 
         player.init(scene);
         camera.init(scene, player.mesh); // nota -> camera et player son des instances récupérés ligne 25
-
+        mainLight.init(scene)
 
         engine.runRenderLoop(function() {
             var deltaTime = engine.getDeltaTime() / 1000;
