@@ -29,9 +29,11 @@ define([
 
 
     Camera.prototype.update = function () {
-        if (!this.target || !this.target.position) {
-            console.error('Camera -> pas de "target" valide');
-        }
+        this.camera.position = new BABYLON.Vector3 (
+            this.target.position.x + offset.x,
+            this.target.position.y + offset.y,
+            this.target.position.z + offset.z
+        );
     }
 
 
