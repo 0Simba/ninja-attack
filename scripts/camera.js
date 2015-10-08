@@ -8,7 +8,7 @@ define([
     =            CONFIG            =
     ==============================*/
 
-    var offset   = new BABYLON.Vector3(0, 2, -10);
+    var offset   = new BABYLON.Vector3(0, 4, -20);
     var rotation = new BABYLON.Vector3(Math.PI / 16, 0, 0);
 
 

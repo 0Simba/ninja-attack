@@ -9,8 +9,8 @@ define([
     ==============================*/
 
     var acceleration = 10;
-    var diameter     = 1;
-    var height       = 2;
+    var diameter     = 0.5;
+    var height       = 1;
 
 
 
@@ -22,8 +22,10 @@ define([
     }
 
 
-    Player.prototype.init = function (scene) {
+    Player.prototype.init = function (scene, start) {
         this.mesh = BABYLON.Mesh.CreateCylinder("player", height, diameter, diameter, 20, scene);
+
+        this.mesh.position = new BABYLON.Vector3(start.x, start.y, 0);
     };
 
 
