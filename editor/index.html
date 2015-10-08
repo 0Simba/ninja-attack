@@ -65,7 +65,9 @@ var monstre_selection;
 <z onclick="selection = charger; var map_charger = prompt('Inserez la carte ici', ''); charger(map_charger)"> Charger</z><br />
 <z onclick="extraire()">Extraire</z><br />
 
-<input type="text" id="extraire" />
+<input type="text" id="extraire" /><br />
+<z onclick="jsonExtract()">Json</z><br />
+<input type="text" id="jsonExtracted" />
 </div>
 
 <div id="espace_jeux" onmousedown="if (selection == 'tracer'){debut_tracageTop = event.clientY; debut_tracageLeft = event.clientX; tracage_patron = true; tracer_patron(event);}"
@@ -90,6 +92,7 @@ document.getElementById(id_moove).style.left = event.clientX - document.getEleme
 
 <script type='text/javascript' src='tracer_carrer.js'></script>
 <script type='text/javascript' src='extraire.js'></script>
+<script type='text/javascript' src='jsonExtract.js'></script>
 <script type='text/javascript' src='clavier.js'></script>
 <script type='text/javascript' src='fonction.js'></script>
 <script type='text/javascript' src='poser_objet.js'></script>
@@ -109,7 +112,7 @@ for (var i = 0 ; i < mur.length ; i++){
 	document.getElementById('espace_jeux').appendChild(creerDom);
 }
 
-for (var i = 0 ; i < pokeball.length ; i++){ 
+for (var i = 0 ; i < pokeball.length ; i++){
 	var creerDom = document.createElement("div");
 	creerDom.className = 'pokeball';
 	creerDom.id = 'pokeball' + i;
@@ -131,9 +134,6 @@ for (var i = 0 ; i < monstre.length ; i++){
 	creerDom.style.height = monstre[i].heigth;
 	document.getElementById('espace_jeux').appendChild(creerDom);
 }
-</p>
-<p style="text-align : center; top : 100%; width : 99% ; position : absolute">
-Tout droit reservé à Nintendo
 </p>
 </body>
 
