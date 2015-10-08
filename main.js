@@ -28,14 +28,27 @@ require([
 ], function (BABYLON, $, camera, player, mainLight) {
     'use strict';
 
+    var canvas;
+    var engine;
+    var scene;
+    var gameData;
 
     $(function () {
-        var canvas = document.getElementById("canvas");
-        var engine = new BABYLON.Engine(canvas);
-        var scene  = new BABYLON.Scene(engine);
+        canvas = document.getElementById("canvas");
+        engine = new BABYLON.Engine(canvas);
+        scene  = new BABYLON.Scene(engine);
+
+        $.getJSON("assets/levels/level0.json", function(data) {
+            gameData = data;
+            launch();
+        });
+    });
+
+
+    function launch () {
 
         player.init(scene);
-        camera.init(scene, player.mesh); // nota -> camera et player son des instances récupérés ligne 25
+        camera.init(scene, player.mesh);
         mainLight.init(scene)
 
         engine.runRenderLoop(function() {
@@ -45,6 +58,5 @@ require([
             camera.update(deltaTime);
             scene.render();
         });
-
-    });
+    }
 });
