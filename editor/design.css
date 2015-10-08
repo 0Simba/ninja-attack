@@ -1,0 +1,92 @@
+
+#espace_jeux
+{
+width : 800px;
+height : 500px;
+position : absolute;
+border : 1px solid black;
+left : 120px;
+top : 50px;
+}
+
+.mur
+{
+position : absolute;
+background : black;
+}
+
+#menu
+{
+position : fixed;
+z-index : 1000;
+background-color : #00FFFF;
+opacity : 0,5;
+}
+
+#patron
+{
+position : absolute;
+background-color : black;
+opacity : 0.5;
+}
+
+z
+{
+cursor : pointer;
+}
+
+.pokeball
+{
+	width : 25px;
+	height : 25px;
+	position : absolute;
+}
+
+.bulbizare
+{
+	width : 36px;
+	height : 35px;
+	position : absolute;
+	background-image : url("bulbizare.gif");
+}
+
+.vie
+{
+	width : 25px;
+	height : 25px;
+	position : absolute;
+	top : 10px;
+	left : 50%;
+}
+
+#extraire
+{
+	max-width : 90px;
+	max-height : 20px;
+}
+
+.papillusion
+{
+	width : 53px;
+	height : 59px;
+	position : absolute;
+	background-image : url("papillusion.gif");
+}
+
+.aeromite
+{
+	width : 58px;
+	height : 73px;
+	position : absolute;
+	background-image : url("aeromite.gif");
+}
+
+.insecateur
+{
+	width : 79px;
+	height : 51px;
+	position : absolute;
+	background-image : url("insecateur.gif");
+}
+
+

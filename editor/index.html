@@ -1,0 +1,140 @@
+
+<!DOCTYPE html>
+<html>
+   <head>
+       <meta charset="utf-8">
+	   <title>Pikachu Attack</title>
+	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	    <meta name="author" content="DERSOIR Baptiste" />
+		<link rel="stylesheet" media="screen" type="text/css" title="Design" href="design.css" />
+	 </head>
+
+<body>
+<script>
+var selection = 'tracer';
+var ctrl = false;
+var z = false;
+
+window.onkeydown = function(event)
+{
+	if (event.keyCode == 17){
+		ctrl = true;
+	}
+	else if (event.keyCode == 90){
+		z = true;
+	}
+	clavier();
+}
+window.onkeyup = function(event)
+{
+	if (event.keyCode == 17){
+	ctrl = false;
+	}
+	else if (event.keyCode == 90){
+		z = false;
+	}
+}
+
+var debut_tracageTop;
+var debut_tracageLeft;
+var fin_tracageTop;
+var fin_tracageLeft;
+var selection;
+var objet_style;
+var monstre_selection;
+</script>
+<div id="menu">
+<z onclick="selection = 'supprimer'">Supprimer</z><br />
+<z onclick="selection = 'deplacer'">Déplacer</z><br />
+<br />
+<z onclick="selection = 'tracer';gerer_patron('tracer');">Tracer carrer</z><br />
+<z onclick="var lol = prompt(); document.getElementById('espace_jeux').style.width = lol + 'px';">width</z><br />
+<z onclick="var lol = prompt(); document.getElementById('espace_jeux').style.height = lol + 'px';">height</z><br />
+<br />
+<z onclick="selection = 'poser_pokeball';gerer_patron('poser_pokeball')">Poser pokeball</z><br />
+<z onclick="selection = 'poser_vie'; gerer_patron('poser_vie')">Poser vie</z> <br />
+<br />
+<z onclick="selection = 'depart'; gerer_patron('depart');">Départ</z><br />
+<z onclick="selection = 'fin'; gerer_patron('fin');">Fin</z><br />
+<br />
+<z onclick="selection = 'poser_monstre'; gerer_patron('poser_bulbizare'); monstre_selection = 'bulbizare'">Poser bulbizare</z><br />
+<z onclick="selection = 'poser_monstre'; gerer_patron('poser_papillusion'); monstre_selection = 'papillusion'">Poser papillusion </z> </br>
+<z onclick="selection = 'poser_monstre';gerer_patron('poser_aeromite');monstre_selection = 'aeromite';">Poser aeromite</z><br />
+<z onclick="selection = 'poser_monstre';gerer_patron('poser_insecateur');monstre_selection = 'insecateur';">Poser insecateur </z><br />
+<br />
+<z onclick="selection = charger; var map_charger = prompt('Inserez la carte ici', ''); charger(map_charger)"> Charger</z><br />
+<z onclick="extraire()">Extraire</z><br />
+
+<input type="text" id="extraire" />
+</div>
+
+<div id="espace_jeux" onmousedown="if (selection == 'tracer'){debut_tracageTop = event.clientY; debut_tracageLeft = event.clientX; tracage_patron = true; tracer_patron(event);}"
+onmouseup="if (selection == 'tracer'){tracage_patron = false; fin_tracageTop = event.clientY; fin_tracageLeft = event.clientX; placer_carrer(debut_tracageTop, debut_tracageLeft, fin_tracageTop, fin_tracageLeft);}"
+onclick="if(selection != 'tracer' && selection != 'supprimer' && selection != 'deplacer'){poser_objet(event.clientX, event.clientY);}"
+onmousemove="if (tracage_patron){
+tracer_patron(event);
+} 
+else if (selection != 'tracer' && selection != 'supprimer' && selection != 'deplacer'){
+gerer_position_patron(event.clientY, event.clientX);
+}
+
+if (selection == 'deplacer' && start_moove){
+document.getElementById(id_moove).style.top = event.clientY - document.getElementById('espace_jeux').offsetTop - decalageY + 'px';
+document.getElementById(id_moove).style.left = event.clientX - document.getElementById('espace_jeux').offsetLeft - decalageX + 'px';
+}"
+>
+<div id="patron"></div>
+<div id="depart" style="position:absolute;"><img src="depart.gif" /></div>
+<div id="fin" style="position:absolute;"><img src="fin.gif" /></div>
+</div>
+
+<script type='text/javascript' src='tracer_carrer.js'></script>
+<script type='text/javascript' src='extraire.js'></script>
+<script type='text/javascript' src='clavier.js'></script>
+<script type='text/javascript' src='fonction.js'></script>
+<script type='text/javascript' src='poser_objet.js'></script>
+<script type='text/javascript' src='gerer_patron.js'></script>
+<script type='text/javascript' src='interagir_dom.js'></script>
+<script type='text/javascript' src='charger.js'></script>
+
+<p id='memoire' style="display : none;" id="memoire"> <!-- mise en memoire du code qui execute le contenue de la map-->
+for (var i = 0 ; i < mur.length ; i++){
+	var creerDom = document.createElement("div");
+	creerDom.className = 'mur';
+	creerDom.id = 'mur' + i;
+	creerDom.style.top = mur[i].top + 'px';
+	creerDom.style.left = mur[i].left + 'px';
+	creerDom.style.width = mur[i].width + 'px';
+	creerDom.style.height = mur[i].height + 'px';
+	document.getElementById('espace_jeux').appendChild(creerDom);
+}
+
+for (var i = 0 ; i < pokeball.length ; i++){ 
+	var creerDom = document.createElement("div");
+	creerDom.className = 'pokeball';
+	creerDom.id = 'pokeball' + i;
+	creerDom.style.top = pokeball[i].top + 'px';
+	creerDom.style.left = pokeball[i].left + 'px';
+	creerDom.style.width = '25px';
+	creerDom.style.height = '25px';
+	creerDom.innerHTML = '<img src="pokeball.gif" width="25" />';
+	document.getElementById('espace_jeux').appendChild(creerDom);
+}
+
+for (var i = 0 ; i < monstre.length ; i++){
+	var creerDom = document.createElement("div");
+	creerDom.className = monstre[i].skin;
+	creerDom.id = 'monstre' + i;
+	creerDom.style.top = monstre[i].top + 'px';
+	creerDom.style.left = monstre[i].left + 'px';
+	creerDom.style.width = monstre[i].width;
+	creerDom.style.height = monstre[i].heigth;
+	document.getElementById('espace_jeux').appendChild(creerDom);
+}
+</p>
+<p style="text-align : center; top : 100%; width : 99% ; position : absolute">
+Tout droit reservé à Nintendo
+</p>
+</body>
+
+</html>
