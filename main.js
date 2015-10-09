@@ -25,10 +25,11 @@ require([
     './scripts/main_light',
     './scripts/wallsBuilder',
     './scripts/ennemies',
+    './scripts/hud',
 
 
     './scripts/inputs'
-], function (BABYLON, $, camera, player, mainLight, wallsBuilder, ennemies) {
+], function (BABYLON, $, camera, player, mainLight, wallsBuilder, ennemies, hud) {
     'use strict';
 
     var canvas;
@@ -40,12 +41,18 @@ require([
         canvas = document.getElementById("canvas");
         engine = new BABYLON.Engine(canvas);
         scene  = new BABYLON.Scene(engine);
-
+        hud.startGameMenu();
+        
         $.getJSON("assets/levels/level0.json", function(data) {
             gameData = data;
-            launch();
+            start();
         });
     });
+
+    function start () {
+        hud.openGame();
+        launch();
+    }
 
 
     function launch () {

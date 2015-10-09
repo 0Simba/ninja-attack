@@ -8,17 +8,49 @@
         body {
             background-color : #EAEAEA;
         }
-        #canvas {
+        #canvas, .hudOverlay {
             left       : 50%;
             margin-left: -400px;
             margin-top : 5px;
             position   : absolute;
         }
+
+        .hudOverlay {
+            width: 800px;
+            height: 600px;
+            overflow: hidden;
+        }
+
+        /* on garde les règles CSS au cas ou */
+       /* .triangle{
+            border: 400px solid;
+            border-color: rgba(0,0,0,0);
+            position: absolute;
+        }
+
+        .leftCorner{
+            top: -200px;
+            left: -450px;
+            border-bottom-color: #000;
+        }
+
+        .rightCorner{
+            top: -200px;
+            left: 450px;
+            border-bottom-color: #000;
+        }
+
+        .topTriangle{
+            left: -250px;
+            border-width: 650px;
+            border-top-color: #FFF;
+        }*/
     </style>
 </head>
 <body>
-
 <canvas id="canvas" width="800" height="600"></canvas>
+<div class="hudOverlay">
+</div>
 
 </body>
 </html>
