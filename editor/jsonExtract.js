@@ -5,18 +5,45 @@ var ratio = 1 / unit;
 function jsonExtract () {
     var value = {};
 
+    extractStartEndOn(value)
+    extractWallOn(value);
+    extractMonstersOn(value);
+
+    document.getElementById('jsonExtracted').value = JSON.stringify(value);
+}
+
+
+function extractMonstersOn (value) {
+    value.monsters = [];
+
+    for (var i = 0 ; i < monstre.length ; i++) {
+        var monster = monstre[i];
+
+        value.monsters.push({
+            x       : applyRatio(monster.left + unit / 2),
+            y       : applyRatio(-monster.top - unit / 2),
+            skin    : monster.skin,
+            iaValue : applyRatio(monster.mouvementDroite)
+        });
+    }
+}
+
+
+function extractStartEndOn (value) {
     value.start = {
         x : applyRatio(document.getElementById('depart').offsetLeft + unit / 2),
         y : applyRatio(-document.getElementById('depart').offsetTop - unit / 2)
     };
 
-
     value.end = {
         x : applyRatio(document.getElementById('fin').offsetLeft - unit / 2),
         y : applyRatio(-document.getElementById('fin').offsetTop + unit / 2)
     };
+}
 
 
+
+function extractWallOn (value) {
     value.walls = [];
 
     for (var i = 0 ; i < mur.length ; i++) {
@@ -34,10 +61,12 @@ function jsonExtract () {
             height : height
         });
     }
-
-
-    document.getElementById('jsonExtracted').value = JSON.stringify(value);
 }
+
+
+/*=============================
+=            UTILS            =
+=============================*/
 
 
 function applyRatio (v) {

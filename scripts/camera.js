@@ -10,7 +10,7 @@ define([
 
     var offset   = new BABYLON.Vector3(0, 4, -20);
     var rotation = new BABYLON.Vector3(Math.PI / 16, 0, 0);
-    var manual = true;
+    var manual   = false;
 
 
     /*===============================
