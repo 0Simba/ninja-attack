@@ -13,6 +13,7 @@ define([
     var acceleration = 45;
     var diameter     = 0.5;
     var height       = 1;
+    var jumpForce    = 40;
 
 
 
@@ -54,8 +55,16 @@ define([
         if (inputs.right) {
             this.physics.velocity.x += acceleration * deltaTime;
         }
+        if (inputs.up && this.physics.onGround) {
+            this.jump();
+        }
         this.physics.update(deltaTime);
     };
+
+
+    Player.prototype.jump = function () {
+        this.physics.velocity.y += jumpForce;
+    }
 
     /*==========================================
     =            RETURN (singleton)            =
