@@ -7,8 +7,25 @@ function jsonExtract () {
 
     extractStartEndOn(value)
     extractWallOn(value);
+    extractMonstersOn(value);
 
     document.getElementById('jsonExtracted').value = JSON.stringify(value);
+}
+
+
+function extractMonstersOn (value) {
+    value.monsters = [];
+
+    for (var i = 0 ; i < monstre.length ; i++) {
+        var monster = monstre[i];
+
+        value.monsters.push({
+            x       : applyRatio(monster.x  - unit / 2),
+            y       : applyRatio(-monster.y + unit / 2),
+            skin    : monster.skin,
+            iaValue : applyRatio(monster.mouvementDroite)
+        });
+    }
 }
 
 

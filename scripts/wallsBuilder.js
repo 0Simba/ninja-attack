@@ -11,8 +11,6 @@ define([
             wall.position = new BABYLON.Vector3(wallConfig.x, wallConfig.y, 0);
             walls.checkCollisions = true;
 
-            console.log(walls.ellipsoid);
-                
         };
     }
 });
