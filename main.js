@@ -41,8 +41,9 @@ require([
         canvas = document.getElementById("canvas");
         engine = new BABYLON.Engine(canvas);
         scene  = new BABYLON.Scene(engine);
-        hud.startGameMenu();
-        
+        hud.init(canvas);
+        hud.createBGDoors();
+
         $.getJSON("assets/levels/level0.json", function(data) {
             gameData = data;
             start();
@@ -50,7 +51,7 @@ require([
     });
 
     function start () {
-        hud.openGame();
+        hud.buildMainMenu();
         launch();
     }
 
