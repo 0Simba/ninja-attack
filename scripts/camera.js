@@ -8,9 +8,11 @@ define([
     =            CONFIG            =
     ==============================*/
 
-    var offset   = new BABYLON.Vector3(0, 4, -20);
+    var offset   = new BABYLON.Vector3(0, 4, -10);
     var rotation = new BABYLON.Vector3(Math.PI / 16, 0, 0);
     var manual   = false;
+
+
 
 
     /*===============================

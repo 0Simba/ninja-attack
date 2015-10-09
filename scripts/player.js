@@ -34,11 +34,12 @@ define([
         for (var i = 0; i < mesh.length; i++) {
             mesh[i].parent = this.mesh;
 
-            mesh[i].scaling.x = 0.095;
-            mesh[i].scaling.y = 0.095;
-            mesh[i].scaling.z = 0.095;
+            mesh[i].scaling.x = 0.065;
+            mesh[i].scaling.y = 0.065;
+            mesh[i].scaling.z = 0.065;
 
             mesh[i].rotate(BABYLON.Axis.X, 4.75, BABYLON.Space.LOCAL);
+            mesh[i].position.y -= 0.5;
         };
 
         this.mesh.checkCollisions = true;
