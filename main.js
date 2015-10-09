@@ -24,9 +24,11 @@ require([
     './scripts/player',
     './scripts/main_light',
     './scripts/wallsBuilder',
+    './scripts/ennemies',
+
 
     './scripts/inputs'
-], function (BABYLON, $, camera, player, mainLight, wallsBuilder) {
+], function (BABYLON, $, camera, player, mainLight, wallsBuilder, ennemies) {
     'use strict';
 
     var canvas;
@@ -60,12 +62,14 @@ require([
         wallsBuilder(scene, gameData.walls);
 
         player.init(scene, gameData.start, tasks[0].loadedMeshes);
+        ennemies.init(scene, gameData.monsters);
         camera.init(scene, player.mesh);
         mainLight.init(scene)
 
         engine.runRenderLoop(function() {
             var deltaTime = engine.getDeltaTime() / 1000;
 
+            ennemies.update(deltaTime);
             player.update(deltaTime);
             camera.update(deltaTime);
             scene.render();
