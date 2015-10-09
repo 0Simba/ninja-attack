@@ -1,15 +1,16 @@
 define([
     'babylon',
     './inputs',
-    './addCharacterCollider'
-], function (BABYLON, inputs, addCharacterCollider) {
+    './addCharacterCollider',
+    './entityPhysics'
+], function (BABYLON, inputs, addCharacterCollider, EntityPhysics) {
     'use strict';
 
     /*==============================
     =            CONFIG            =
     ==============================*/
 
-    var acceleration = 10;
+    var acceleration = 40;
     var diameter     = 0.5;
     var height       = 1;
 
@@ -20,8 +21,9 @@ define([
     ===============================*/
 
     function Player () {
-        this.width  = diameter;
-        this.height = height;
+        this.width   = diameter;
+        this.height  = height;
+        this.physics = new EntityPhysics(this);
     }
 
 
@@ -35,12 +37,12 @@ define([
 
     Player.prototype.update = function (deltaTime) {
         if (inputs.left) {
-            this.mesh.position.x -= 10 * deltaTime;
+            this.physics.velocity.x -= acceleration * deltaTime;
         }
         if (inputs.right) {
-            this.mesh.position.x += 10 * deltaTime;
+            this.physics.velocity.x += acceleration * deltaTime;
         }
-
+        this.physics.update(deltaTime);
     };
 
 

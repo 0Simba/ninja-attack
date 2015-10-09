@@ -36,8 +36,8 @@ function extractStartEndOn (value) {
     };
 
     value.end = {
-        x : applyRatio(document.getElementById('fin').offsetLeft - unit / 2),
-        y : applyRatio(-document.getElementById('fin').offsetTop + unit / 2)
+        x : applyRatio(document.getElementById('fin').offsetLeft + unit / 2),
+        y : applyRatio(-document.getElementById('fin').offsetTop - unit / 2)
     };
 }
 

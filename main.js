@@ -25,10 +25,11 @@ require([
     './scripts/main_light',
     './scripts/wallsBuilder',
     './scripts/ennemies',
+    './scripts/endPoint',
 
 
     './scripts/inputs'
-], function (BABYLON, $, camera, player, mainLight, wallsBuilder, ennemies) {
+], function (BABYLON, $, camera, player, mainLight, wallsBuilder, ennemies, initEndPoint) {
     'use strict';
 
     var canvas;
@@ -51,6 +52,7 @@ require([
     function launch () {
         wallsBuilder(scene, gameData.walls);
 
+        initEndPoint(scene, gameData.end);
         player.init(scene, gameData.start);
         ennemies.init(scene, gameData.monsters);
         camera.init(scene, player.mesh);
