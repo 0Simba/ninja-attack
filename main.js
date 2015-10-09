@@ -36,6 +36,7 @@ require([
     var engine;
     var scene;
     var gameData;
+    var loader;
 
     $(function () {
         canvas = document.getElementById("canvas");
@@ -44,18 +45,28 @@ require([
         scene.collisionsEnabled = true;
         // scene.debugLayer.show();
 
+
+        loader = new BABYLON.AssetsManager(scene);
+
         $.getJSON("assets/levels/level0.json", function(data) {
             gameData = data;
-            launch();
+
+            var meshTask = loader.addMeshTask("ninja", "", "./assets/", "ninja.babylon");
+
+            loader.onFinish = function (tasks) {
+                launch(tasks);
+            };
+
+            loader.load();
         });
     });
 
 
-    function launch () {
+    function launch (tasks) {
         wallsBuilder(scene, gameData.walls);
 
         initEndPoint(scene, gameData.end);
-        player.init(scene, gameData.start);
+        player.init(scene, gameData.start, tasks[0].loadedMeshes);
         ennemies.init(scene, gameData.monsters);
         camera.init(scene, player.mesh);
         mainLight.init(scene)

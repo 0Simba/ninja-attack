@@ -26,12 +26,21 @@ define([
     }
 
 
-    Player.prototype.init = function (scene, start) {
-        this.mesh = BABYLON.Mesh.CreateCylinder("player", height, diameter, diameter, 20, scene);
+    Player.prototype.init = function (scene, start, mesh) {
+        this.mesh = BABYLON.Mesh.CreateCylinder("player", height, diameter, diameter, 0, scene);
         this.mesh.position  = new BABYLON.Vector3(start.x, start.y, 0);
         this.mesh.ellipsoid = new BABYLON.Vector3(0.125, 0.25, 0.125);
 
-        // addCharacterCollider(scene, this);
+        for (var i = 0; i < mesh.length; i++) {
+            mesh[i].parent = this.mesh;
+
+            mesh[i].scaling.x = 0.095;
+            mesh[i].scaling.y = 0.095;
+            mesh[i].scaling.z = 0.095;
+
+            mesh[i].rotate(BABYLON.Axis.X, 4.75, BABYLON.Space.LOCAL);
+        };
+
         this.mesh.checkCollisions = true;
         this.physics = new EntityPhysics(this);
     };
@@ -46,9 +55,6 @@ define([
         }
         this.physics.update(deltaTime);
     };
-
-
-
 
     /*==========================================
     =            RETURN (singleton)            =
