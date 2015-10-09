@@ -52,6 +52,7 @@ require([
         wallsBuilder(scene, gameData.walls);
 
         player.init(scene, gameData.start);
+        ennemies.init(scene, gameData.monsters);
         camera.init(scene, player.mesh);
         mainLight.init(scene)
 

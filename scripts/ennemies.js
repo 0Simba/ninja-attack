@@ -14,7 +14,13 @@ define([
         this.list = [];
     }
 
-    Ennemies.prototype.init = function () {
+    Ennemies.prototype.init = function (scene, datas) {
+        for (var i = 0; i < datas.length; i++) {
+            var data   = datas[i];
+            var ennemi = new Rabbit (data, scene);
+
+            this.list.push(ennemi);
+        };
     };
 
 
@@ -38,12 +44,27 @@ define([
     ================================*/
 
 
-    function Rabbit () {
+    function Rabbit (data, scene) {
+        this.mesh = BABYLON.Mesh.CreateSphere("rabbit", 20, 1, scene);
+        this.mesh.position = new BABYLON.Vector3(data.x, data.y, 0);
     }
 
 
     Rabbit.prototype.update = function () {
     };
+
+
+
+
+    /*==========================
+    =            IA            =
+    ==========================*/
+
+
+    function leftRightIA () {
+
+    }
+
 
 
     /*==================================================

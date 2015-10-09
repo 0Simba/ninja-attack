@@ -20,8 +20,8 @@ function extractMonstersOn (value) {
         var monster = monstre[i];
 
         value.monsters.push({
-            x       : applyRatio(monster.x  - unit / 2),
-            y       : applyRatio(-monster.y + unit / 2),
+            x       : applyRatio(monster.left + unit / 2),
+            y       : applyRatio(-monster.top - unit / 2),
             skin    : monster.skin,
             iaValue : applyRatio(monster.mouvementDroite)
         });
