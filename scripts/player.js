@@ -10,7 +10,7 @@ define([
     =            CONFIG            =
     ==============================*/
 
-    var acceleration = 40;
+    var acceleration = 45;
     var diameter     = 0.5;
     var height       = 1;
 
@@ -23,15 +23,17 @@ define([
     function Player () {
         this.width   = diameter;
         this.height  = height;
-        this.physics = new EntityPhysics(this);
     }
 
 
     Player.prototype.init = function (scene, start) {
         this.mesh = BABYLON.Mesh.CreateCylinder("player", height, diameter, diameter, 20, scene);
-        this.mesh.position = new BABYLON.Vector3(start.x, start.y, 0);
+        this.mesh.position  = new BABYLON.Vector3(start.x, start.y, 0);
+        this.mesh.ellipsoid = new BABYLON.Vector3(0.125, 0.25, 0.125);
 
-        addCharacterCollider(scene, this);
+        // addCharacterCollider(scene, this);
+        this.mesh.checkCollisions = true;
+        this.physics = new EntityPhysics(this);
     };
 
 

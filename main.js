@@ -41,6 +41,8 @@ require([
         canvas = document.getElementById("canvas");
         engine = new BABYLON.Engine(canvas);
         scene  = new BABYLON.Scene(engine);
+        scene.collisionsEnabled = true;
+        // scene.debugLayer.show();
 
         $.getJSON("assets/levels/level0.json", function(data) {
             gameData = data;

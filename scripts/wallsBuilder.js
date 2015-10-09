@@ -8,9 +8,8 @@ define([
             var wallConfig = walls[i];
 
             var wall = BABYLON.Mesh.CreateBox("wall" + i, {height: wallConfig.height, width : wallConfig.width, length : 2}, scene);
-            wall.position = new BABYLON.Vector3(wallConfig.x, wallConfig.y, 0);
-            walls.checkCollisions = true;
-
+            wall.position        = new BABYLON.Vector3(wallConfig.x, wallConfig.y, 0);
+            wall.checkCollisions = true;
         };
     }
 });
