@@ -24,9 +24,9 @@ define([
     };
 
 
-    Ennemies.prototype.update = function () {
+    Ennemies.prototype.update = function (deltaTime) {
         for (var i = 0; i < this.list.length; i++) {
-            this.list[i].update();
+            this.list[i].update(deltaTime);
         };
     };
 
@@ -47,10 +47,15 @@ define([
     function Rabbit (data, scene) {
         this.mesh = BABYLON.Mesh.CreateSphere("rabbit", 20, 1, scene);
         this.mesh.position = new BABYLON.Vector3(data.x, data.y, 0);
+
+        this.iaValue = data.iaValue;
+
+        this.ia = leftRightIA;
     }
 
 
-    Rabbit.prototype.update = function () {
+    Rabbit.prototype.update = function (deltaTime) {
+        this.ia(deltaTime);
     };
 
 
@@ -61,8 +66,7 @@ define([
     ==========================*/
 
 
-    function leftRightIA () {
-
+    function leftRightIA (deltaTime) {
     }
 
 

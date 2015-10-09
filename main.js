@@ -59,6 +59,7 @@ require([
         engine.runRenderLoop(function() {
             var deltaTime = engine.getDeltaTime() / 1000;
 
+            ennemies.update(deltaTime);
             player.update(deltaTime);
             camera.update(deltaTime);
             scene.render();
