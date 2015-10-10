@@ -31,7 +31,9 @@ define([
     Player.prototype.init = function (scene, start, mesh) {
         this.mesh = BABYLON.Mesh.CreateCylinder("player", height, diameter, diameter, 0, scene);
         this.mesh.position  = new BABYLON.Vector3(start.x, start.y, 0);
-        this.mesh.ellipsoid = new BABYLON.Vector3(0.125, 0.25, 0.125);
+        this.mesh.ellipsoid = new BABYLON.Vector3(0.25, 0.5, 0.125);
+        this.mesh.ellipsoidOffset = new BABYLON.Vector3(0, 0.5, 0);
+
 
         for (var i = 0; i < mesh.length; i++) {
             mesh[i].parent = this.mesh;

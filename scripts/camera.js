@@ -40,7 +40,7 @@ define([
 
 
     Camera.prototype.init = function (scene, player) {
-        this.targetPoint = BABYLON.Mesh.CreateSphere("target", 10, 0.3, scene);
+        this.targetPoint = BABYLON.Mesh.CreateSphere("target", 0, 0.3, scene);
         this.player = player;
         this.camera  = new BABYLON.FollowCamera("FollowCam", startPosition, scene);
         this.camera.target = this.targetPoint; // target any mesh or object with a "position" Vector3
