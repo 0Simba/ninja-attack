@@ -46,7 +46,6 @@ define([
             mesh[i].position.y -= 0.5;
         };
 
-        this.mesh.checkCollisions = true;
         this.physics = new EntityPhysics(this);
     };
 
@@ -62,8 +61,6 @@ define([
         if (inputs.up && (this.physics.onGround || this.physics.onRoof)) {
             this.jump();
         }
-        $('#debug .player_y_velocity').html(Math.round(this.physics.velocity.y * 10000) / 10000);
-        $('#debug .player_x_velocity').html(Math.round(this.physics.velocity.x * 10000) / 10000);
     };
 
 

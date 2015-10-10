@@ -15,7 +15,7 @@ define([
         this.frictionY = 0;
         this.frictionX = 3.5;
 
-
+        this.parent.mesh.checkCollisions = true;
 
         var entityPhysics = this;
         this.parent.mesh.onCollide = function (targetMesh) {
