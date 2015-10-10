@@ -32,6 +32,14 @@ require([
 ], function (BABYLON, $, camera, player, mainLight, wallsBuilder, ennemies, initEndPoint) {
     'use strict';
 
+    /*==============================
+    =            CONFIG            =
+    ==============================*/
+
+    var maxDeltaTime = 0.1;
+
+
+
     var canvas;
     var engine;
     var scene;
@@ -72,7 +80,7 @@ require([
         mainLight.init(scene)
 
         engine.runRenderLoop(function() {
-            var deltaTime = engine.getDeltaTime() / 1000;
+            var deltaTime = Math.min(engine.getDeltaTime() / 1000, maxDeltaTime);
 
             ennemies.update(deltaTime);
             player.update(deltaTime);

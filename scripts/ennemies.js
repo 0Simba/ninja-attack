@@ -18,9 +18,10 @@ define([
     Ennemies.prototype.init = function (scene, datas) {
         for (var i = 0; i < datas.length; i++) {
             var data   = datas[i];
-            var ennemi = new Rabbit (data, scene);
+            var ennemy = new Rabbit (data, scene);
+            addEnnemyProperties(ennemy)
 
-            this.list.push(ennemi);
+            this.list.push(ennemy);
         };
     };
 
@@ -71,6 +72,10 @@ define([
 
 
 
+
+    function addEnnemyProperties (ennemy) {
+        ennemy.tag = 'ennemy';
+    }
 
     /*==========================
     =            IA            =

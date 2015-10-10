@@ -5,7 +5,8 @@ define([
 
     var gravity = -9.81 * 3;
 
-    function EntityPhysics (parent) {
+    function EntityPhysics (parent, onEntityCollide) {
+        parent.mesh.parentLogic = parent;
         this.parent   = parent;
         this.velocity = {
             x : 0,
@@ -16,9 +17,17 @@ define([
         this.frictionX = 3.5;
 
         this.parent.mesh.checkCollisions = true;
+        this.onEntityCollide = onEntityCollide || function () {};
 
         var entityPhysics = this;
+
+
         this.parent.mesh.onCollide = function (targetMesh) {
+            if (targetMesh.name != 'wall') {
+                entityPhysics.onEntityCollide(targetMesh.parentLogic);
+                targetMesh.parentLogic.physics.onEntityCollide(targetMesh.parentLogic);
+                return;
+            }
             if (entityPhysics.currentProcessDirection == 'x') {
                 entityPhysics.velocity.x = 0;
             }
