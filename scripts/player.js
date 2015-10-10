@@ -77,6 +77,53 @@ define([
     };
 
 
+    Player.prototype.jump = function () {
+        this.physics.velocity.y = this.jumpForce;
+    };
+
+
+
+
+    /*=======================================
+    =            UPDATES METHODS            =
+    =======================================*/
+
+    Player.prototype.update = function (deltaTime) {
+        this.updateInvulnerability(deltaTime);
+        this.physics.update(deltaTime);
+        this.updateInputs(deltaTime);
+        this.updateRotation(deltaTime);
+    };
+
+
+    Player.prototype.updateRotation = function () {
+        if (this.physics.velocity.x !== 0) {
+            this.direction = (this.physics.velocity.x > 0) ? -1 : 1;
+        }
+        var targetYRotation = Math.PI / 2 * this.direction;
+        if (this.physics.onRoof) {
+            targetYRotation *= -1;
+        }
+        this.mesh.rotation.y = this.mesh.rotation.y + (targetYRotation - this.mesh.rotation.y) * turnSpeedRatio;
+
+        var targetXRotation = (this.physics.onRoof) ? Math.PI : 0;
+        this.mesh.rotation.x = this.mesh.rotation.x + (targetXRotation - this.mesh.rotation.x) * turnSpeedRatio;
+    };
+
+
+    Player.prototype.updateInputs = function (deltaTime) {
+        if (inputs.left) {
+            this.physics.velocity.x -= acceleration * deltaTime;
+        }
+        if (inputs.right) {
+            this.physics.velocity.x += acceleration * deltaTime;
+        }
+        if (inputs.up && (this.physics.onGround || this.physics.onRoof)) {
+            this.jump();
+        }
+    };
+
+
     Player.prototype.updateInvulnerability = function (deltaTime) {
         if (this.invulnerable) {
             this.invulnerableElapsedTime += deltaTime;
@@ -96,48 +143,10 @@ define([
                 this.childsMeshes[i].visibility = alpha;
             };
         }
-    }
-
-
-    Player.prototype.updateRotation = function () {
-        if (this.physics.velocity.x !== 0) {
-            this.direction = (this.physics.velocity.x > 0) ? -1 : 1;
-        }
-        var targetYRotation = Math.PI / 2 * this.direction;
-        if (this.physics.onRoof) {
-            targetYRotation *= -1;
-        }
-        this.mesh.rotation.y = this.mesh.rotation.y + (targetYRotation - this.mesh.rotation.y) * turnSpeedRatio;
-
-        var targetXRotation = (this.physics.onRoof) ? Math.PI : 0;
-        this.mesh.rotation.x = this.mesh.rotation.x + (targetXRotation - this.mesh.rotation.x) * turnSpeedRatio;
-    }
-
-
-    Player.prototype.updateInputs = function (deltaTime) {
-        if (inputs.left) {
-            this.physics.velocity.x -= acceleration * deltaTime;
-        }
-        if (inputs.right) {
-            this.physics.velocity.x += acceleration * deltaTime;
-        }
-        if (inputs.up && (this.physics.onGround || this.physics.onRoof)) {
-            this.jump();
-        }
-    }
-
-
-    Player.prototype.update = function (deltaTime) {
-        this.updateInvulnerability(deltaTime);
-        this.physics.update(deltaTime);
-        this.updateInputs(deltaTime);
-        this.updateRotation(deltaTime);
     };
 
 
-    Player.prototype.jump = function () {
-        this.physics.velocity.y = this.jumpForce;
-    };
+
 
     /*==========================================
     =            RETURN (singleton)            =
