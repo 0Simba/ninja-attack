@@ -1,19 +1,19 @@
 define([
+    'jquery',
     'babylon',
     './inputs',
-    './addCharacterCollider',
     './entityPhysics'
-], function (BABYLON, inputs, addCharacterCollider, EntityPhysics) {
+], function ($, BABYLON, inputs, EntityPhysics) {
     'use strict';
 
     /*==============================
     =            CONFIG            =
     ==============================*/
 
-    var acceleration = 45;
+    var acceleration = 20;
     var diameter     = 0.5;
     var height       = 1;
-    var jumpForce    = 40;
+    var jumpHeight   = 5;
 
 
 
@@ -22,8 +22,9 @@ define([
     ===============================*/
 
     function Player () {
-        this.width   = diameter;
-        this.height  = height;
+        this.width     = diameter;
+        this.height    = height;
+        this.jumpForce = Math.sqrt(jumpHeight * -EntityPhysics.gravity * 2);
     }
 
 
@@ -49,21 +50,23 @@ define([
 
 
     Player.prototype.update = function (deltaTime) {
+        this.physics.update(deltaTime);
         if (inputs.left) {
             this.physics.velocity.x -= acceleration * deltaTime;
         }
         if (inputs.right) {
             this.physics.velocity.x += acceleration * deltaTime;
         }
-        if (inputs.up && this.physics.onGround) {
+        if (inputs.up && (this.physics.onGround || this.physics.onRoof)) {
             this.jump();
         }
-        this.physics.update(deltaTime);
+        $('#debug .player_y_velocity').html(Math.round(this.physics.velocity.y * 10000) / 10000);
+        $('#debug .player_x_velocity').html(Math.round(this.physics.velocity.x * 10000) / 10000);
     };
 
 
     Player.prototype.jump = function () {
-        this.physics.velocity.y += jumpForce;
+        this.physics.velocity.y += this.jumpForce;
     }
 
     /*==========================================

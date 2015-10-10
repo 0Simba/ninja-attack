@@ -1,10 +1,9 @@
 define([
-    'babylon',
-    './addCharacterCollider'
-], function (BABYLON, addCharacterCollider) {
+    'babylon'
+], function (BABYLON) {
     'use strict';
 
-    var gravity = -9.81 * 5;
+    var gravity = -9.81 * 3;
 
     function EntityPhysics (parent) {
         this.parent   = parent;
@@ -13,32 +12,32 @@ define([
             y : 0
         };
 
-        this.friction = 5;
+        this.frictionY = 0;
+        this.frictionX = 3.5;
 
-        // addCharacterCollider(scene, this.parent);
 
 
-        var that = this;
+        var entityPhysics = this;
         this.parent.mesh.onCollide = function (targetMesh) {
-            if (that.currentProcessDirection === 'x') {
-                that.velocity.x = 0;
+            if (entityPhysics.currentProcessDirection == 'x') {
+                entityPhysics.velocity.x = 0;
             }
-            else if (that.currentProcessDirection === 'y') {
-                that.parent.mesh.y -= 0.5;
-                that.velocity.y = 10;
-                that.onGround   = true;
+            else if (entityPhysics.currentProcessDirection == 'y') {
+                if (entityPhysics.velocity.y < 0) {
+                    entityPhysics.onGround = true;
+                }
+                else {
+                    entityPhysics.onRoof = true;
+                }
+                entityPhysics.velocity.y = 0;
             }
         }
     }
 
-    //mesh.onCollide
 
     EntityPhysics.prototype.update = function (deltaTime) {
-        this.onGround = false;
         this.currentProcessDirection = 'y';
         this.updatePositionAndVelocityY(deltaTime);
-
-        this.parent.mesh.computeWorldMatrix();
 
         this.currentProcessDirection = 'x';
         this.updatePositionAndVelocityX(deltaTime);
@@ -48,23 +47,30 @@ define([
 
 
     EntityPhysics.prototype.updatePositionAndVelocityX = function (deltaTime) {
-        var newVelocity = this.velocity.x * Math.exp(-this.friction * deltaTime);
-
-        this.parent.mesh.moveWithCollisions(new BABYLON.Vector3(0.5 * (this.velocity.x + newVelocity) * deltaTime, 0, 0));
+        var newVelocity = this.velocity.x * Math.exp(-this.frictionX * deltaTime);
+        var moveValue   = 0.5 * (this.velocity.x + newVelocity) * deltaTime;
         this.velocity.x = newVelocity;
+        this.parent.mesh.moveWithCollisions(new BABYLON.Vector3(moveValue, 0, 0));
     };
 
 
     EntityPhysics.prototype.updatePositionAndVelocityY = function (deltaTime) {
-        this.velocity.y += gravity * deltaTime;
-        var newVelocity = this.velocity.y * Math.exp(-this.friction * deltaTime);
+        if (!this.onGround) {
+            this.velocity.y += gravity * deltaTime;
+        }
+
+        this.onGround = false;
+        this.onRoof   = false;
+
+        var newVelocity = this.velocity.y * Math.exp(-this.frictionY * deltaTime);
         var moveValue   = 0.5 * (this.velocity.y + newVelocity) * deltaTime;
 
-        this.parent.mesh.moveWithCollisions(new BABYLON.Vector3(0, moveValue, 0));
         this.velocity.y = newVelocity;
+        this.parent.mesh.moveWithCollisions(new BABYLON.Vector3(0, moveValue, 0));
     };
 
 
+    EntityPhysics.gravity = gravity;
 
     return EntityPhysics;
 });

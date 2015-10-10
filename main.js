@@ -68,7 +68,7 @@ require([
         initEndPoint(scene, gameData.end);
         player.init(scene, gameData.start, tasks[0].loadedMeshes);
         ennemies.init(scene, gameData.monsters);
-        camera.init(scene, player.mesh);
+        camera.init(scene, player);
         mainLight.init(scene)
 
         engine.runRenderLoop(function() {
