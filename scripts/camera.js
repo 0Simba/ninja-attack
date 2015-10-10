@@ -8,6 +8,7 @@ define([
     =            CONFIG            =
     ==============================*/
 
+        // babylon camera
     var startPosition      = new BABYLON.Vector3(0, 0, -20);
     var radius             = 10; // how far from the object to follow
     var heightOffset       = 1; // how high above the object to place the camera
@@ -16,10 +17,12 @@ define([
     var maxCameraSpeed     = 20; // speed limit
 
 
+        //target point
     var pointVelocityOffsetRatioX = 0.5;
     var pointVelocityOffsetRatioY = 0.1;
     var moveToTargetXRatio       = 0.2;
     var moveToTargetYRatio       = 0.2;
+    var maxOffset                = 1.5;
 
     var onGroundHeightOffset = 3;
     var onRoofHeightOffset   = -7;
@@ -83,10 +86,13 @@ define([
 
 
     Camera.prototype.lookAtPoint = function (deltaTime) {
+        var xDiff = Math.max(-maxOffset, Math.min(maxOffset, this.player.physics.velocity.x * pointVelocityOffsetRatioX));
+        var yDiff = Math.max(-maxOffset, Math.min(maxOffset, this.player.physics.velocity.y * pointVelocityOffsetRatioY));
+
         var point = new BABYLON.Vector3 (
-            this.player.mesh.position.x + (this.player.physics.velocity.x * pointVelocityOffsetRatioX),
-            this.player.mesh.position.y + (this.player.physics.velocity.y * pointVelocityOffsetRatioY),
-            this.player.mesh.position.z
+            this.player.mesh.position.x + xDiff,
+            this.player.mesh.position.y + yDiff,
+            this.player.mesh.position.z - Math.abs(xDiff) - Math.abs(yDiff)
         );
 
         return point;

@@ -16,7 +16,15 @@ define([
     var jumpHeight   = 5;
     var invulnerableDuration = 2;
 
+    var chargeMaxDuration = 1;
+    var chargeMaxVelocity = new BABYLON.Vector3(50, 2, 0);
+    var speedToBeCharging = 7;
+    var chargeRotateSpeed = 12;
+
     var turnSpeedRatio = 0.2;
+
+
+
 
     /*===============================
     =            METHODS            =
@@ -33,6 +41,8 @@ define([
         this.tag       = 'player';
         this.life      = 3;
         this.direction = 1;
+
+        this.chargeElapsedTime = 0;
     }
 
 
@@ -82,6 +92,14 @@ define([
     };
 
 
+    Player.prototype.launchChargeAttack = function () {
+        var ratio = Math.min(1, this.chargeElapsedTime / chargeMaxDuration);
+
+        this.chargeElapsedTime = 0;
+        this.physics.velocity.x += chargeMaxVelocity.x * ratio * -this.direction;
+        this.physics.velocity.y += chargeMaxVelocity.y * ratio;
+    };
+
 
 
     /*=======================================
@@ -93,21 +111,31 @@ define([
         this.physics.update(deltaTime);
         this.updateInputs(deltaTime);
         this.updateRotation(deltaTime);
+        this.updateChargeAttack(deltaTime);
     };
 
 
-    Player.prototype.updateRotation = function () {
+    Player.prototype.updateRotation = function (deltaTime) {
         if (this.physics.velocity.x !== 0) {
             this.direction = (this.physics.velocity.x > 0) ? -1 : 1;
         }
-        var targetYRotation = Math.PI / 2 * this.direction;
-        if (this.physics.onRoof) {
-            targetYRotation *= -1;
-        }
-        this.mesh.rotation.y = this.mesh.rotation.y + (targetYRotation - this.mesh.rotation.y) * turnSpeedRatio;
 
-        var targetXRotation = (this.physics.onRoof) ? Math.PI : 0;
-        this.mesh.rotation.x = this.mesh.rotation.x + (targetXRotation - this.mesh.rotation.x) * turnSpeedRatio;
+        if (Math.abs(this.physics.velocity.x) > speedToBeCharging) {
+            this.mesh.rotation.y = 0;
+            this.mesh.rotation.z = Math.PI / 2 * -this.direction;
+            this.mesh.rotation.x += Math.PI * deltaTime * chargeRotateSpeed;
+        }
+        else {
+            this.mesh.rotation.z = 0;
+            var targetYRotation = Math.PI / 2 * this.direction;
+            if (this.physics.onRoof) {
+                targetYRotation *= -1;
+            }
+            this.mesh.rotation.y = this.mesh.rotation.y + (targetYRotation - this.mesh.rotation.y) * turnSpeedRatio;
+
+            var targetXRotation = (this.physics.onRoof) ? Math.PI : 0;
+            this.mesh.rotation.x = this.mesh.rotation.x + (targetXRotation - this.mesh.rotation.x) * turnSpeedRatio;
+        }
     };
 
 
@@ -146,6 +174,17 @@ define([
     };
 
 
+    Player.prototype.updateChargeAttack = function (deltaTime) {
+        if (inputs.space) {
+            this.chargeElapsedTime += deltaTime;
+
+            var ratio = Math.min(1, this.chargeElapsedTime / chargeMaxDuration);
+            $('#debug .charge_ratio').html(ratio);
+        }
+        else if (this.chargeElapsedTime > 0) {
+            this.launchChargeAttack();
+        }
+    };
 
 
     /*==========================================
