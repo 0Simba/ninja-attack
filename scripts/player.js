@@ -11,20 +11,26 @@ define([
     =            CONFIG            =
     ==============================*/
 
+        // physics
     var acceleration = 20;
     var diameter     = 0.5;
     var height       = 1;
     var jumpHeight   = 3;
     var invulnerableDuration = 2;
 
+        //charge attack
     var chargeMaxDuration = 1;
     var chargeMaxVelocity = new BABYLON.Vector3(50, 2, 0);
     var speedToBeCharging = 7;
     var chargeRotateSpeed = 12;
 
+        //thunderbolt
+    var thunderboltOffset   = new BABYLON.Vector3(0, 3, -2);
+    var thunderboltDuration = 0.2;
+
+
     var turnSpeedRatio = 0.2;
 
-    var thunderboltOffset = new BABYLON.Vector3(0, 3, -2);
 
 
 
@@ -89,29 +95,41 @@ define([
 
 
     Player.prototype.initThunderboltAttack = function (scene) {
-        this.thunderboltSpawnPoint = BABYLON.Mesh.CreateSphere("thunderboltSpawnPoint", 10, 0.2, scene);;
-        this.thunderboltSpawnPoint.position = thunderboltOffset;
+        this.isDoingThuderbolt      = false;
+        this.thunderbolt = {};
+        this.thunderbolt.elapsedTime = 0;
 
-        this.thunderboltParticleSystem = new BABYLON.ParticleSystem("thunderbolt", 10000, scene);
-        this.thunderboltParticleSystem.emitter    = this.thunderboltSpawnPoint;
-        this.thunderboltParticleSystem.direction1 = new BABYLON.Vector3(-0.2, -20, 0);
-        this.thunderboltParticleSystem.direction2 = new BABYLON.Vector3(0.2, -20, 0);
-        this.thunderboltParticleSystem.minEmitBox = new BABYLON.Vector3(-0.4, 0, 0);
-        this.thunderboltParticleSystem.maxEmitBox = new BABYLON.Vector3(0.4, 0, 0);
-        this.thunderboltParticleSystem.minSize    = 0.01;
-        this.thunderboltParticleSystem.maxSize    = 0.1;
-        this.thunderboltParticleSystem.emitRate   = 1000;
-        this.thunderboltParticleSystem.updateSpeed = 0.005;
-        this.thunderboltParticleSystem.minLifeTime = 0.2;
-        this.thunderboltParticleSystem.maxLifeTime = 0.22;
-        this.thunderboltParticleSystem.gravity = new BABYLON.Vector3(0, -9.81, 0);
-        this.thunderboltParticleSystem.minAngularSpeed = 0;
-        this.thunderboltParticleSystem.maxAngularSpeed = 2;
-        this.thunderboltParticleSystem.particleTexture = new BABYLON.Texture("../assets/thunderbolt.png", scene);
+        this.thunderbolt.spawnPoint          = BABYLON.Mesh.CreateSphere("thunderboltSpawnPoint", 0, 0.2, scene);;
+        this.thunderbolt.spawnPoint.position = thunderboltOffset;
+        this.thunderbolt.spawnPoint.parent   = this.mesh;
 
-        this.thunderboltSpawnPoint.parent = this.mesh;
+        this.thunderbolt.mesh            = BABYLON.Mesh.CreateBox("thunderbolt", {height: thunderboltOffset.y, width : 0.3, length : 0.1}, scene);
+        this.thunderbolt.mesh.position   = new BABYLON.Vector3(thunderboltOffset.x, thunderboltOffset.y, thunderboltOffset.z);
+        this.thunderbolt.mesh.position.y -= thunderboltOffset.y / 2;
+        this.thunderbolt.mesh.parent     = this.mesh;
+        this.thunderbolt.physics         = new EntityPhysics(this.thunderbolt);
+        this.thunderbolt.tag             = 'player attack';
+        this.thunderbolt.mesh.isVisible  = false;
+        this.thunderbolt.mesh.checkCollisions = false;
 
-        this.thunderboltParticleSystem.start();
+        this.thunderbolt.particleSystem = new BABYLON.ParticleSystem("thunderbolt", 10000, scene);
+        this.thunderbolt.particleSystem.emitter     = this.thunderbolt.spawnPoint;
+        this.thunderbolt.particleSystem.direction1  = new BABYLON.Vector3(-0.2, -50, 0);
+        this.thunderbolt.particleSystem.direction2  = new BABYLON.Vector3(0.2, -50, 0);
+        this.thunderbolt.particleSystem.minEmitBox  = new BABYLON.Vector3(-0.4, 0, 0);
+        this.thunderbolt.particleSystem.maxEmitBox  = new BABYLON.Vector3(0.4, -1, 0);
+        this.thunderbolt.particleSystem.minSize     = 0.1;
+        this.thunderbolt.particleSystem.maxSize     = 0.2;
+        this.thunderbolt.particleSystem.emitRate    = 500;
+        this.thunderbolt.particleSystem.updateSpeed = 0.005;
+        this.thunderbolt.particleSystem.minLifeTime = 0.07;
+        this.thunderbolt.particleSystem.maxLifeTime = 0.09;
+        this.thunderbolt.particleSystem.gravity     = new BABYLON.Vector3(0, -9.81, 0);
+        // this.thunderbolt.particleSystem.manualEmitCount = 300;
+        this.thunderbolt.particleSystem.minAngularSpeed = 0;
+        this.thunderbolt.particleSystem.maxAngularSpeed = 2;
+        this.thunderbolt.particleSystem.particleTexture = new BABYLON.Texture("../assets/thunderbolt.png", scene);
+
     };
 
 
@@ -164,6 +182,22 @@ define([
     };
 
 
+    Player.prototype.launchThunderbolt = function () {
+        this.isDoingThuderbolt       = true;
+        this.thunderbolt.elapsedTime = 0;
+        this.thunderbolt.mesh.checkCollisions = true;
+        this.thunderbolt.particleSystem.start();
+    };
+
+
+    Player.prototype.stopThunderbolt = function () {
+        this.thunderbolt.elapsedTime = 0;
+        this.isDoingThuderbolt       = false;
+        this.thunderbolt.mesh.checkCollisions = false;
+        this.thunderbolt.particleSystem.stop();
+    };
+
+
 
     /*=======================================
     =            UPDATES METHODS            =
@@ -175,6 +209,7 @@ define([
         this.updateInputs(deltaTime);
         this.updateRotation(deltaTime);
         this.updateChargeAttack(deltaTime);
+        this.updateThunderboltAttack(deltaTime);
         this.checkFallDeath();
     };
 
@@ -251,7 +286,18 @@ define([
     };
 
 
+
     Player.prototype.updateThunderboltAttack = function (deltaTime) {
+        if (this.isDoingThuderbolt) {
+            this.thunderbolt.elapsedTime += deltaTime;
+
+            if (this.thunderbolt.elapsedTime > thunderboltDuration) {
+                this.stopThunderbolt();
+            }
+        }
+        if (inputs.bottom && this.physics.onGround) {
+            this.launchThunderbolt();
+        }
     };
 
 

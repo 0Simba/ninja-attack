@@ -27,7 +27,7 @@ define([
 
 
     Ennemies.prototype.update = function (deltaTime) {
-        for (var i = 0; i < this.list.length; i++) {
+        for (var i = this.list.length - 1; i >= 0; i--) {
             this.list[i].update(deltaTime);
         };
     };
@@ -39,6 +39,17 @@ define([
     };
 
 
+    Ennemies.prototype.destroy = function (ennemy) {
+        ennemy.mesh.dispose();
+        var ennemyIndex = this.list.indexOf(ennemy);
+
+        if (ennemy !== -1) {
+            ennemy.mesh.dispose();
+            this.list.splice(ennemyIndex, 1);
+        }
+    }
+
+    var ennemies = new Ennemies;
 
 
     /*================================
@@ -75,6 +86,11 @@ define([
 
     function addEnnemyProperties (ennemy) {
         ennemy.tag = 'ennemy';
+        ennemy.physics.onEntityCollide = function (entity) {
+            if (entity.tag === 'player attack') {
+                ennemies.destroy(ennemy);
+            }
+        }
     }
 
     /*==========================
@@ -105,5 +121,5 @@ define([
     =            RETURN singleton du manager           =
     ==================================================*/
 
-    return new Ennemies();
+    return ennemies;
 });
