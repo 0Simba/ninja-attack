@@ -24,6 +24,8 @@ define([
 
     var turnSpeedRatio = 0.2;
 
+    var thunderboltOffset = new BABYLON.Vector3(0, 3, -2);
+
 
 
 
@@ -74,7 +76,7 @@ define([
         this.mesh.ellipsoidOffset = new BABYLON.Vector3(0, 0.5, 0);
 
         this.setChildsMeshes(meshes);
-
+        this.initThunderboltAttack(scene);
 
         this.physics = new EntityPhysics(this);
         this.physics.onEntityCollide = function (target) {
@@ -83,6 +85,33 @@ define([
             }
         }
 
+    };
+
+
+    Player.prototype.initThunderboltAttack = function (scene) {
+        this.thunderboltSpawnPoint = BABYLON.Mesh.CreateSphere("thunderboltSpawnPoint", 10, 0.2, scene);;
+        this.thunderboltSpawnPoint.position = thunderboltOffset;
+
+        this.thunderboltParticleSystem = new BABYLON.ParticleSystem("thunderbolt", 10000, scene);
+        this.thunderboltParticleSystem.emitter    = this.thunderboltSpawnPoint;
+        this.thunderboltParticleSystem.direction1 = new BABYLON.Vector3(-0.2, -20, 0);
+        this.thunderboltParticleSystem.direction2 = new BABYLON.Vector3(0.2, -20, 0);
+        this.thunderboltParticleSystem.minEmitBox = new BABYLON.Vector3(-0.4, 0, 0);
+        this.thunderboltParticleSystem.maxEmitBox = new BABYLON.Vector3(0.4, 0, 0);
+        this.thunderboltParticleSystem.minSize    = 0.01;
+        this.thunderboltParticleSystem.maxSize    = 0.1;
+        this.thunderboltParticleSystem.emitRate   = 1000;
+        this.thunderboltParticleSystem.updateSpeed = 0.005;
+        this.thunderboltParticleSystem.minLifeTime = 0.2;
+        this.thunderboltParticleSystem.maxLifeTime = 0.22;
+        this.thunderboltParticleSystem.gravity = new BABYLON.Vector3(0, -9.81, 0);
+        this.thunderboltParticleSystem.minAngularSpeed = 0;
+        this.thunderboltParticleSystem.maxAngularSpeed = 2;
+        this.thunderboltParticleSystem.particleTexture = new BABYLON.Texture("../assets/thunderbolt.png", scene);
+
+        this.thunderboltSpawnPoint.parent = this.mesh;
+
+        this.thunderboltParticleSystem.start();
     };
 
 
@@ -133,6 +162,7 @@ define([
             this.loseLife();
         }
     };
+
 
 
     /*=======================================
@@ -218,6 +248,10 @@ define([
         else if (this.chargeElapsedTime > 0) {
             this.launchChargeAttack();
         }
+    };
+
+
+    Player.prototype.updateThunderboltAttack = function (deltaTime) {
     };
 
 
