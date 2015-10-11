@@ -2,8 +2,9 @@ define([
     'jquery',
     'babylon',
     './inputs',
-    './entityPhysics'
-], function ($, BABYLON, inputs, EntityPhysics) {
+    './entityPhysics',
+    './minY'
+], function ($, BABYLON, inputs, EntityPhysics, minY) {
     'use strict';
 
     /*==============================
@@ -13,7 +14,7 @@ define([
     var acceleration = 20;
     var diameter     = 0.5;
     var height       = 1;
-    var jumpHeight   = 5;
+    var jumpHeight   = 3;
     var invulnerableDuration = 2;
 
     var chargeMaxDuration = 1;
@@ -57,21 +58,23 @@ define([
             meshes[i].rotate(BABYLON.Axis.X, 4.75, BABYLON.Space.LOCAL);
             meshes[i].position.y -= 0.5;
         };
+
+        this.childsMeshes = meshes;
     };
 
 
     Player.prototype.init = function (scene, start, meshes) {
         var player = this;
 
+        this.startPoint = start;
+
         this.mesh = BABYLON.Mesh.CreateCylinder("player", height, diameter, diameter, 0, scene);
         this.mesh.position  = new BABYLON.Vector3(start.x, start.y, 0);
         this.mesh.ellipsoid = new BABYLON.Vector3(0.25, 0.5, 0.125);
         this.mesh.ellipsoidOffset = new BABYLON.Vector3(0, 0.5, 0);
 
-
         this.setChildsMeshes(meshes);
 
-        this.childsMeshes = meshes;
 
         this.physics = new EntityPhysics(this);
         this.physics.onEntityCollide = function (target) {
@@ -88,8 +91,7 @@ define([
             ennemy.physics.velocity.x = this.physics.velocity.x * 2;
         }
         else if (!this.invulnerable) {
-            this.invulnerable = true;
-            this.life--;
+            this.loseLife();
             $('#debug .player_life').html(this.life);
             this.physics.velocity.y = this.jumpForce / 2;
         }
@@ -97,6 +99,12 @@ define([
             this.physics.velocity.y = this.jumpForce / 2;
         }
     };
+
+
+    Player.prototype.loseLife = function () {
+        this.invulnerable = true;
+        this.life--;
+    }
 
 
     Player.prototype.jump = function () {
@@ -113,6 +121,19 @@ define([
     };
 
 
+    Player.prototype.checkFallDeath = function () {
+        if (this.mesh.position.y < minY.get()) {
+            this.mesh.position.x = this.startPoint.x;
+            this.mesh.position.y = this.startPoint.y;
+
+            this.physics.velocity.x = 0;
+            this.physics.velocity.y = 0;
+
+            this.chargeElapsedTime  = 0;
+            this.loseLife();
+        }
+    };
+
 
     /*=======================================
     =            UPDATES METHODS            =
@@ -124,6 +145,7 @@ define([
         this.updateInputs(deltaTime);
         this.updateRotation(deltaTime);
         this.updateChargeAttack(deltaTime);
+        this.checkFallDeath();
     };
 
 

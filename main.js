@@ -26,10 +26,11 @@ require([
     './scripts/wallsBuilder',
     './scripts/ennemies',
     './scripts/endPoint',
+    './scripts/minY',
 
 
     './scripts/inputs'
-], function (BABYLON, $, camera, player, mainLight, wallsBuilder, ennemies, initEndPoint) {
+], function (BABYLON, $, camera, player, mainLight, wallsBuilder, ennemies, initEndPoint, minY) {
     'use strict';
 
     /*==============================
@@ -72,6 +73,7 @@ require([
 
     function launch (tasks) {
         wallsBuilder(scene, gameData.walls);
+        minY.set(gameData.walls);
 
         initEndPoint(scene, gameData.end);
         player.init(scene, gameData.start, tasks[0].loadedMeshes);

@@ -14,7 +14,7 @@ define([
     var heightOffset       = 1; // how high above the object to place the camera
     var rotationOffset     = 180; // the viewing angle
     var cameraAcceleration = 0.05; // how fast to move
-    var maxCameraSpeed     = 20; // speed limit
+    var maxCameraSpeed     = 1; // speed limit
 
 
         //target point
@@ -70,7 +70,7 @@ define([
         this.targetPoint.position = new BABYLON.Vector3(
             this.targetPoint.position.x + (nextPoint.x - this.targetPoint.position.x) * moveToTargetXRatio,
             this.targetPoint.position.y + (nextPoint.y - this.targetPoint.position.y) * moveToTargetYRatio,
-            this.targetPoint.position.z + (nextPoint.z - this.targetPoint.position.z) * 1
+            this.targetPoint.position.z + (nextPoint.z - this.targetPoint.position.z) * moveToTargetYRatio
         );
 
         if (this.player.physics.onRoof) {
