@@ -20,8 +20,8 @@ define([
         //target point
     var pointVelocityOffsetRatioX = 0.5;
     var pointVelocityOffsetRatioY = 0.1;
-    var moveToTargetXRatio       = 0.2;
-    var moveToTargetYRatio       = 0.2;
+    var moveToTargetXRatio       = 0.1;
+    var moveToTargetYRatio       = 0.1;
     var maxOffset                = 1.5;
 
     var onGroundHeightOffset = 3;

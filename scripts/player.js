@@ -46,7 +46,21 @@ define([
     }
 
 
-    Player.prototype.init = function (scene, start, mesh) {
+    Player.prototype.setChildsMeshes = function (meshes) {
+        for (var i = 0; i < meshes.length; i++) {
+            meshes[i].parent = this.mesh;
+
+            meshes[i].scaling.x = 0.065;
+            meshes[i].scaling.y = 0.065;
+            meshes[i].scaling.z = 0.065;
+
+            meshes[i].rotate(BABYLON.Axis.X, 4.75, BABYLON.Space.LOCAL);
+            meshes[i].position.y -= 0.5;
+        };
+    };
+
+
+    Player.prototype.init = function (scene, start, meshes) {
         var player = this;
 
         this.mesh = BABYLON.Mesh.CreateCylinder("player", height, diameter, diameter, 0, scene);
@@ -54,35 +68,33 @@ define([
         this.mesh.ellipsoid = new BABYLON.Vector3(0.25, 0.5, 0.125);
         this.mesh.ellipsoidOffset = new BABYLON.Vector3(0, 0.5, 0);
 
-        this.childsMeshes = mesh;
 
-        for (var i = 0; i < mesh.length; i++) {
-            mesh[i].parent = this.mesh;
+        this.setChildsMeshes(meshes);
 
-            mesh[i].scaling.x = 0.065;
-            mesh[i].scaling.y = 0.065;
-            mesh[i].scaling.z = 0.065;
-
-            mesh[i].rotate(BABYLON.Axis.X, 4.75, BABYLON.Space.LOCAL);
-            mesh[i].position.y -= 0.5;
-        };
+        this.childsMeshes = meshes;
 
         this.physics = new EntityPhysics(this);
         this.physics.onEntityCollide = function (target) {
             if (target.tag === 'ennemy') {
-                player.onHitEnnemy();
+                player.onHitEnnemy(target);
             }
         }
 
     };
 
 
-    Player.prototype.onHitEnnemy = function () {
-        this.physics.velocity.y = this.jumpForce / 2;
-        if (!this.invulnerable) {
+    Player.prototype.onHitEnnemy = function (ennemy) {
+        if (Math.abs(this.physics.velocity.x) > speedToBeCharging) {
+            ennemy.physics.velocity.x = this.physics.velocity.x * 2;
+        }
+        else if (!this.invulnerable) {
             this.invulnerable = true;
             this.life--;
             $('#debug .player_life').html(this.life);
+            this.physics.velocity.y = this.jumpForce / 2;
+        }
+        else {
+            this.physics.velocity.y = this.jumpForce / 2;
         }
     };
 
@@ -96,7 +108,7 @@ define([
         var ratio = Math.min(1, this.chargeElapsedTime / chargeMaxDuration);
 
         this.chargeElapsedTime = 0;
-        this.physics.velocity.x += chargeMaxVelocity.x * ratio * -this.direction;
+        this.physics.velocity.x = chargeMaxVelocity.x * ratio * -this.direction;
         this.physics.velocity.y += chargeMaxVelocity.y * ratio;
     };
 
@@ -120,12 +132,12 @@ define([
             this.direction = (this.physics.velocity.x > 0) ? -1 : 1;
         }
 
-        if (Math.abs(this.physics.velocity.x) > speedToBeCharging) {
+        if (Math.abs(this.physics.velocity.x) > speedToBeCharging) { // Charge Attack Animation
             this.mesh.rotation.y = 0;
             this.mesh.rotation.z = Math.PI / 2 * -this.direction;
             this.mesh.rotation.x += Math.PI * deltaTime * chargeRotateSpeed;
         }
-        else {
+        else {                                                       // Normal Animation
             this.mesh.rotation.z = 0;
             var targetYRotation = Math.PI / 2 * this.direction;
             if (this.physics.onRoof) {
@@ -185,6 +197,8 @@ define([
             this.launchChargeAttack();
         }
     };
+
+
 
 
     /*==========================================
