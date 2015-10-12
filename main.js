@@ -46,6 +46,8 @@ require([
     var scene;
     var gameData;
     var loader;
+    var tasks  = {};
+    var toLoad = {};
 
     $(function () {
         canvas = document.getElementById("canvas");
@@ -60,9 +62,14 @@ require([
         $.getJSON("assets/levels/level0.json", function(data) {
             gameData = data;
 
-            var meshTask = loader.addMeshTask("ninja", "", "./assets/", "ninja.babylon");
+            toLoad.ninja = loader.addMeshTask("ninja", "", "./assets/", "ninja.babylon");
+            toLoad.rabit = loader.addMeshTask("rabit", "", "./assets/", "rabit.babylone");
 
-            loader.onFinish = function (tasks) {
+            for (var key in toLoad) {
+                toLoad[key].onSuccess = taskOnSuccessCallback(key);
+            }
+
+            loader.onFinish = function () {
                 launch(tasks);
             };
 
@@ -71,13 +78,23 @@ require([
     });
 
 
+    function taskOnSuccessCallback (key) {
+        return function (task) {
+            tasks[key] = task;
+            for (var i = 0; i < task.loadedMeshes.length ; i++) {
+                task.loadedMeshes[i].isVisible = false;
+            }
+        }
+    }
+
+
     function launch (tasks) {
         wallsBuilder(scene, gameData.walls);
         minY.set(gameData.walls);
 
         initEndPoint(scene, gameData.end);
-        player.init(scene, gameData.start, tasks[0].loadedMeshes);
-        ennemies.init(scene, gameData.monsters);
+        player.init(scene, gameData.start, tasks.ninja.loadedMeshes);
+        ennemies.init(scene, gameData.monsters, tasks);
         camera.init(scene, player);
         mainLight.init(scene)
 

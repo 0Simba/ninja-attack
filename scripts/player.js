@@ -3,8 +3,9 @@ define([
     'babylon',
     './inputs',
     './entityPhysics',
+    './entity_capabilities',
     './minY'
-], function ($, BABYLON, inputs, EntityPhysics, minY) {
+], function ($, BABYLON, inputs, EntityPhysics, addEntityCapabilities, minY) {
     'use strict';
 
     /*==============================
@@ -29,10 +30,6 @@ define([
     var thunderboltDuration = 0.2;
 
 
-    var turnSpeedRatio = 0.2;
-
-
-
 
 
     /*===============================
@@ -52,22 +49,27 @@ define([
         this.direction = 1;
 
         this.chargeElapsedTime = 0;
+
+        addEntityCapabilities(this);
     }
 
 
     Player.prototype.setChildsMeshes = function (meshes) {
+        this.childsMeshes = [];
         for (var i = 0; i < meshes.length; i++) {
-            meshes[i].parent = this.mesh;
+            var mesh = meshes[i].clone();
+            mesh.parent = this.mesh;
 
-            meshes[i].scaling.x = 0.065;
-            meshes[i].scaling.y = 0.065;
-            meshes[i].scaling.z = 0.065;
+            mesh.scaling.x = 0.065;
+            mesh.scaling.y = 0.065;
+            mesh.scaling.z = 0.065;
+            mesh.isVisible = true;
 
-            meshes[i].rotate(BABYLON.Axis.X, 4.75, BABYLON.Space.LOCAL);
-            meshes[i].position.y -= 0.5;
+            mesh.rotate(BABYLON.Axis.X, 4.75, BABYLON.Space.LOCAL);
+            mesh.position.y -= 0.5;
+            this.childsMeshes.push(mesh);
         };
 
-        this.childsMeshes = meshes;
     };
 
 
@@ -151,7 +153,7 @@ define([
     Player.prototype.loseLife = function () {
         this.invulnerable = true;
         this.life--;
-    }
+    };
 
 
     Player.prototype.jump = function () {
@@ -199,6 +201,7 @@ define([
 
 
 
+
     /*=======================================
     =            UPDATES METHODS            =
     =======================================*/
@@ -207,33 +210,25 @@ define([
         this.updateInvulnerability(deltaTime);
         this.physics.update(deltaTime);
         this.updateInputs(deltaTime);
-        this.updateRotation(deltaTime);
+        this.updateRotationOverride(deltaTime);
         this.updateChargeAttack(deltaTime);
         this.updateThunderboltAttack(deltaTime);
         this.checkFallDeath();
     };
 
 
-    Player.prototype.updateRotation = function (deltaTime) {
-        if (this.physics.velocity.x !== 0) {
-            this.direction = (this.physics.velocity.x > 0) ? -1 : 1;
-        }
-
+    Player.prototype.updateRotationOverride = function (deltaTime) {
         if (Math.abs(this.physics.velocity.x) > speedToBeCharging) { // Charge Attack Animation
+            if (this.physics.velocity.x !== 0) {
+                this.direction = (this.physics.velocity.x > 0) ? -1 : 1;
+            }
+
             this.mesh.rotation.y = 0;
             this.mesh.rotation.z = Math.PI / 2 * -this.direction;
             this.mesh.rotation.x += Math.PI * deltaTime * chargeRotateSpeed;
         }
-        else {                                                       // Normal Animation
-            this.mesh.rotation.z = 0;
-            var targetYRotation = Math.PI / 2 * this.direction;
-            if (this.physics.onRoof) {
-                targetYRotation *= -1;
-            }
-            this.mesh.rotation.y = this.mesh.rotation.y + (targetYRotation - this.mesh.rotation.y) * turnSpeedRatio;
-
-            var targetXRotation = (this.physics.onRoof) ? Math.PI : 0;
-            this.mesh.rotation.x = this.mesh.rotation.x + (targetXRotation - this.mesh.rotation.x) * turnSpeedRatio;
+        else {
+            this.updateRotation(deltaTime);
         }
     };
 
