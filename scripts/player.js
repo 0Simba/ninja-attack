@@ -56,7 +56,7 @@ define([
 
     Player.prototype.setChildsMeshes = function (meshes) {
         this.childsMeshes = [];
-        for (var i = 0; i < meshes.length; i++) {
+        for (var i = 36; i < 37; i++) {
             var mesh = meshes[i].clone();
             mesh.parent = this.mesh;
 

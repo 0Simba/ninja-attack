@@ -78,10 +78,17 @@ define([
         this.setChildsMeshes();
 
         this.iaValue = data.iaValue;
+        this.scene   = scene;
 
         addLeftRightIA(this);
         addEntityCapabilities(this);
+
+        this.playeWalkAnimation();
     }
+
+    Rabit.prototype.playeWalkAnimation = function () {
+        this.scene.beginAnimation(this.skeleton, 40, 60, true, 0.8);
+    };
 
 
     Rabit.prototype.update = function (deltaTime) {
@@ -92,8 +99,12 @@ define([
 
 
     Rabit.prototype.setChildsMeshes = function () {
-        var meshes = tasks.rabit.loadedMeshes;
-        for (var i = 0; i < meshes.length; i++) {
+        var meshes    = tasks.rabit.loadedMeshes;
+        this.skeleton = tasks.rabit.loadedSkeletons[0].clone();
+
+        this.childsMeshes = [];
+
+        for (var i = 1; i < meshes.length; i++) {
             var mesh = meshes[i].clone();
             mesh.parent = this.mesh;
 
@@ -101,12 +112,13 @@ define([
             mesh.scaling.y = 0.02;
             mesh.scaling.z = 0.02;
             mesh.isVisible = true;
+            mesh.skeleton  = this.skeleton;
 
             mesh.rotation.y = 0;
             mesh.position.y -= 0.5;
-        };
 
-        this.childsMeshes = meshes;
+            this.childsMeshes.push(mesh);
+        };
     };
 
 

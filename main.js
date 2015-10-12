@@ -82,8 +82,13 @@ require([
         return function (task) {
             tasks[key] = task;
             for (var i = 0; i < task.loadedMeshes.length ; i++) {
-                task.loadedMeshes[i].isVisible = false;
+                task.loadedMeshes[i].isVisible = true;
             }
+
+            var skeletons = task.loadedSkeletons;
+            skeletons.forEach(function(s) {
+                scene.beginAnimation(s, 0, 100, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE, 10);
+            });
         }
     }
 
