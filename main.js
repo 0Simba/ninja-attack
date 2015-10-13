@@ -82,7 +82,7 @@ require([
         return function (task) {
             tasks[key] = task;
             for (var i = 0; i < task.loadedMeshes.length ; i++) {
-                task.loadedMeshes[i].isVisible = true;
+                task.loadedMeshes[i].isVisible = false;
             }
 
             var skeletons = task.loadedSkeletons;

@@ -83,10 +83,11 @@ define([
         addLeftRightIA(this);
         addEntityCapabilities(this);
 
-        this.playeWalkAnimation();
+        this.playWalkAnimation();
     }
 
-    Rabit.prototype.playeWalkAnimation = function () {
+
+    Rabit.prototype.playWalkAnimation = function () {
         this.scene.beginAnimation(this.skeleton, 40, 60, true, 0.8);
     };
 
