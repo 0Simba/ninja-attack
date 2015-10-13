@@ -1,8 +1,9 @@
 define([
     'babylon',
     './entityPhysics',
-    './entity_capabilities'
-], function (BABYLON, EntityPhysics, addEntityCapabilities) {
+    './entity_capabilities',
+    './animator'
+], function (BABYLON, EntityPhysics, addEntityCapabilities, Animator) {
     'use strict';
 
 
@@ -77,19 +78,23 @@ define([
         this.physics = new EntityPhysics(this);
         this.setChildsMeshes();
 
-        this.iaValue = data.iaValue;
-        this.scene   = scene;
+        this.iaValue  = data.iaValue;
+        this.scene    = scene;
 
         addLeftRightIA(this);
         addEntityCapabilities(this);
 
-        this.playWalkAnimation();
+        this.initAnimator();
     }
 
 
-    Rabit.prototype.playWalkAnimation = function () {
-        this.scene.beginAnimation(this.skeleton, 40, 60, true, 0.8);
-    };
+    Rabit.prototype.initAnimator = function () {
+        this.animator = new Animator(this.skeleton, this.scene);
+        this.animator.add('walk', 40, 60, true, 0.8);
+        this.animator.play('walk');
+    }
+
+
 
 
     Rabit.prototype.update = function (deltaTime) {
