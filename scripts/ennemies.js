@@ -1,7 +1,8 @@
 define([
     'babylon',
-    './ennemies/rabit'
-], function (BABYLON, Rabit) {
+    './ennemies/rabit',
+    './ennemies/scyther'
+], function (BABYLON, Rabit, Scyther) {
     'use strict';
 
 
