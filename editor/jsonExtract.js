@@ -8,6 +8,7 @@ function jsonExtract () {
     extractStartEndOn(value)
     extractWallOn(value);
     extractMonstersOn(value);
+    extractHotZoneOn(value);
 
     document.getElementById('jsonExtracted').value = JSON.stringify(value);
 }
@@ -70,6 +71,24 @@ function extractWallOn (value) {
             height : height
         });
     }
+}
+
+
+function extractHotZoneOn (value) {
+    console.log(hotZone);
+        
+    value.hotZones = [];
+
+    for (var i = 0; i < hotZone.length; i++) {
+        var currentHotZone = hotZone[i];
+
+        value.hotZones.push({
+            inRadius  : applyRatio(currentHotZone.inSize),
+            outRadius : applyRatio(currentHotZone.outSize),
+            y         : applyRatio(-currentHotZone.top),
+            x         : applyRatio(currentHotZone.left)
+        })
+    };
 }
 
 

@@ -21,9 +21,11 @@ function charger(map){
 	for (var i = 0 ; i < monstre.length ; i++){
 		document.getElementById('espace_jeux').removeChild(document.getElementById('monstre'+i));
 	}
-
-		for (var i = 0 ; i < vie.length ; i++){
+	for (var i = 0 ; i < vie.length ; i++){
 		document.getElementById('espace_jeux').removeChild(document.getElementById('vie'+i));
+	}
+	for (var i = 0 ; i < hotZone.length ; i++){
+		document.getElementById('espace_jeux').removeChild(document.getElementById('hotZone'+i));
 	}
 
 	map = map.replace(/(mur)/g, 'murr');				// On vient transferer les valeur créer dans la fonction dans les tableau de l'editeur (porté variable)
@@ -34,13 +36,15 @@ function charger(map){
 	map = map.replace(/(pokeball)/g, 'pokeballl');
 
 	map = map.replace(/(vie)/g, 'viee');
+	map = map.replace(/(hotZone)/g, 'hotZonee');
 
 	eval(map);
 
-	mur = murr;
-	monstre = monstree;
+	mur      = murr;
+	monstre  = monstree;
 	pokeball = pokeballl;
-	vie = viee;
+	vie      = viee;
+	hotZone  = hotZonee;
 
 	for (var i = 0 ; i < mur.length ; i++){
 		var creerDom = document.createElement("div");
