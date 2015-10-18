@@ -112,6 +112,9 @@ function charger(map){
 		newDom.style.top    = hotZone[i].top  + 'px';
 		newDom.style.left   = hotZone[i].left + 'px';
 		newDom.innerHTML  = '<div class="outHotZone" style="margin-left : -' + (outSize / 2) + 'px; margin-top : -' + (outSize / 2) + 'px; width : ' + outSize + 'px; height: ' + outSize + 'px;"></div><div class="inHotZone" style="margin-left : -' + (inSize / 2) + 'px; margin-top : -' + (inSize / 2) + 'px; width : ' + inSize + 'px; height: ' + inSize + 'px;"></div>';
+		newDom.onclick     = function(){interagir_dom(this.id);};
+		newDom.onmousedown = function(){interagir_dom(this.id, event.clientX, event.clientY);};
+		newDom.onmouseup   = function(){interagir_dom(this.id, event.clientX, event.clientY, true);};
 		document.getElementById('espace_jeux').appendChild(newDom);
 	};
 

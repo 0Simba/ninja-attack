@@ -210,12 +210,15 @@ function poser_objet(posX, posY){ //cette fonction pose et créer les tableau de
 
 		var newDom = document.createElement("div");
 		newDom.className    = 'hotZone';
-		newDom.id           = 'hotZone' + hotZone.length;
+		newDom.id           = 'hotZone' + (hotZone.length - 1);
 		newDom.style.top    = (posY + window.pageYOffset) - 50  +'px';
 		newDom.style.left   = (posX + window.pageXOffset) - 100 +'px';
 		newDom.style.width  = outSize;
 		newDom.style.height = outSize;
 		newDom.innerHTML  = '<div class="outHotZone" style="margin-left : -' + (outSize / 2) + 'px; margin-top : -' + (outSize / 2) + 'px; width : ' + outSize + 'px; height: ' + outSize + 'px;"></div><div class="inHotZone" style="margin-left : -' + (inSize / 2) + 'px; margin-top : -' + (inSize / 2) + 'px; width : ' + inSize + 'px; height: ' + inSize + 'px;"></div>';
+		newDom.onclick     = function(){interagir_dom(this.id);};
+		newDom.onmousedown = function(){interagir_dom(this.id, event.clientX, event.clientY);};
+		newDom.onmouseup   = function(){interagir_dom(this.id, event.clientX, event.clientY, true);};
 		document.getElementById('espace_jeux').appendChild(newDom);
 	}
 }
