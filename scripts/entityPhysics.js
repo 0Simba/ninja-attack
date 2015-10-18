@@ -5,7 +5,7 @@ define([
 
     var gravity = -9.81 * 3;
 
-    function EntityPhysics (parent, onEntityCollide) {
+    function EntityPhysics (parent, onEntityCollide, entityGravity) {
         parent.mesh.parentLogic = parent;
         this.parent   = parent;
         this.velocity = {
@@ -15,6 +15,8 @@ define([
 
         this.frictionY = 0;
         this.frictionX = 3.5;
+
+        this.gravity = (typeof entityGravity === 'number') ? entityGravity : gravity;
 
         this.parent.mesh.checkCollisions = true;
         this.onEntityCollide = onEntityCollide || function () {};
@@ -65,7 +67,7 @@ define([
 
     EntityPhysics.prototype.updatePositionAndVelocityY = function (deltaTime) {
         if (!this.onGround) {
-            this.velocity.y += gravity * deltaTime;
+            this.velocity.y += this.gravity * deltaTime;
         }
 
         this.onGround = false;

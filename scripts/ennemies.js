@@ -8,11 +8,16 @@ define([
 
     var tasks;
 
+    var skinToClass = {
+        'rabit'   : Rabit,
+        'scyther' : Scyther
+    };
+
+
+
     /*===============================
     =            MANAGER            =
     ===============================*/
-
-
 
     function Ennemies () {
         this.list = [];
@@ -37,7 +42,14 @@ define([
 
 
     Ennemies.prototype.create = function (params) {
-        var rabit = new Rabit(params, this.scene, tasks.rabit);
+        var targetClass = skinToClass[params.skin];
+
+        if (!targetClass) {
+            return;
+        }
+
+
+        var rabit = new targetClass(params, this.scene, tasks[params.skin]);
         this.list.push(rabit);
         addEnnemyProperties(rabit)
     };
@@ -54,6 +66,8 @@ define([
     }
 
     var ennemies = new Ennemies;
+
+
 
 
     /*================================

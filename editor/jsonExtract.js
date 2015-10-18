@@ -13,6 +13,14 @@ function jsonExtract () {
 }
 
 
+var editorSkinNameToGameName = {
+    'bulbizare'   : 'rabit',
+    'insecateur'  : 'scyther',
+    'papillusion' : 'butterfree',
+    'aeromite'    : 'venomoth'
+};
+
+
 function extractMonstersOn (value) {
     value.monsters = [];
 
@@ -22,7 +30,7 @@ function extractMonstersOn (value) {
         value.monsters.push({
             x       : applyRatio(monster.left + unit / 2),
             y       : applyRatio(-monster.top - unit / 2),
-            skin    : monster.skin,
+            skin    : editorSkinNameToGameName[monster.skin],
             iaValue : applyRatio(monster.mouvementDroite)
         });
     }
