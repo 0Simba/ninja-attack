@@ -75,18 +75,17 @@ function extractWallOn (value) {
 
 
 function extractHotZoneOn (value) {
-    console.log(hotZone);
-        
     value.hotZones = [];
 
     for (var i = 0; i < hotZone.length; i++) {
         var currentHotZone = hotZone[i];
 
         value.hotZones.push({
-            inRadius  : applyRatio(currentHotZone.inSize),
-            outRadius : applyRatio(currentHotZone.outSize),
+            inRadius  : applyRatio(currentHotZone.inSize  / 2),
+            outRadius : applyRatio(currentHotZone.outSize / 2),
             y         : applyRatio(-currentHotZone.top),
-            x         : applyRatio(currentHotZone.left)
+            x         : applyRatio(currentHotZone.left),
+            zoomRatio : parseFloat(currentHotZone.zoomRatio)
         })
     };
 }

@@ -24,13 +24,14 @@ require([
     './scripts/player',
     './scripts/main_light',
     './scripts/wallsBuilder',
+    './scripts/hot_zones_checker',
     './scripts/ennemies',
     './scripts/endPoint',
     './scripts/minY',
 
 
     './scripts/inputs'
-], function (BABYLON, $, camera, player, mainLight, wallsBuilder, ennemies, initEndPoint, minY) {
+], function (BABYLON, $, camera, player, mainLight, wallsBuilder, hotZonesChecker, ennemies, initEndPoint, minY) {
     'use strict';
 
     /*==============================
@@ -102,6 +103,7 @@ require([
         ennemies.init(scene, gameData.monsters, tasks);
         camera.init(scene, player);
         mainLight.init(scene)
+        hotZonesChecker.init(gameData.hotZones);
 
         engine.runRenderLoop(function() {
             var deltaTime = Math.min(engine.getDeltaTime() / 1000, maxDeltaTime);

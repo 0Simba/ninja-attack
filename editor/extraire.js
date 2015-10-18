@@ -48,6 +48,7 @@ function extraire(){
 		contenue += 'hotZone['+i+'].left = ' + hotZone[i].left +';';
 		contenue += 'hotZone['+i+'].inSize  = ' + hotZone[i].inSize +';';
 		contenue += 'hotZone['+i+'].outSize = ' + hotZone[i].outSize +';';
+		contenue += 'hotZone['+i+'].zoomRatio = ' + hotZone[i].zoomRatio +';';
 	}
 
 	//contenue += document.getElementById('memoire').innerHTML; //rajout des boucle de creation (bug si pas dans le meme fichier que les données tableau)

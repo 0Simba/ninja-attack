@@ -1,6 +1,7 @@
 define([
-    'babylon'
-], function (BABYLON) {
+    'babylon',
+    './hot_zones_checker'
+], function (BABYLON, hotZonesChecker) {
     'use strict';
 
 
@@ -73,6 +74,17 @@ define([
             this.targetPoint.position.z + (nextPoint.z - this.targetPoint.position.z) * moveToTargetYRatio
         );
 
+        var hotZonesCheckedPosition = hotZonesChecker.checkWith(nextPoint, radius);
+
+        if (hotZonesCheckedPosition) {
+            this.targetPoint.position.x = hotZonesCheckedPosition.x;
+            this.targetPoint.position.y = hotZonesCheckedPosition.y;
+            this.camera.radius = hotZonesCheckedPosition.zoom;
+        }
+        else {
+            this.camera.radius = radius;
+        }
+
         if (this.player.physics.onRoof) {
             this.camera.heightOffset = onRoofHeightOffset;
         }
@@ -92,7 +104,7 @@ define([
         var point = new BABYLON.Vector3 (
             this.player.mesh.position.x + xDiff,
             this.player.mesh.position.y + yDiff,
-            this.player.mesh.position.z - Math.abs(xDiff) - Math.abs(yDiff)
+            this.player.mesh.position.z// - Math.abs(xDiff) - Math.abs(yDiff)
         );
 
         return point;

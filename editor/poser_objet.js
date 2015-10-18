@@ -202,11 +202,16 @@ function poser_objet(posX, posY){ //cette fonction pose et créer les tableau de
 		var newHotZone  = new class_objet();
 		var inSize      = prompt('in size');
 		var outSize     = prompt('out size');
-		newHotZone.top =  posY + window.pageYOffset - 50;
-		newHotZone.left = posX + window.pageXOffset - 100;
-		newHotZone.inSize  = inSize;
-		newHotZone.outSize = outSize;
+		var zoomRatio   = prompt('zoom ratio');
+
+		newHotZone.top       =  posY + window.pageYOffset - 50;
+		newHotZone.left      = posX + window.pageXOffset - 100;
+		newHotZone.inSize    = inSize;
+		newHotZone.outSize   = outSize;
+		newHotZone.zoomRatio = zoomRatio;
+
 		hotZone.push(newHotZone);
+
 
 		var newDom = document.createElement("div");
 		newDom.className    = 'hotZone';
