@@ -28,7 +28,7 @@ function clavier(){
 			vie.pop();
 			var obj = document.getElementById("espace_jeux");
 			var old = document.getElementById("vie"+cible);
-			obj.removeChild(old);		
+			obj.removeChild(old);
 		}
 	}
 }

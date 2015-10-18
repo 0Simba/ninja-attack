@@ -89,4 +89,26 @@ cursor : pointer;
 	background-image : url("insecateur.gif");
 }
 
+.hotZone
+{
+	position : absolute;
+	background-color: black;
+	width : 10px;
+	height : 10px;
+}
 
+.inHotZone
+{
+	background-color: red;
+	position        : absolute;
+	border-radius   : 50%;
+	opacity         : 0.5;
+}
+
+.outHotZone
+{
+	background-color: green;
+	position        : absolute;
+	border-radius   : 50%;
+	opacity         : 0.5;
+}
