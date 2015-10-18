@@ -22,12 +22,14 @@ define([
         //charge attack
     var chargeMaxDuration = 1;
     var chargeMaxVelocity = new BABYLON.Vector3(50, 2, 0);
-    var speedToBeCharging = 7;
+    var speedToBeCharging = 10;
     var chargeRotateSpeed = 12;
 
         //thunderbolt
     var thunderboltOffset   = new BABYLON.Vector3(0, 3, -2);
     var thunderboltDuration = 0.2;
+
+    var hitEnnemyEjectForce = 9.5;
 
 
 
@@ -138,13 +140,18 @@ define([
         if (Math.abs(this.physics.velocity.x) > speedToBeCharging) {
             ennemy.physics.velocity.x = this.physics.velocity.x * 2;
         }
-        else if (!this.invulnerable) {
-            this.loseLife();
-            $('#debug .player_life').html(this.life);
-            this.physics.velocity.y = this.jumpForce / 2;
-        }
         else {
             this.physics.velocity.y = this.jumpForce / 2;
+
+            var xDiff = ennemy.mesh.position.x - this.mesh.position.x;
+            var ejectXDirection = (xDiff > 0) ? -1 : 1;
+
+            this.physics.velocity.x   =  ejectXDirection * hitEnnemyEjectForce;
+            ennemy.physics.velocity.x = -ejectXDirection * hitEnnemyEjectForce;
+
+            if (!this.invulnerable) {
+                this.loseLife();
+            }
         }
     };
 
