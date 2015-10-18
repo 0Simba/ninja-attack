@@ -36,6 +36,10 @@ define([
             else if (entityPhysics.currentProcessDirection == 'y') {
                 if (entityPhysics.velocity.y < 0) {
                     entityPhysics.onGround = true;
+                    entityPhysics.lastGroundPosition = {
+                        x : entityPhysics.parent.mesh.position.x,
+                        y : entityPhysics.parent.mesh.position.y
+                    }
                 }
                 else {
                     entityPhysics.onRoof = true;

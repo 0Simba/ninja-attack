@@ -29,7 +29,14 @@ define([
     var thunderboltOffset   = new BABYLON.Vector3(0, 3, -2);
     var thunderboltDuration = 0.2;
 
+
+        // collision
     var hitEnnemyEjectForce = 9.5;
+
+
+        // Fall
+    var motionlessDuration = 0.7;
+    var yOffsetRespawn     = 0.3;
 
 
 
@@ -51,6 +58,8 @@ define([
         this.direction = 1;
 
         this.chargeElapsedTime = 0;
+
+        this.motionlessElapsedTime = motionlessDuration;
 
         addEntityCapabilities(this);
     }
@@ -176,18 +185,29 @@ define([
     };
 
 
-    Player.prototype.checkFallDeath = function () {
+    Player.prototype.checkFallDeath = function (deltaTime) {
         if (this.mesh.position.y < minY.get()) {
-            this.mesh.position.x = this.startPoint.x;
-            this.mesh.position.y = this.startPoint.y;
+            this.placeOnLastGroundPosition();
 
-            this.physics.velocity.x = 0;
-            this.physics.velocity.y = 0;
+            this.chargeElapsedTime     = 0;
+            this.motionlessElapsedTime = 0;
 
-            this.chargeElapsedTime  = 0;
             this.loseLife();
         }
+        else if (this.motionlessElapsedTime < motionlessDuration) {
+            this.placeOnLastGroundPosition();
+            this.motionlessElapsedTime += deltaTime;
+        }
     };
+
+
+    Player.prototype.placeOnLastGroundPosition = function () {
+        this.mesh.position.x = this.physics.lastGroundPosition.x;
+        this.mesh.position.y = this.physics.lastGroundPosition.y + yOffsetRespawn;
+
+        this.physics.velocity.x = 0;
+        this.physics.velocity.y = 0;
+    }
 
 
     Player.prototype.launchThunderbolt = function () {
@@ -219,7 +239,7 @@ define([
         this.updateRotationOverride(deltaTime);
         this.updateChargeAttack(deltaTime);
         this.updateThunderboltAttack(deltaTime);
-        this.checkFallDeath();
+        this.checkFallDeath(deltaTime);
     };
 
 
@@ -240,6 +260,10 @@ define([
 
 
     Player.prototype.updateInputs = function (deltaTime) {
+        if (this.motionlessElapsedTime < motionlessDuration) {
+            return;
+        }
+
         if (inputs.left) {
             this.physics.velocity.x -= acceleration * deltaTime;
         }
