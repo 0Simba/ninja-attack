@@ -10,12 +10,12 @@ define([
     ==============================*/
 
         // babylon camera
-    var startPosition      = new BABYLON.Vector3(0, 0, -20);
+    var startPosition      = new BABYLON.Vector3(0, 0, -3);
     var radius             = 10; // how far from the object to follow
     var heightOffset       = 1; // how high above the object to place the camera
     var rotationOffset     = 180; // the viewing angle
-    var cameraAcceleration = 0.05; // how fast to move
-    var maxCameraSpeed     = 1; // speed limit
+    var cameraAcceleration = 0.07; // how fast to move
+    var maxCameraSpeed     = 2; // speed limit
 
 
         //target point
@@ -26,7 +26,7 @@ define([
     var maxOffset                = 1.5;
 
     var onGroundHeightOffset = 3;
-    var onRoofHeightOffset   = -7;
+    var onRoofHeightOffset   = -6;
     var normalHeightOffset   = 3;
 
 
@@ -44,7 +44,10 @@ define([
 
 
     Camera.prototype.init = function (scene, player) {
-        this.targetPoint = BABYLON.Mesh.CreateSphere("target", 0, 0.3, scene);
+        startPosition.x = player.mesh.position.x;
+        startPosition.y = player.mesh.position.y;
+
+        this.targetPoint = BABYLON.Mesh.CreateSphere("target", 10, 0.3, scene);
         this.player = player;
         this.camera  = new BABYLON.FollowCamera("FollowCam", startPosition, scene);
         this.camera.target = this.targetPoint; // target any mesh or object with a "position" Vector3
@@ -54,6 +57,7 @@ define([
         this.camera.rotationOffset     = rotationOffset;
         this.camera.cameraAcceleration = cameraAcceleration;
         this.camera.maxCameraSpeed     = maxCameraSpeed;
+
 
 
         if (manual) {
@@ -67,21 +71,26 @@ define([
             return;
         }
 
-        var nextPoint = this.lookAtPoint(deltaTime);
-        this.targetPoint.position = new BABYLON.Vector3(
-            this.targetPoint.position.x + (nextPoint.x - this.targetPoint.position.x) * moveToTargetXRatio,
-            this.targetPoint.position.y + (nextPoint.y - this.targetPoint.position.y) * moveToTargetYRatio,
-            this.targetPoint.position.z + (nextPoint.z - this.targetPoint.position.z) * moveToTargetYRatio
-        );
-
-        var hotZonesCheckedPosition = hotZonesChecker.checkWith(nextPoint, radius);
-
+        var hotZonesCheckedPosition = hotZonesChecker.checkWith(this.player.mesh.position, radius);
         if (hotZonesCheckedPosition) {
             this.targetPoint.position.x = hotZonesCheckedPosition.x;
             this.targetPoint.position.y = hotZonesCheckedPosition.y;
             this.camera.radius = hotZonesCheckedPosition.zoom;
+
+            this.targetPoint.position = new BABYLON.Vector3(
+                this.targetPoint.position.x + (hotZonesCheckedPosition.x - this.targetPoint.position.x) * moveToTargetXRatio,
+                this.targetPoint.position.y + (hotZonesCheckedPosition.y - this.targetPoint.position.y) * moveToTargetYRatio,
+                this.targetPoint.position.z + (0 - this.targetPoint.position.z) * moveToTargetYRatio
+            );
         }
         else {
+            var nextPoint = this.lookAtPoint(deltaTime);
+            this.targetPoint.position = new BABYLON.Vector3(
+                this.targetPoint.position.x + (nextPoint.x - this.targetPoint.position.x) * moveToTargetXRatio,
+                this.targetPoint.position.y + (nextPoint.y - this.targetPoint.position.y) * moveToTargetYRatio,
+                this.targetPoint.position.z + (nextPoint.z - this.targetPoint.position.z) * moveToTargetYRatio
+            );
+
             this.camera.radius = radius;
         }
 
