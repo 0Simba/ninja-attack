@@ -21,6 +21,7 @@ var editorSkinNameToGameName = {
 };
 
 
+
 function extractMonstersOn (value) {
     value.monsters = [];
 
@@ -31,7 +32,7 @@ function extractMonstersOn (value) {
             x       : applyRatio(monster.left + unit / 2),
             y       : applyRatio(-monster.top - unit / 2),
             skin    : editorSkinNameToGameName[monster.skin],
-            iaValue : applyRatio(monster.mouvementDroite)
+            iaValue : applyRatio(monster.mouvementDroite || monster.mouvementHaut)
         });
     }
 }

@@ -1,16 +1,20 @@
 define([
     'babylon',
     './ennemies/rabit',
-    './ennemies/scyther'
-], function (BABYLON, Rabit, Scyther) {
+    './ennemies/scyther',
+    './ennemies/butterfree',
+    './ennemies/venomoth'
+], function (BABYLON, Rabit, Scyther, Butterfree, Venomoth) {
     'use strict';
 
 
     var tasks;
 
     var skinToClass = {
-        'rabit'   : Rabit,
-        'scyther' : Scyther
+        'rabit'      : Rabit,
+        'scyther'    : Scyther,
+        'butterfree' : Butterfree,
+        'venomoth'   : Venomoth
     };
 
 
