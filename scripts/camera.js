@@ -71,10 +71,10 @@ define([
             return;
         }
 
-        var hotZonesCheckedPosition = hotZonesChecker.checkWith(this.player.mesh.position, radius);
+        var nextPoint = this.lookAtPoint(deltaTime);
+        var hotZonesCheckedPosition = hotZonesChecker.checkWith(nextPoint, radius);
+
         if (hotZonesCheckedPosition) {
-            this.targetPoint.position.x = hotZonesCheckedPosition.x;
-            this.targetPoint.position.y = hotZonesCheckedPosition.y;
             this.camera.radius = hotZonesCheckedPosition.zoom;
 
             this.targetPoint.position = new BABYLON.Vector3(
@@ -84,7 +84,6 @@ define([
             );
         }
         else {
-            var nextPoint = this.lookAtPoint(deltaTime);
             this.targetPoint.position = new BABYLON.Vector3(
                 this.targetPoint.position.x + (nextPoint.x - this.targetPoint.position.x) * moveToTargetXRatio,
                 this.targetPoint.position.y + (nextPoint.y - this.targetPoint.position.y) * moveToTargetYRatio,

@@ -49,14 +49,17 @@ require([
     var loader;
     var tasks  = {};
     var toLoad = {};
+    var canvasRatio;
 
     $(function () {
         canvas = document.getElementById("canvas");
         engine = new BABYLON.Engine(canvas);
         scene  = new BABYLON.Scene(engine);
         scene.collisionsEnabled = true;
-        // scene.debugLayer.show();
 
+        canvasRatio = canvas.width / canvas.height;
+        resizeCanvas();
+        $(window).resize(resizeCanvas);
 
         loader = new BABYLON.AssetsManager(scene);
 
@@ -112,6 +115,27 @@ require([
             player.update(deltaTime);
             camera.update(deltaTime);
             scene.render();
+        });
+    }
+
+
+
+    function resizeCanvas () {
+        var width  = $(window).width();
+        var height = $(window).height();
+        var windowRatio = width / height;
+
+        if (canvasRatio < windowRatio) {
+            canvas.height = height;
+            canvas.width  = height * canvasRatio;
+        }
+        else {
+            canvas.width  = width;
+            canvas.height = width / canvasRatio;
+        }
+
+        $('#canvas').css({
+            marginLeft : '-' + canvas.width / 2 + 'px'
         });
     }
 });
