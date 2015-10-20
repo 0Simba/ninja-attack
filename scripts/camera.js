@@ -25,9 +25,9 @@ define([
     var moveToTargetYRatio       = 0.1;
     var maxOffset                = 1.5;
 
-    var onGroundHeightOffset = 3;
+    var onGroundHeightOffset = 1;
     var onRoofHeightOffset   = -6;
-    var normalHeightOffset   = 3;
+    var normalHeightOffset   = 1;
 
 
     var manual        = false;

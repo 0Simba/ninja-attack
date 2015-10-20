@@ -1,6 +1,7 @@
 
 var unit  = 36; // pikachu height
 var ratio = 1 / unit;
+var yUpValue = 30;
 
 function jsonExtract () {
     var value = {};
@@ -31,7 +32,7 @@ function extractMonstersOn (value) {
 
         value.monsters.push({
             x       : applyRatio(monster.left + unit / 2),
-            y       : applyRatio(-monster.top - unit / 2),
+            y       : applyRatio(-monster.top - unit / 2) + yUpValue,
             skin    : editorSkinNameToGameName[monster.skin],
             iaValue : applyRatio(monster.mouvementDroite || monster.mouvementHaut)
         });
@@ -42,12 +43,12 @@ function extractMonstersOn (value) {
 function extractStartEndOn (value) {
     value.start = {
         x : applyRatio(document.getElementById('depart').offsetLeft + unit / 2),
-        y : applyRatio(-document.getElementById('depart').offsetTop - unit / 2)
+        y : applyRatio(-document.getElementById('depart').offsetTop - unit / 2) + yUpValue
     };
 
     value.end = {
         x : applyRatio(document.getElementById('fin').offsetLeft + unit / 2),
-        y : applyRatio(-document.getElementById('fin').offsetTop - unit / 2)
+        y : applyRatio(-document.getElementById('fin').offsetTop - unit / 2) + yUpValue
     };
 }
 
@@ -65,7 +66,7 @@ function extractWallOn (value) {
         var x      = applyRatio(wall.left + wall.width / 2);
 
         value.walls.push({
-            y      : y,
+            y      : y + yUpValue,
             x      : x,
             width  : width,
             height : height
@@ -83,7 +84,7 @@ function extractHotZoneOn (value) {
         value.hotZones.push({
             inRadius  : applyRatio(currentHotZone.inSize  / 2),
             outRadius : applyRatio(currentHotZone.outSize / 2),
-            y         : applyRatio(-currentHotZone.top),
+            y         : applyRatio(-currentHotZone.top) + yUpValue,
             x         : applyRatio(currentHotZone.left),
             zoomRatio : parseFloat(currentHotZone.zoomRatio)
         })
