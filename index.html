@@ -7,17 +7,27 @@
     <style type="text/css">
         body {
             background-color : #EAEAEA;
+            margin : 0px;
+            left   : 0px;
+            top    : 0px;
+            overflow: hidden;
         }
         #canvas, .hudOverlay {
             left       : 50%;
-            margin-left: -400px;
+            margin-left: -450px;
             margin-top : 5px;
             position   : absolute;
+
+        }
+        #debug {
+            position : absolute;
+            left     : 0px;
+            top      : 0px;
         }
 
         .hudOverlay {
-            width: 800px;
-            height: 600px;
+            width: 1600px;
+            height: 900px;
             overflow: hidden;
         }
 
@@ -48,8 +58,11 @@
     </style>
 </head>
 <body>
-<canvas id="canvas" width="800" height="600"></canvas>
+<canvas id="canvas" width="1600" height="900"></canvas>
+<!-- <div id="debug">
+player life  : <span class="player_life">0</span><br />
+charge ratio : <span class="charge_ratio">0</span><br />
+</div> -->
 <div class="hudOverlay"></div>
-
 </body>
 </html>

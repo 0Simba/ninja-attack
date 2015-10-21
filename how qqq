@@ -1,0 +1,51 @@
+* [1;34med205c9[m - [1;32m(19 minutes ago)[m [37mexport rabit from ennemies[m [2;37m- 0Simba[m[1;33m (HEAD, origin/master, master)[m
+* [1;34mb5ffee8[m - [1;32m(5 days ago)[m [37madd animator and use it on rabbits[m [2;37m- 0Simba[m[1;33m[m
+* [1;34m759f266[m - [1;32m(5 days ago)[m [37mFix meshes[m [2;37m- 0Simba[m[1;33m[m
+* [1;34m43d6984[m - [1;32m(5 days ago)[m [37manim rabit[m [2;37m- 0Simba[m[1;33m[m
+* [1;34m805065e[m - [1;32m(5 days ago)[m [37mreview loader + add rabit skin[m [2;37m- 0Simba[m[1;33m[m
+* [1;34m2019e95[m - [1;32m(6 days ago)[m [37mthunderbolt is ok[m [2;37m- 0Simba[m[1;33m[m
+* [1;34mef7cdd0[m - [1;32m(7 days ago)[m [37mprepapre thunderbolt[m [2;37m- 0Simba[m[1;33m[m
+* [1;34m437f8d2[m - [1;32m(7 days ago)[m [37madd falling death + fix camera[m [2;37m- 0Simba[m[1;33m[m
+* [1;34ma2fd287[m - [1;32m(7 days ago)[m [37mcan eject ennemy with charge attack[m [2;37m- 0Simba[m[1;33m[m
+* [1;34me3013b1[m - [1;32m(7 days ago)[m [37madd charge attack animation + execution logics[m [2;37m- 0Simba[m[1;33m[m
+* [1;34mc69677d[m - [1;32m(7 days ago)[m [37msmall player refactor[m [2;37m- 0Simba[m[1;33m[m
+* [1;34m3017471[m - [1;32m(7 days ago)[m [37mset player rotation[m [2;37m- 0Simba[m[1;33m[m
+* [1;34m3f7ae06[m - [1;32m(7 days ago)[m [37madd life + invulnerability system[m [2;37m- 0Simba[m[1;33m[m
+* [1;34m2adb2e2[m - [1;32m(7 days ago)[m [37mUpgrade rabbit ennemy[m [2;37m- 0Simba[m[1;33m[m
+* [1;34m105bac5[m - [1;32m(7 days ago)[m [37mreview player hitbox + remove some debug[m [2;37m- 0Simba[m[1;33m[m
+* [1;34mf4697a9[m - [1;32m(7 days ago)[m [37mreview physics and camera[m [2;37m- 0Simba[m[1;33m[m
+* [1;34m55c8ae0[m - [1;32m(8 days ago)[m [37mAdd jump[m [2;37m- 0Simba[m[1;33m[m
+* [1;34m1f4a2bc[m - [1;32m(8 days ago)[m [37mchange ninja size and camera[m [2;37m- 0Simba[m[1;33m[m
+*   [1;34m21a30a5[m - [1;32m(8 days ago)[m [37mMerge branch 'master' of github.com:0Simba/ninja-attack[m [2;37m- 0Simba[m[1;33m[m
+[32m|[m[33m\[m  
+[32m|[m *   [1;34mb94d46f[m - [1;32m(8 days ago)[m [37mMerge remote-tracking branch 'origin/master' into Load_Player[m [2;37m- FloFrancois[m[1;33m (origin/Load_Player)[m
+[32m|[m [34m|[m[35m\[m  
+[32m|[m * [35m|[m [1;34mf5332cc[m - [1;32m(8 days ago)[m [37mIntégration du Ninja OK[m [2;37m- FloFrancois[m[1;33m[m
+* [35m|[m [35m|[m [1;34m8f58e3f[m - [1;32m(8 days ago)[m [37mphysics on player ok[m [2;37m- 0Simba[m[1;33m[m
+* [35m|[m [35m|[m [1;34m96abc8c[m - [1;32m(8 days ago)[m [37mBegin physics[m [2;37m- 0Simba[m[1;33m[m
+[35m|[m [35m|[m[35m/[m  
+[35m|[m[35m/[m[35m|[m   
+[35m|[m [35m|[m * [1;34m610f3cd[m - [1;32m(8 days ago)[m [37madded doors and core menu[m [2;37m- Ttouaty[m[1;33m (origin/Menu)[m
+[35m|[m [35m|[m * [1;34m0a8b870[m - [1;32m(8 days ago)[m [37madded basic game opening[m [2;37m- Ttouaty[m[1;33m (menu)[m
+[35m|[m [35m|[m[35m/[m  
+[35m|[m[35m/[m[35m|[m   
+* [35m|[m   [1;34mff88ead[m - [1;32m(8 days ago)[m [37mMerge branch 'prepareEnnemies'[m [2;37m- 0Simba[m[1;33m[m
+[35m|[m[1;32m\[m [35m\[m  
+[35m|[m [1;32m|[m[35m/[m  
+[35m|[m[35m/[m[1;32m|[m   
+[35m|[m * [1;34m9c014d6[m - [1;32m(8 days ago)[m [37mpolish ennemies script[m [2;37m- 0Simba[m[1;33m (origin/prepareEnnemies)[m
+[35m|[m * [1;34m38e33a5[m - [1;32m(8 days ago)[m [37mload ennemies[m [2;37m- 0Simba[m[1;33m[m
+[35m|[m * [1;34mdf987b0[m - [1;32m(8 days ago)[m [37mEditor export monsters[m [2;37m- 0Simba[m[1;33m[m
+[35m|[m * [1;34m24b4770[m - [1;32m(8 days ago)[m [37madd gitignore[m [2;37m- 0Simba[m[1;33m[m
+[35m|[m * [1;34m1b20ae1[m - [1;32m(8 days ago)[m [37mPrepapre ennemies script[m [2;37m- 0Simba[m[1;33m[m
+* [1;32m|[m [1;34maa6e835[m - [1;32m(8 days ago)[m [37mAjout des assets du ninja[m [2;37m- FloFrancois[m[1;33m[m
+[1;32m|[m[1;32m/[m  
+* [1;34m1f4952d[m - [1;32m(9 days ago)[m [37madd collider adder[m [2;37m- 0Simba[m[1;33m[m
+* [1;34m659284b[m - [1;32m(9 days ago)[m [37mWalls cration and player position is ok[m [2;37m- 0Simba[m[1;33m (origin/levelBuilder)[m
+* [1;34m505b256[m - [1;32m(9 days ago)[m [37mJson loaded[m [2;37m- 0Simba[m[1;33m[m
+* [1;34m7ec64c3[m - [1;32m(9 days ago)[m [37meditor json extractor ok[m [2;37m- 0Simba[m[1;33m (origin/preparePikachuEditor)[m
+* [1;34m3b845ef[m - [1;32m(9 days ago)[m [37mInit editor[m [2;37m- 0Simba[m[1;33m[m
+* [1;34m8315cd4[m - [1;32m(3 weeks ago)[m [37mCamera follow player[m [2;37m- 0Simba[m[1;33m[m
+* [1;34m0dd370c[m - [1;32m(3 weeks ago)[m [37m﻿Add main light[m [2;37m- 0Simba[m[1;33m[m
+* [1;34m7f81a12[m - [1;32m(3 weeks ago)[m [37mAdd very basic architecture + add OIMO[m [2;37m- 0Simba[m[1;33m[m
+* [1;34me58d260[m - [1;32m(3 weeks ago)[m [37mInitial commit[m [2;37m- 0Simba[m[1;33m[m

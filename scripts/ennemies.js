@@ -1,40 +1,75 @@
 define([
-    'babylon'
-], function (BABYLON) {
+    'babylon',
+    './ennemies/rabit',
+    './ennemies/scyther',
+    './ennemies/butterfree',
+    './ennemies/venomoth'
+], function (BABYLON, Rabit, Scyther, Butterfree, Venomoth) {
     'use strict';
+
+
+    var tasks;
+
+    var skinToClass = {
+        'rabit'      : Rabit,
+        'scyther'    : Scyther,
+        'butterfree' : Butterfree,
+        'venomoth'   : Venomoth
+    };
+
 
 
     /*===============================
     =            MANAGER            =
     ===============================*/
 
-
-
     function Ennemies () {
         this.list = [];
     }
 
-    Ennemies.prototype.init = function (scene, datas) {
+    Ennemies.prototype.init = function (scene, datas, _tasks) {
+        tasks = _tasks;
+        this.scene = scene;
+
         for (var i = 0; i < datas.length; i++) {
             var data   = datas[i];
-            var ennemi = new Rabbit (data, scene);
-
-            this.list.push(ennemi);
+            this.create(data);
         };
     };
 
 
     Ennemies.prototype.update = function (deltaTime) {
-        for (var i = 0; i < this.list.length; i++) {
+        for (var i = this.list.length - 1; i >= 0; i--) {
             this.list[i].update(deltaTime);
         };
     };
 
 
     Ennemies.prototype.create = function (params) {
-        var rabbit = new Rabbit(params);
-        this.list.push(rabbit);
+        var targetClass = skinToClass[params.skin];
+
+        if (!targetClass) {
+            return;
+        }
+
+
+        var rabit = new targetClass(params, this.scene, tasks[params.skin]);
+        this.list.push(rabit);
+        addEnnemyProperties(rabit)
     };
+
+
+    Ennemies.prototype.destroy = function (ennemy) {
+        ennemy.mesh.dispose();
+        var ennemyIndex = this.list.indexOf(ennemy);
+
+        if (ennemy !== -1) {
+            ennemy.mesh.dispose();
+            this.list.splice(ennemyIndex, 1);
+        }
+    }
+
+    var ennemies = new Ennemies;
 
 
 
@@ -43,31 +78,16 @@ define([
     =            Entities            =
     ================================*/
 
-
-    function Rabbit (data, scene) {
-        this.mesh = BABYLON.Mesh.CreateSphere("rabbit", 20, 1, scene);
-        this.mesh.position = new BABYLON.Vector3(data.x, data.y, 0);
-
-        this.iaValue = data.iaValue;
-
-        this.ia = leftRightIA;
+    function addEnnemyProperties (ennemy) {
+        ennemy.tag = 'ennemy';
+        ennemy.physics.onEntityCollide = function (entity) {
+            if (entity.tag === 'player attack') {
+                ennemies.destroy(ennemy);
+            }
+        };
     }
 
 
-    Rabbit.prototype.update = function (deltaTime) {
-        this.ia(deltaTime);
-    };
-
-
-
-
-    /*==========================
-    =            IA            =
-    ==========================*/
-
-
-    function leftRightIA (deltaTime) {
-    }
 
 
 
@@ -75,5 +95,5 @@ define([
     =            RETURN singleton du manager           =
     ==================================================*/
 
-    return new Ennemies();
+    return ennemies;
 });

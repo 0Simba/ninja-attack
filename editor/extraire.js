@@ -3,11 +3,11 @@ function extraire(){
 
 	var startX = document.getElementById('depart').offsetLeft;
 	var startY = document.getElementById('depart').offsetTop;
-	
+
 	var endX = document.getElementById('fin').offsetLeft;
 	var endY = document.getElementById('fin').offsetTop;
-	
-	var contenue = 'var mur = new Array();var pokeball = new Array();var monstre = new Array(); var vie = new Array();';
+
+	var contenue = 'var mur = new Array();var pokeball = new Array();var monstre = new Array(); var vie = new Array(); var hotZone = new Array();';
 	contenue += 'var startX = '+startX+';';
 	contenue += 'var startY = '+startY+';';
 	contenue += 'var endX = '+endX+';';
@@ -37,13 +37,20 @@ function extraire(){
 		contenue += 'monstre['+i+'].skin = \''+monstre[i].skin+'\';';
 		contenue += 'creer_'+monstre[i].skin+'(monstre['+i+']);';
 	}
-		for (var i = 0 ; i < vie.length ; i++){
+	for (var i = 0 ; i < vie.length ; i++){
 		contenue += 'vie['+i+'] = new class_objet();'
 		contenue += 'vie['+i+'].top = ' + vie[i].top +';';
 		contenue += 'vie['+i+'].left = ' + vie[i].left +';';
 	}
+	for (var i = 0 ; i < hotZone.length; i++) {
+		contenue += 'hotZone['+i+'] = new class_objet();'
+		contenue += 'hotZone['+i+'].top  = ' + hotZone[i].top +';';
+		contenue += 'hotZone['+i+'].left = ' + hotZone[i].left +';';
+		contenue += 'hotZone['+i+'].inSize  = ' + hotZone[i].inSize +';';
+		contenue += 'hotZone['+i+'].outSize = ' + hotZone[i].outSize +';';
+		contenue += 'hotZone['+i+'].zoomRatio = ' + hotZone[i].zoomRatio +';';
+	}
 
 	//contenue += document.getElementById('memoire').innerHTML; //rajout des boucle de creation (bug si pas dans le meme fichier que les données tableau)
 	document.getElementById('extraire').value = contenue;
-	
 }

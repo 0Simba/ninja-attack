@@ -8,7 +8,7 @@ var decalageY;
 var blocage_debug = false;
 
 function interagir_dom(cible, mouseX, mouseY, fin_deplacement){
-	var id = cible.replace(/[a-z]+/, ''); // on supprime les lettres pour recuperer l'id
+	var id = cible.replace(/[a-zA-Z]+/, ''); // on supprime les lettres pour recuperer l'id
 	var tab = cible.replace(/[0-9]+/, ''); // ici les chiffre
 	if (selection == 'supprimer'){
 		if (tab == 'mur'){
@@ -29,6 +29,10 @@ function interagir_dom(cible, mouseX, mouseY, fin_deplacement){
 		else if (tab == 'vie'){
 			var aSup = vie[id];
 			vie = unset(vie, aSup)
+			document.getElementById('espace_jeux').removeChild(document.getElementById(cible));
+		}
+		else if (tab == "hotZone") {
+			hotZone.splice(id, 1);
 			document.getElementById('espace_jeux').removeChild(document.getElementById(cible));
 		}
 	}

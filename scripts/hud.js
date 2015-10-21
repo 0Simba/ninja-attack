@@ -1,5 +1,5 @@
 define([
-    'jquery',
+    'jquery'
 ], function ($) {
     'use strict';
     var that;
@@ -26,9 +26,9 @@ define([
     };
 
     Hud.prototype.openDoors = function() {
-        $(this.$hud.find(".doors").children().get(0)).finish().animate({left: "-1500px"},1500);
-        $(this.$hud.find(".doors").children().get(1)).finish().animate({left: "1500px"},1500);
-        $(this.$hud.find(".doors").children().get(2)).finish().animate({top: "-1500px"},1500);
+        $(this.$hud.find(".doors").children().get(0)).finish().animate({left: (-this.size.w)+"px"},1500);
+        $(this.$hud.find(".doors").children().get(1)).finish().animate({left: (this.size.w)+"px"},1500);
+        $(this.$hud.find(".doors").children().get(2)).finish().animate({top: (this.size.h)+"px"},1500);
     };
 
     Hud.prototype.closeDoors = function() {
@@ -37,19 +37,19 @@ define([
         $(this.$hud.find(".doors").children().get(2)).finish().animate({top: 0},400);
     };
 
+
+    /** 
+        Main Menu build function 
+        creates and attaches events to the main menu's buttons.
+    */
     Hud.prototype.buildMainMenu = function() {
         this.$hud.append("<div class='menuButtons' style='position:absolute;'></div>");
 
         var launchButton = this.createButton(250,80,25);
         launchButton
         .on("mouseup",function () {
-            that.openDoors(); 
-            $('.menuButtons').children().off();
-            $('.menuButtons').children().each(function (index) {
-                $(this).animate({left: ((index % 2) * 2 - 1) * 1000},600,function () {
-                    $(this).remove();
-                });
-            });
+            // start(); /* START THE GAME (need to reach main.js) */
+            that.fadeMainMenu();
         })
         .on("mousedown",function () {
             that.closeDoors(); 
@@ -70,8 +70,22 @@ define([
         levelSelectButton.find(".content").text("Select Level");
         launchButton.css({left:"-1000px", top:300});
         levelSelectButton.css({left:"-1000px", top:400});
-        launchButton.animate({left:that.size.w * 0.5 - launchButton.width() * 0.5},600);
-        levelSelectButton.animate({left:that.size.w * 0.5 - levelSelectButton.width() * 0.5},600);
+
+        $('.menuButtons').children().each(function (index) {
+            $(this).animate({left:that.size.w * 0.5 - $(this).width() * 0.5},600);
+        });
+    };
+
+    /** 
+        Make the buttons slide left and right && removes' em.
+    */
+    Hud.prototype.fadeMainMenu = function() {
+        $('.menuButtons').children().off();
+        $('.menuButtons').children().each(function (index) {
+            $(this).animate({left: ((index % 2) * 3 - 1) * (that.size.w + $(this).width())},600,function () {
+                $(this).remove();
+            });
+        });
     };
 
     Hud.prototype.createButton = function(width,height,angle) {
