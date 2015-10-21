@@ -54,25 +54,24 @@ define([
         .on("mousedown",function () {
             that.closeDoors(); 
         });
-        this.$hud.find(".menuButtons").append(launchButton);
-        
-        launchButton.find(".content").text("LAUNCH !");
-        launchButton.css({left:"-1000px", top:300});
-        launchButton.animate({left:that.size.w * 0.5 - launchButton.width() * 0.5},600);
 
-
-        var quitButton = this.createButton(250,80,-25);
-        quitButton.on("mouseup",function () {
-            $('html').prepend("<h1 style='color:red;'>FUCK YOU !!!!</h1>");
+        var levelSelectButton = this.createButton(250,80,25);
+        levelSelectButton
+        .on("mouseup",function () {
+            that.buildLevelSelectMenu();
+        })
+        .on("mousedown",function () {
+            that.closeDoors(); 
         });
-
-        this.$hud.find(".menuButtons").append(quitButton);
+        this.$hud.find(".menuButtons").append(launchButton);
+        this.$hud.find(".menuButtons").append(levelSelectButton);
         
-        quitButton.find(".content").text("DON'T CLICK ME !");
-        quitButton.css({left:"1000px", top:450});
-        quitButton.animate({left:that.size.w * 0.5 - quitButton.width() * 0.5},600);
-        
-
+        launchButton.find(".content").text("Play");
+        levelSelectButton.find(".content").text("Select Level");
+        launchButton.css({left:"-1000px", top:300});
+        levelSelectButton.css({left:"-1000px", top:400});
+        launchButton.animate({left:that.size.w * 0.5 - launchButton.width() * 0.5},600);
+        levelSelectButton.animate({left:that.size.w * 0.5 - levelSelectButton.width() * 0.5},600);
     };
 
     Hud.prototype.createButton = function(width,height,angle) {
@@ -101,6 +100,9 @@ define([
         this.$hud.children().remove();
     };
 
+    Hud.prototype.buildLevelSelectMenu = function() {
+        console.log("building level select menu");
+    };
     
 
     /*==========================================
