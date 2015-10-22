@@ -66,7 +66,7 @@ require([
 
         loader = new BABYLON.AssetsManager(scene);
 
-        $.getJSON("assets/levels/level0.json", function(data) {
+        $.getJSON("assets/levels/level2.json", function(data) {
             gameData = data;
 
             toLoad.ninja = loader.addMeshTask("ninja", "", "./assets/", "ninja.babylon");
