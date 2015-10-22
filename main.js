@@ -103,8 +103,6 @@ require([
     function launch (tasks) {
         addSkybox(scene);
         wallsBuilder(scene, gameData.walls);
-        collectiblesBuilder.build(scene, gameData.collectibles);
-        lifesBuilder.build(scene, gameData.lifes);
         minY.set(gameData.walls);
 
         initEndPoint(scene, gameData.end);
@@ -113,6 +111,8 @@ require([
         camera.init(scene, player);
         mainLight.init(scene)
         hotZonesChecker.init(gameData.hotZones);
+        collectiblesBuilder.build(scene, gameData.collectibles);
+        lifesBuilder.build(scene, gameData.lifes);
 
         engine.runRenderLoop(function() {
             var deltaTime = Math.min(engine.getDeltaTime() / 1000, maxDeltaTime);
