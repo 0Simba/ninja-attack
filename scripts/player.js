@@ -5,8 +5,9 @@ define([
     './entityPhysics',
     './entity_capabilities',
     './minY',
-    './animator'
-], function ($, BABYLON, inputs, EntityPhysics, addEntityCapabilities, minY, Animator) {
+    './animator',
+    './hud'
+], function ($, BABYLON, inputs, EntityPhysics, addEntityCapabilities, minY, Animator, hud) {
     'use strict';
 
     /*==============================
@@ -145,6 +146,7 @@ define([
         this.isDoingThuderbolt      = false;
         this.thunderbolt = {};
         this.thunderbolt.elapsedTime = 0;
+        this.thunderbolt.rechargeTime = 0;
 
         this.thunderbolt.spawnPoint          = BABYLON.Mesh.CreateSphere("thunderboltSpawnPoint", 0, 0.2, scene);;
         this.thunderbolt.spawnPoint.position = thunderboltOffset;
@@ -203,6 +205,7 @@ define([
     Player.prototype.loseLife = function () {
         this.invulnerable = true;
         this.life--;
+        hud.updateHealth((this.life / this.maxLife) * 100);
     };
 
 
@@ -251,6 +254,7 @@ define([
     Player.prototype.launchThunderbolt = function () {
         this.isDoingThuderbolt       = true;
         this.thunderbolt.elapsedTime = 0;
+        this.thunderbolt.rechargeTime += 50;
         this.thunderbolt.mesh.checkCollisions = true;
         this.thunderbolt.particleSystem.start();
     };
@@ -349,12 +353,14 @@ define([
     Player.prototype.updateChargeAttack = function (deltaTime) {
         if (inputs.space) {
             this.chargeElapsedTime += deltaTime;
-
+            console.log()
+            hud.updateCharge(Math.min((this.chargeElapsedTime / chargeMaxDuration) * 100,100));
             var ratio = Math.min(1, this.chargeElapsedTime / chargeMaxDuration);
             $('#debug .charge_ratio').html(ratio);
         }
         else if (this.chargeElapsedTime > 0) {
             this.launchChargeAttack();
+            hud.updateCharge(0);
         }
     };
 
@@ -362,7 +368,6 @@ define([
     Player.prototype.updateThunderboltAttack = function (deltaTime) {
         if (this.isDoingThuderbolt) {
             this.thunderbolt.elapsedTime += deltaTime;
-
             if (this.thunderbolt.elapsedTime > thunderboltDuration) {
                 this.stopThunderbolt();
             }
@@ -370,6 +375,9 @@ define([
         if (inputs.bottom && (this.physics.onGround || this.physics.onRoof)) {
             this.launchThunderbolt();
         }
+        this.thunderbolt.rechargeTime -= this.thunderbolt.rechargeTime <= 0 ? 0 : 1;
+        hud.updateThunder(this.thunderbolt.rechargeTime);
+
     };
 
 

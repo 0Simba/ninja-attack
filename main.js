@@ -29,12 +29,11 @@ require([
     './scripts/lifes_builder',
     './scripts/hot_zones_checker',
     './scripts/ennemies',
+    './scripts/hud',
     './scripts/endPoint',
     './scripts/minY',
-
-
     './scripts/inputs'
-], function (BABYLON, $, camera, player, addSkybox, mainLight, wallsBuilder, collectiblesBuilder, lifesBuilder, hotZonesChecker, ennemies, initEndPoint, minY) {
+], function (BABYLON, $, camera, player, addSkybox, mainLight, wallsBuilder, collectiblesBuilder, lifesBuilder, hotZonesChecker, ennemies, hud, initEndPoint, minY) {
     'use strict';
 
     /*==============================
@@ -45,25 +44,28 @@ require([
 
 
 
-    var canvas;
-    var engine;
-    var scene;
-    var gameData;
-    var loader;
-    var tasks  = {};
-    var toLoad = {};
-    var canvasRatio;
+    var canvas,
+        engine,
+        scene,
+        gameData,
+        loader,
+        tasks  = {},
+        toLoad = {},
+        canvasRatio;
 
     $(function () {
         canvas = document.getElementById("canvas");
         engine = new BABYLON.Engine(canvas);
         scene  = new BABYLON.Scene(engine);
+
         scene.collisionsEnabled = true;
 
         canvasRatio = canvas.width / canvas.height;
         resizeCanvas();
         $(window).resize(resizeCanvas);
 
+        hud.init(canvas);
+        hud.playButtonCallback = startLevel;
         loader = new BABYLON.AssetsManager(scene);
 
         $.getJSON("assets/levels/level2.json", function(data) {
@@ -77,7 +79,8 @@ require([
             }
 
             loader.onFinish = function () {
-                launch(tasks);
+                hud.createBGDoors();
+                hud.buildMainMenu();
             };
 
             loader.load();
@@ -97,6 +100,17 @@ require([
                 scene.beginAnimation(s, 0, 100, BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE, 10);
             });
         }
+    }
+
+    /** public function to be used in hud.js 
+        
+        @param string level => key of the level to launch (unused for now)
+    
+    */
+    function startLevel (level) {
+        hud.openDoors();
+        hud.buildInGameHud();
+        launch(tasks);
     }
 
 
@@ -142,6 +156,12 @@ require([
 
         $('#canvas').css({
             marginLeft : '-' + canvas.width / 2 + 'px'
+        });
+
+        $('.hudOverlay').css({
+            width       : canvas.width,
+            height      : canvas.height,
+            marginLeft  : '-' + canvas.width / 2 + 'px'
         });
     }
 });
