@@ -4,7 +4,6 @@ define([
 ], function (BABYLON, hotZonesChecker) {
     'use strict';
 
-
     /*==============================
     =            CONFIG            =
     ==============================*/
