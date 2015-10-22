@@ -33,9 +33,11 @@ define([
     };
 
     Hud.prototype.closeDoors = function() {
-        $(".door-left").finish().animate({left: (-that.size.w * 0.5625)},400);
-        $(".door-right").finish().animate({left: (that.size.w * 0.5625)},400);
-        $(".door-top").finish().animate({top: 0},400);
+        $(".door-left").finish().animate({left: 0},400);
+        $(".door-right").finish().animate({left: 0},400);
+        $(".door-top").finish().animate({top: 0},400,function () {
+            $(".gameoverFade").remove();
+        });
     };
 
 
@@ -45,7 +47,7 @@ define([
     */
     Hud.prototype.buildMainMenu = function() {
         $(".menuButtons").remove();
-        this.$hud.append("<div class='menuButtons' style='position:absolute; width: 100%;'></div>");
+        this.$hud.append("<div class='menuButtons' style='position:absolute; width: 100%; height:100%;'></div>");
 
         var launchButton = this.createButton(250,80,25);
         launchButton
@@ -63,7 +65,7 @@ define([
         })
         .on("mousedown",function () {
         });
-        var $mainTitle = $("<h1 class='mainTitle'>Ninja Attack</h1>").css({WebkitFilter: "drop-shadow(12px 7px 7px rgba(0,0,0,.5))", color:"brown", fontSize: "100px", fontFamily: "fantasy", position:"relative", textAlign:"center", margin:"auto", top:-500});
+        var $mainTitle = $("<h1 class='mainTitle'>Ninja Attack</h1>").css({WebkitFilter: "drop-shadow(12px 7px 7px rgba(0,0,0,.5))", color:"brown", fontSize: "80px", fontFamily: "fantasy", position:"relative", textAlign:"center", margin:"auto", top:-500});
         
         this.$hud.find(".menuButtons").prepend($mainTitle);
         this.$hud.find(".menuButtons").append(launchButton);
@@ -71,12 +73,12 @@ define([
         
         launchButton.find(".content").text("Play");
         levelSelectButton.find(".content").text("Select Level");
-        launchButton.css({left:"-1000px", top:600});
-        levelSelectButton.css({left:"-1000px", top:700});
+        launchButton.css({left:"-1000px", top: "60%"});
+        levelSelectButton.css({left:"-1000px", top:"70%"});
 
-       $('.mainTitle').animate({top:200},600);
+       $('.mainTitle').animate({top:"20%"},600);
         $('.menuButtons').children().each(function (index) {
-            $(this).animate({left:that.size.w * 0.5 - $(this).width() * 0.5},600);
+            $(this).animate({left:$("#canvas").width()*0.5 - $(this).width() * 0.5},600);
         });
     };
 
@@ -103,7 +105,7 @@ define([
             WebkitTransform: "skew("+angle+"deg)",
             MozTransform: "skew("+angle+"deg)",
             boxShadow: "2px 3px 10px #000",
-            background: "-webkit-gradient(linear, left top, left bottom, color-stop(0%,#b7deed), color-stop(50%,#71ceef), color-stop(51%,#21b4e2), color-stop(100%,#b7deed))"
+            background: "-webkit-gradient(linear, left top, left bottom, color-stop(0%,#a90329), color-stop(44%,#8f0222), color-stop(100%,#6d0019))"
         });
         var content = $("<p class='content'></p>").css({
             width: "100%",
@@ -177,8 +179,19 @@ define([
         }
         else
         {
+            this.$hud.find(".thunderBar2").css({height: "0"})
             this.$hud.find(".thunderBar").css({height: percentage+"%"})
         }
+    };
+
+    Hud.prototype.gameoverFade = function() {
+        var fadeOverlay = $('<div class="gameoverFade" style="position:absolute; width: 100%; height: 100%; background-color:black; opacity:0"></div>')
+
+        this.$hud.find(".doors").append(fadeOverlay);
+        this.closeDoors();
+        fadeOverlay.delay(400).animate({opacity: 1},700, function () {
+           that.buildMainMenu(); 
+        });
     };
     
 

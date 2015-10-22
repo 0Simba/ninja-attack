@@ -131,6 +131,12 @@ require([
         lifesBuilder.build(scene, gameData.lifes);
 
         engine.runRenderLoop(function() {
+            if (player.dead) {
+                engine.stopRenderLoop();
+                destroy();
+                console.log("ded")
+                return;
+            }
             var deltaTime = Math.min(engine.getDeltaTime() / 1000, maxDeltaTime);
 
             ennemies.update(deltaTime);
@@ -140,6 +146,11 @@ require([
         });
     }
 
+
+    function destroy () {
+        scene.dispose();
+
+    }
 
 
     function resizeCanvas () {
