@@ -213,6 +213,7 @@ define([
             this.kill();
     };
 
+
     Player.prototype.kill = function() {
         this.dead = true;
         hud.gameoverFade();
@@ -366,7 +367,7 @@ define([
 
 
     Player.prototype.updateChargeAttack = function (deltaTime) {
-        if (inputs.space) {
+        if (inputs.space || inputs.a) {
             this.chargeElapsedTime += deltaTime;
             console.log()
             hud.updateCharge(Math.min((this.chargeElapsedTime / chargeMaxDuration) * 100,100));
@@ -387,7 +388,7 @@ define([
                 this.stopThunderbolt();
             }
         }
-        if (inputs.bottom && (this.physics.onGround || this.physics.onRoof) && this.thunderbolt.rechargeTime <= 2 && (this.thunderbolt.elapsedTime > thunderboltMinDelay)) {
+        if ((inputs.bottom || inputs.z)&& (this.physics.onGround || this.physics.onRoof) && this.thunderbolt.rechargeTime <= 2 && (this.thunderbolt.elapsedTime > thunderboltMinDelay)) {
             this.launchThunderbolt();
         }
         this.thunderbolt.rechargeTime -= this.thunderbolt.rechargeTime <= 0 ? 0 : deltaTime*0.5;
