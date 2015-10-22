@@ -4,8 +4,9 @@ define([
     './inputs',
     './entityPhysics',
     './entity_capabilities',
-    './minY'
-], function ($, BABYLON, inputs, EntityPhysics, addEntityCapabilities, minY) {
+    './minY',
+    './animator'
+], function ($, BABYLON, inputs, EntityPhysics, addEntityCapabilities, minY, Animator) {
     'use strict';
 
     /*==============================
@@ -99,14 +100,32 @@ define([
         this.setChildsMeshes(meshes);
         this.initThunderboltAttack(scene);
 
+        //this.initAnimator();
+
         this.physics = new EntityPhysics(this);
         this.physics.onEntityCollide = function (target) {
             if (target.tag === 'ennemy') {
                 player.onHitEnnemy(target);
             }
         }
-
     };
+
+/*
+    Player.prototype.initAnimator = function () {
+        this.animator = new Animator(this.skeleton, this.scene);
+        this.animator.add('Idle', 0, 39, true, 0.8);
+        this.animator.add('Walk', 40, 85, true, 0.8);
+        this.animator.add('Run', 86, 106, true, 0.8);
+        this.animator.add('BackStrafe', 107, 177, true, 0.8);
+        this.animator.add('LeftStrafe', 178, 208, true, 0.8);
+        this.animator.add('RightStrafe', 209, 240, true, 0.8);
+        this.animator.add('Jump', 241, 276, true, 0.8);
+        this.animator.add('Slide', 277, 307, true, 0.8);
+        this.animator.add('Swim', 308, 350, true, 0.8);
+
+        this.animator.play('Idle');
+    };
+    */
 
 
     Player.prototype.initThunderboltAttack = function (scene) {
