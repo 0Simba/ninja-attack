@@ -59,9 +59,6 @@ define([
 
 
 
-        if (manual) {
-            this.camera.attachControl(canvas);
-        }
     }
 
 
