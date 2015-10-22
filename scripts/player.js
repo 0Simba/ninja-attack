@@ -40,6 +40,7 @@ define([
     var yOffsetRespawn     = 0.3;
 
 
+    var maxLife = 3;
 
 
     /*===============================
@@ -55,7 +56,8 @@ define([
         this.invulnerableElapsedTime = 0
 
         this.tag       = 'player';
-        this.life      = 3;
+        this.life      = maxLife;
+        this.maxLife   = maxLife;
         this.direction = 1;
 
         this.chargeElapsedTime = 0;
@@ -89,10 +91,11 @@ define([
 
         this.startPoint = start;
 
-        this.mesh = BABYLON.Mesh.CreateCylinder("player", height, diameter, diameter, 0, scene);
+        this.mesh = BABYLON.Mesh.CreateCylinder("player", height, diameter, diameter, 10, scene);
         this.mesh.position  = new BABYLON.Vector3(start.x, start.y, 0);
         this.mesh.ellipsoid = new BABYLON.Vector3(0.25, 0.5, 0.125);
         this.mesh.ellipsoidOffset = new BABYLON.Vector3(0, 0.5, 0);
+        this.mesh.isVisible = false;
 
         this.setChildsMeshes(meshes);
         this.initThunderboltAttack(scene);

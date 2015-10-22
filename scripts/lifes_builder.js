@@ -1,6 +1,7 @@
 define([
-    'babylon'
-], function (BABYLON) {
+    'babylon',
+    './player'
+], function (BABYLON, player) {
     'use strict';
 
 
@@ -19,14 +20,25 @@ define([
 
 
 
-
     function Lifes (scene, data) {
         var material = new BABYLON.StandardMaterial("material", scene);
         material.emissiveColor = new BABYLON.Color3(0, 1, 1);
 
+        var that = this;
+
         this.mesh = BABYLON.Mesh.CreateCylinder("life", 0.3, 0.3, 0.3, 20, scene);
         this.mesh.position = new BABYLON.Vector3(data.x, data.y, 0);
         this.mesh.material = material;
+
+        this.mesh.actionManager = new BABYLON.ActionManager(scene);
+        this.mesh.actionManager.registerAction(
+            new BABYLON.ExecuteCodeAction({ 'trigger' : BABYLON.ActionManager.OnIntersectionEnterTrigger, parameter : player.mesh}, function () {
+                if (player.life < player.maxLife) {
+                    player.life++;
+                    that.mesh.dispose();
+                }
+            }
+        ));
     }
 
     return new LifesBuilder();
