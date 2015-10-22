@@ -59,6 +59,7 @@ require([
         engine = new BABYLON.Engine(canvas);
         scene  = new BABYLON.Scene(engine);
         scene.collisionsEnabled = true;
+        // scene.debugLayer.show();
 
         canvasRatio = canvas.width / canvas.height;
         resizeCanvas();
@@ -69,8 +70,9 @@ require([
         $.getJSON("assets/levels/level0.json", function(data) {
             gameData = data;
 
-            toLoad.ninja = loader.addMeshTask("ninja", "", "./assets/", "ninja.babylon");
-            toLoad.rabit = loader.addMeshTask("rabit", "", "./assets/", "rabit.babylone");
+            toLoad.ninja      = loader.addMeshTask("ninja", "", "./assets/", "ninja.babylon");
+            toLoad.rabit      = loader.addMeshTask("rabit", "", "./assets/", "rabit.babylone");
+            toLoad.butterfree = loader.addMeshTask("butterfree", "", "./assets/", "blue.babylon");
 
             for (var key in toLoad) {
                 toLoad[key].onSuccess = taskOnSuccessCallback(key);

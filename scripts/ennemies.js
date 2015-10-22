@@ -18,9 +18,11 @@ define([
     };
 
     var editorSkinToGameSkin = {
-        'rabit'   : 'rabit',
-        'scyther' : 'rabit'
-    }
+        'rabit'      : 'rabit',
+        'scyther'    : 'rabit',
+        'butterfree' : 'butterfree',
+        'venomoth'   : 'butterfree'
+    };
 
 
     /*===============================
