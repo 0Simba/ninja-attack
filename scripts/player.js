@@ -24,7 +24,7 @@ define([
     var chargeMaxDuration = 1;
     var chargeMaxVelocity = new BABYLON.Vector3(50, 2, 0);
     var speedToBeCharging = 10;
-    var chargeRotateSpeed = 12;
+    var chargeRotateSpeed = 3;
 
         //thunderbolt
     var thunderboltOffset   = new BABYLON.Vector3(0, 3, -2);
@@ -39,6 +39,9 @@ define([
     var motionlessDuration = 0.7;
     var yOffsetRespawn     = 0.3;
 
+    // animations
+    var walkSpeed = 0.3;
+    var runSpeed  = 3.4;
 
     var maxLife = 3;
 
@@ -70,10 +73,13 @@ define([
 
     Player.prototype.setChildsMeshes = function (meshes) {
         this.childsMeshes = [];
-        for (var i = 0; i < meshes.length; i++) {
-            var mesh = meshes[i].clone();
+        this.skeleton = meshes.loadedSkeletons[0].clone();
+
+        for (var i = 0; i < meshes.loadedMeshes.length; i++) {
+            var mesh = meshes.loadedMeshes[i].clone();
             mesh.parent = this.mesh;
 
+            mesh.skeleton  = this.skeleton;
             mesh.scaling.x = 0.065;
             mesh.scaling.y = 0.065;
             mesh.scaling.z = 0.065;
@@ -101,7 +107,7 @@ define([
         this.setChildsMeshes(meshes);
         this.initThunderboltAttack(scene);
 
-        // this.initAnimator();
+
 
         this.physics = new EntityPhysics(this);
         this.physics.onEntityCollide = function (target) {
@@ -109,21 +115,29 @@ define([
                 player.onHitEnnemy(target);
             }
         }
+
+
+        this.initAnimator();
     };
 
-    Player.prototype.initAnimator = function () {
-        this.animator = new Animator(this.skeleton, this.scene);
-        this.animator.add('Idle', 0, 39, true, 0.8);
-        this.animator.add('Walk', 40, 85, true, 0.8);
-        this.animator.add('Run', 86, 106, true, 0.8);
-        this.animator.add('BackStrafe', 107, 177, true, 0.8);
-        this.animator.add('LeftStrafe', 178, 208, true, 0.8);
-        this.animator.add('RightStrafe', 209, 240, true, 0.8);
-        this.animator.add('Jump', 241, 276, true, 0.8);
-        this.animator.add('Slide', 277, 307, true, 0.8);
-        this.animator.add('Swim', 308, 350, true, 0.8);
 
-        this.animator.play('Idle');
+    Player.prototype.initAnimator = function () {
+        var that = this;
+
+        this.animator = new Animator(this.skeleton, this.scene);
+        this.animator.add('idle', 0, 39, true, 1);
+        this.animator.add('walk', 40, 85, true, 1);
+        this.animator.add('run', 86, 106, true, 1);
+        this.animator.add('backStrafe', 107, 177, true, 1);
+        this.animator.add('leftStrafe', 178, 208, true, 1);
+        this.animator.add('rightStrafe', 209, 240, true, 1);
+        this.animator.add('jump', 241, 276, false, 2, function () {
+            that.animator.play('idle');
+        });
+        this.animator.add('slide', 277, 307, true, 1);
+        this.animator.add('swim', 308, 350, true, 1);
+
+        this.animator.play('run');
     };
 
 
@@ -150,10 +164,10 @@ define([
         this.thunderbolt.particleSystem.direction1  = new BABYLON.Vector3(-0.2, -1, 0);
         this.thunderbolt.particleSystem.direction2  = new BABYLON.Vector3(0.2, -1, 0);
         this.thunderbolt.particleSystem.minEmitBox  = new BABYLON.Vector3(-0.4, 0, 0);
-        this.thunderbolt.particleSystem.maxEmitBox  = new BABYLON.Vector3(0.4, -2, 0);
+        this.thunderbolt.particleSystem.maxEmitBox  = new BABYLON.Vector3(0.4, -2.5, 0);
         this.thunderbolt.particleSystem.minSize     = 0.1;
         this.thunderbolt.particleSystem.maxSize     = 0.2;
-        this.thunderbolt.particleSystem.emitRate    = 100;
+        this.thunderbolt.particleSystem.emitRate    = 130;
         this.thunderbolt.particleSystem.updateSpeed = 0.5;
         this.thunderbolt.particleSystem.minLifeTime = 0.8;
         this.thunderbolt.particleSystem.maxLifeTime = 1;
@@ -194,6 +208,9 @@ define([
 
     Player.prototype.jump = function () {
         this.physics.velocity.y = this.jumpForce;
+        if (!this.physics.onRoof) {
+            this.animator.play('jump');
+        }
     };
 
 
@@ -261,6 +278,7 @@ define([
         this.updateChargeAttack(deltaTime);
         this.updateThunderboltAttack(deltaTime);
         this.checkFallDeath(deltaTime);
+        this.updateAnimations();
     };
 
 
@@ -285,6 +303,14 @@ define([
             return;
         }
 
+        if (inputs.up && (this.physics.onGround || this.physics.onRoof)) {
+            this.jump();
+        }
+
+        if (this.isDoingThuderbolt) {
+            return;
+        }
+
         if (inputs.left) {
             this.physics.velocity.x -= acceleration * deltaTime;
             this.forceDirection = 1;
@@ -294,9 +320,6 @@ define([
             this.forceDirection = -1;
         } else {
             this.forceDirection = 0;
-        }
-        if (inputs.up && (this.physics.onGround || this.physics.onRoof)) {
-            this.jump();
         }
     };
 
@@ -336,7 +359,6 @@ define([
     };
 
 
-
     Player.prototype.updateThunderboltAttack = function (deltaTime) {
         if (this.isDoingThuderbolt) {
             this.thunderbolt.elapsedTime += deltaTime;
@@ -345,12 +367,33 @@ define([
                 this.stopThunderbolt();
             }
         }
-        if (inputs.bottom && this.physics.onGround) {
+        if (inputs.bottom && (this.physics.onGround || this.physics.onRoof)) {
             this.launchThunderbolt();
         }
     };
 
 
+    Player.prototype.updateAnimations = function () {
+        if (this.animator.currentAnimation === 'jump') {
+            return;
+        }
+
+        if (Math.abs(this.physics.velocity.x) > speedToBeCharging) {
+            this.animator.play('slide');
+        }
+        else if (this.isDoingThuderbolt) {
+            this.animator.play('backStrafe');
+        }
+        else if (Math.abs(this.physics.velocity.x) > runSpeed) {
+            this.animator.play('run');
+        }
+        else if (Math.abs(this.physics.velocity.x) > walkSpeed) {
+            this.animator.play('walk');
+        }
+        else {
+            this.animator.play('idle');
+        }
+    };
 
 
     /*==========================================
