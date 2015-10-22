@@ -3,6 +3,11 @@ var unit  = 36; // pikachu height
 var ratio = 1 / unit;
 var yUpValue = 30;
 
+var pokeballSize = 25;
+var lifeSize     = 40;
+var endWidth     = 80;
+var endHeight    = 58;
+
 function jsonExtract () {
     var value = {};
 
@@ -10,6 +15,8 @@ function jsonExtract () {
     extractWallOn(value);
     extractMonstersOn(value);
     extractHotZoneOn(value);
+    extractCollectiblesOn(value);
+    extractLifesOn(value);
 
     document.getElementById('jsonExtracted').value = JSON.stringify(value);
 }
@@ -47,8 +54,8 @@ function extractStartEndOn (value) {
     };
 
     value.end = {
-        x : applyRatio(document.getElementById('fin').offsetLeft + unit / 2),
-        y : applyRatio(-document.getElementById('fin').offsetTop - unit / 2) + yUpValue
+        x : applyRatio(document.getElementById('fin').offsetLeft + endWidth  / 2),
+        y : applyRatio(-document.getElementById('fin').offsetTop - endHeight / 2) + yUpValue
     };
 }
 
@@ -88,6 +95,35 @@ function extractHotZoneOn (value) {
             x         : applyRatio(currentHotZone.left),
             zoomRatio : parseFloat(currentHotZone.zoomRatio)
         })
+    };
+}
+
+
+
+function extractCollectiblesOn (value) {
+    value.collectibles = [];
+
+    for (var i = 0; i < pokeball.length; i++) {
+        var collectible = pokeball[i];
+
+        value.collectibles.push({
+            x : applyRatio(collectible.left + pokeballSize / 2),
+            y : applyRatio(-collectible.top - pokeballSize / 2) + yUpValue,
+        });
+    };
+}
+
+
+function extractLifesOn (value) {
+    value.lifes = [];
+
+    for (var i = 0; i < vie.length; i++) {
+        var collectible = vie[i];
+
+        value.lifes.push({
+            x : applyRatio(collectible.left + lifeSize / 2),
+            y : applyRatio(-collectible.top - lifeSize / 2) + yUpValue,
+        });
     };
 }
 

@@ -25,6 +25,8 @@ require([
     './scripts/skybox',
     './scripts/main_light',
     './scripts/wallsBuilder',
+    './scripts/collectiblesBuilder',
+    './scripts/lifes_builder',
     './scripts/hot_zones_checker',
     './scripts/ennemies',
     './scripts/endPoint',
@@ -32,7 +34,7 @@ require([
 
 
     './scripts/inputs'
-], function (BABYLON, $, camera, player, addSkybox, mainLight, wallsBuilder, hotZonesChecker, ennemies, initEndPoint, minY) {
+], function (BABYLON, $, camera, player, addSkybox, mainLight, wallsBuilder, collectiblesBuilder, lifesBuilder, hotZonesChecker, ennemies, initEndPoint, minY) {
     'use strict';
 
     /*==============================
@@ -101,6 +103,8 @@ require([
     function launch (tasks) {
         addSkybox(scene);
         wallsBuilder(scene, gameData.walls);
+        collectiblesBuilder.build(scene, gameData.collectibles);
+        lifesBuilder.build(scene, gameData.lifes);
         minY.set(gameData.walls);
 
         initEndPoint(scene, gameData.end);
