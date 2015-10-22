@@ -32,7 +32,7 @@ define([
         Butterfree.prototype.initAnimator.call(this);
 
         for (var i = 0; i < this.childsMeshes.length; i++) {
-            this.childsMeshes[i].material.emissiveColor = new BABYLON.Color4(1, 0, 0, 0.8);
+            this.childsMeshes[i].material.subMaterials[0].emissiveColor = new BABYLON.Color4(1, 0, 0, 0.8);
             this.childsMeshes[i].rotation.y = Math.PI;
         };
 
