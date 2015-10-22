@@ -30,6 +30,7 @@ define([
         //thunderbolt
     var thunderboltOffset   = new BABYLON.Vector3(0, 3, -2);
     var thunderboltDuration = 0.2;
+    var thunderboltMinDelay = 0.5;
 
 
         // collision
@@ -62,6 +63,7 @@ define([
         this.tag       = 'player';
         this.life      = maxLife;
         this.maxLife   = maxLife;
+        this.dead      = false;
         this.direction = 1;
 
         this.chargeElapsedTime = 0;
@@ -95,7 +97,7 @@ define([
 
     Player.prototype.init = function (scene, start, meshes) {
         var player = this;
-
+        this.dead  = false;
         this.scene = scene;
         this.startPoint = start;
 
@@ -143,7 +145,7 @@ define([
 
 
     Player.prototype.initThunderboltAttack = function (scene) {
-        this.isDoingThuderbolt      = false;
+        this.isDoingThunderbolt      = false;
         this.thunderbolt = {};
         this.thunderbolt.elapsedTime = 0;
         this.thunderbolt.rechargeTime = 0;
@@ -206,6 +208,13 @@ define([
         this.invulnerable = true;
         this.life--;
         hud.updateHealth((this.life / this.maxLife) * 100);
+        if (this.life <= 0)
+            this.kill();
+    };
+
+    Player.prototype.kill = function() {
+        this.dead = true;
+        console.log("%cYOU ARE DEEEAAAAD !!!!","color:red");
     };
 
 
@@ -252,17 +261,16 @@ define([
 
 
     Player.prototype.launchThunderbolt = function () {
-        this.isDoingThuderbolt       = true;
+        this.isDoingThunderbolt       = true;
         this.thunderbolt.elapsedTime = 0;
-        this.thunderbolt.rechargeTime += 50;
+        this.thunderbolt.rechargeTime += 2;
         this.thunderbolt.mesh.checkCollisions = true;
         this.thunderbolt.particleSystem.start();
     };
 
 
     Player.prototype.stopThunderbolt = function () {
-        this.thunderbolt.elapsedTime = 0;
-        this.isDoingThuderbolt       = false;
+        this.isDoingThunderbolt       = false;
         this.thunderbolt.mesh.checkCollisions = false;
         this.thunderbolt.particleSystem.stop();
     };
@@ -306,14 +314,19 @@ define([
         if (this.motionlessElapsedTime < motionlessDuration) {
             return;
         }
+        
+        if (this.dead == true) {
+            return;
+        }
 
         if (inputs.up && (this.physics.onGround || this.physics.onRoof)) {
             this.jump();
         }
 
-        if (this.isDoingThuderbolt) {
+        if (this.isDoingThunderbolt) {
             return;
         }
+
 
         if (inputs.left) {
             this.physics.velocity.x -= acceleration * deltaTime;
@@ -366,18 +379,17 @@ define([
 
 
     Player.prototype.updateThunderboltAttack = function (deltaTime) {
-        if (this.isDoingThuderbolt) {
-            this.thunderbolt.elapsedTime += deltaTime;
+        this.thunderbolt.elapsedTime += deltaTime;
+        if (this.isDoingThunderbolt) {
             if (this.thunderbolt.elapsedTime > thunderboltDuration) {
                 this.stopThunderbolt();
             }
         }
-        if (inputs.bottom && (this.physics.onGround || this.physics.onRoof)) {
+        if (inputs.bottom && (this.physics.onGround || this.physics.onRoof) && this.thunderbolt.rechargeTime <= 2 && (this.thunderbolt.elapsedTime > thunderboltMinDelay)) {
             this.launchThunderbolt();
         }
-        this.thunderbolt.rechargeTime -= this.thunderbolt.rechargeTime <= 0 ? 0 : 1;
-        hud.updateThunder(this.thunderbolt.rechargeTime);
-
+        this.thunderbolt.rechargeTime -= this.thunderbolt.rechargeTime <= 0 ? 0 : deltaTime;
+        hud.updateThunder(this.thunderbolt.rechargeTime * 50);
     };
 
 
@@ -389,7 +401,7 @@ define([
         if (Math.abs(this.physics.velocity.x) > speedToBeCharging) {
             this.animator.play('slide');
         }
-        else if (this.isDoingThuderbolt) {
+        else if (this.isDoingThunderbolt) {
             this.animator.play('backStrafe');
         }
         else if (Math.abs(this.physics.velocity.x) > runSpeed) {

@@ -45,7 +45,7 @@ define([
     */
     Hud.prototype.buildMainMenu = function() {
         $(".menuButtons").remove();
-        this.$hud.append("<div class='menuButtons' style='position:absolute; width: 100%;'></div>");
+        this.$hud.append("<div class='menuButtons' style='position:absolute; width: 100%; height:100%;'></div>");
 
         var launchButton = this.createButton(250,80,25);
         launchButton
@@ -63,7 +63,7 @@ define([
         })
         .on("mousedown",function () {
         });
-        var $mainTitle = $("<h1 class='mainTitle'>Ninja Attack</h1>").css({WebkitFilter: "drop-shadow(12px 7px 7px rgba(0,0,0,.5))", color:"brown", fontSize: "100px", fontFamily: "fantasy", position:"relative", textAlign:"center", margin:"auto", top:-500});
+        var $mainTitle = $("<h1 class='mainTitle'>Ninja Attack</h1>").css({WebkitFilter: "drop-shadow(12px 7px 7px rgba(0,0,0,.5))", color:"brown", fontSize: "80px", fontFamily: "fantasy", position:"relative", textAlign:"center", margin:"auto", top:-500});
         
         this.$hud.find(".menuButtons").prepend($mainTitle);
         this.$hud.find(".menuButtons").append(launchButton);
@@ -71,12 +71,12 @@ define([
         
         launchButton.find(".content").text("Play");
         levelSelectButton.find(".content").text("Select Level");
-        launchButton.css({left:"-1000px", top:600});
-        levelSelectButton.css({left:"-1000px", top:700});
+        launchButton.css({left:"-1000px", top: "60%"});
+        levelSelectButton.css({left:"-1000px", top:"70%"});
 
-       $('.mainTitle').animate({top:200},600);
+       $('.mainTitle').animate({top:"20%"},600);
         $('.menuButtons').children().each(function (index) {
-            $(this).animate({left:that.size.w * 0.5 - $(this).width() * 0.5},600);
+            $(this).animate({left:$("#canvas").width()*0.5 - $(this).width() * 0.5},600);
         });
     };
 
@@ -177,6 +177,7 @@ define([
         }
         else
         {
+            this.$hud.find(".thunderBar2").css({height: "0"})
             this.$hud.find(".thunderBar").css({height: percentage+"%"})
         }
     };
