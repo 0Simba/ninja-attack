@@ -46,9 +46,9 @@ define([
         startPosition.x = player.mesh.position.x;
         startPosition.y = player.mesh.position.y;
 
-        this.targetPoint = BABYLON.Mesh.CreateSphere("target", 10, 0.3, scene);
+        this.targetPoint = BABYLON.Mesh.CreateSphere("target", 0, 0.3, scene);
         this.player = player;
-        this.camera  = new BABYLON.FollowCamera("FollowCam", startPosition, scene);
+        this.camera = new BABYLON.FollowCamera("FollowCam", startPosition, scene);
         this.camera.target = this.targetPoint; // target any mesh or object with a "position" Vector3
 
         this.camera.radius             = radius;
