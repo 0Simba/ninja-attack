@@ -1,6 +1,7 @@
 define([
-    'jquery'
-], function ($) {
+    'jquery',
+    './player'
+], function ($,player) {
     'use strict';
     var that;
 
@@ -10,31 +11,31 @@ define([
         that            = this;
     }
 
-    Hud.prototype.init = function(canvas) {
+    Hud.prototype.init = function(canvas, startCallback) {
         this.size.w = canvas.width;
         this.size.h = canvas.height;
     };
 
     Hud.prototype.createBGDoors = function() {
         this.$hud.find(".doors").remove();
-        var target = this.$hud.append("<div class='doors' style='position:absolute;'></div>").find(".doors");
+        var target = this.$hud.append("<div class='doors' style='width: 100%; height: 100%; position:absolute;'></div>").find(".doors");
 
-        var $baseDiv = $("<div></div>").css({border: (this.size.w * 0.5)+"px solid", borderColor: "rgba(0,0,0,0)", position: "absolute"});
-        $baseDiv.clone().css({top: (-this.size.w * 0.25)+"px", left: (-this.size.w * 0.5625)+"px", borderBottomColor: "#000"}).appendTo(target);
-        $baseDiv.clone().css({top: (-this.size.w * 0.25)+"px",  left: (this.size.w * 0.5625)+"px",  borderBottomColor: "#000"}).appendTo(target);
-        $baseDiv.clone().css({left: (-this.size.w * 0.3125)+"px", borderTopColor: "#d8e1e7",  borderWidth: (this.size.w * 0.8125)+"px"}).appendTo(target);
+        var $baseDiv = $("<img src=''>").css({position: "absolute", display: "block", height: "100%"});
+        $baseDiv.clone().attr("src","assets/menu/leftDoor.png").addClass("door-left").css({width: "50%"}).appendTo(target);
+        $baseDiv.clone().attr("src","assets/menu/rightDoor.png").addClass("door-right").css({width: "50%",marginLeft: "50%"}).appendTo(target);
+        $baseDiv.clone().attr("src","assets/menu/topDoor.png").addClass("door-top").css({width: "100%"}).appendTo(target);
     };
 
     Hud.prototype.openDoors = function() {
-        $(this.$hud.find(".doors").children().get(0)).finish().animate({left: (-this.size.w)+"px"},1500);
-        $(this.$hud.find(".doors").children().get(1)).finish().animate({left: (this.size.w)+"px"},1500);
-        $(this.$hud.find(".doors").children().get(2)).finish().animate({top: (this.size.h)+"px"},1500);
+        $(".door-left").finish().animate({left: (-that.size.w)+"px"},1500);
+        $(".door-right").finish().animate({left: (that.size.w)+"px"},1500);
+        $(".door-top").finish().animate({top: -(that.size.h * 2)+"px"},1500);
     };
 
     Hud.prototype.closeDoors = function() {
-        $(this.$hud.find(".doors").children().get(0)).finish().animate({left: (-this.size.w * 0.5625)},400);
-        $(this.$hud.find(".doors").children().get(1)).finish().animate({left: (this.size.w * 0.5625)},400);
-        $(this.$hud.find(".doors").children().get(2)).finish().animate({top: 0},400);
+        $(".door-left").finish().animate({left: (-that.size.w * 0.5625)},400);
+        $(".door-right").finish().animate({left: (that.size.w * 0.5625)},400);
+        $(".door-top").finish().animate({top: 0},400);
     };
 
 
@@ -43,16 +44,16 @@ define([
         creates and attaches events to the main menu's buttons.
     */
     Hud.prototype.buildMainMenu = function() {
-        this.$hud.append("<div class='menuButtons' style='position:absolute;'></div>");
+        $(".menuButtons").remove();
+        this.$hud.append("<div class='menuButtons' style='position:absolute; width: 100%;'></div>");
 
         var launchButton = this.createButton(250,80,25);
         launchButton
         .on("mouseup",function () {
-            // start(); /* START THE GAME (need to reach main.js) */
+            that.playButtonCallback();
             that.fadeMainMenu();
         })
         .on("mousedown",function () {
-            that.closeDoors(); 
         });
 
         var levelSelectButton = this.createButton(250,80,25);
@@ -61,25 +62,31 @@ define([
             that.buildLevelSelectMenu();
         })
         .on("mousedown",function () {
-            that.closeDoors(); 
         });
+        var $mainTitle = $("<h1 class='mainTitle'>Ninja Attack</h1>").css({WebkitFilter: "drop-shadow(12px 7px 7px rgba(0,0,0,.5))", color:"brown", fontSize: "100px", fontFamily: "fantasy", position:"relative", textAlign:"center", margin:"auto", top:-500});
+        
+        this.$hud.find(".menuButtons").prepend($mainTitle);
         this.$hud.find(".menuButtons").append(launchButton);
-        this.$hud.find(".menuButtons").append(levelSelectButton);
+        //this.$hud.find(".menuButtons").append(levelSelectButton);  <<<<===== level select not finished
         
         launchButton.find(".content").text("Play");
         levelSelectButton.find(".content").text("Select Level");
-        launchButton.css({left:"-1000px", top:300});
-        levelSelectButton.css({left:"-1000px", top:400});
+        launchButton.css({left:"-1000px", top:600});
+        levelSelectButton.css({left:"-1000px", top:700});
 
+       $('.mainTitle').animate({top:200},600);
         $('.menuButtons').children().each(function (index) {
             $(this).animate({left:that.size.w * 0.5 - $(this).width() * 0.5},600);
         });
     };
 
+    Hud.prototype.playButtonCallback = function() {};
+
     /** 
         Make the buttons slide left and right && removes' em.
     */
     Hud.prototype.fadeMainMenu = function() {
+        $('.mainTitle').animate({top:-150},600,function () {$(this).remove();});
         $('.menuButtons').children().off();
         $('.menuButtons').children().each(function (index) {
             $(this).animate({left: ((index % 2) * 3 - 1) * (that.size.w + $(this).width())},600,function () {
@@ -103,7 +110,7 @@ define([
             textAlign: "center",
             pointerEvents: "none",
             WebkitTransform: "skew("+(-angle)+"deg)",
-            MozTransform: "skew("+(-angle)+"deg)",
+            MozTransform: "skew("+(-angle)+"deg)"
         })
         .appendTo($newButton);
 
@@ -116,6 +123,62 @@ define([
 
     Hud.prototype.buildLevelSelectMenu = function() {
         console.log("building level select menu");
+    };
+
+    Hud.prototype.buildInGameHud = function() {
+        /* 
+            health
+            charge
+            collectibles
+        */
+        var $inGameHud = $("<div class='inGameHud' style='position:absolute; width:100%; height:100%;'></div>").prependTo(this.$hud);
+        var $healthBarContainer = $("<div></div>").css({
+            width           : "20%",
+            height          : "5%",
+            backgroundColor : "grey",
+            margin          : "1%",
+            border          : "5px black solid",
+            position        : "absolute"
+        }).appendTo($inGameHud);
+        var $healthBar = $("<div class='healthBar'></div>").css({
+            position        : "absolute",
+            width           : "100%",
+            height          : "100%",
+            backgroundColor : "brown",
+        }).appendTo($healthBarContainer);
+
+        var $chargeBarContainer = $healthBarContainer.clone().css({
+            width       : "2%",
+            height      : "25%",
+            marginTop   : "5%"
+        }).appendTo($inGameHud);
+        $chargeBarContainer.children().remove();
+        $healthBar.clone().removeClass().addClass("chargeBar").css({height:"0%", backgroundColor: "yellow"}).appendTo($chargeBarContainer);
+
+        var $thunderBarContainer = $chargeBarContainer.clone().css({marginLeft: "4%"}).appendTo($inGameHud);
+        $thunderBarContainer.children().remove();
+        $healthBar.clone().removeClass().addClass("thunderBar").css({height:"0%", backgroundColor: "yellow"}).appendTo($thunderBarContainer);
+        $healthBar.clone().removeClass().addClass("thunderBar2").css({height:"0%", backgroundColor: "red"}).appendTo($thunderBarContainer);
+
+    };
+
+    Hud.prototype.updateHealth = function(percentage) {
+        this.$hud.find(".healthBar").css({width: percentage+"%"})
+    };
+
+    Hud.prototype.updateCharge = function(percentage) {
+        this.$hud.find(".chargeBar").css({height: percentage+"%"})
+    };
+    
+    Hud.prototype.updateThunder = function(percentage) {
+        if (percentage >= 100) {
+            this.$hud.find(".thunderBar").css({height: "100%"})
+            this.$hud.find(".thunderBar2").css({height: Math.min(percentage - 100, 100)+"%"})
+        }
+        else
+        {
+            this.$hud.find(".thunderBar").css({height: percentage+"%"})
+        }
     };
     
 

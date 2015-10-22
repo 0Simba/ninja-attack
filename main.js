@@ -42,14 +42,14 @@ require([
 
 
 
-    var canvas;
-    var engine;
-    var scene;
-    var gameData;
-    var loader;
-    var tasks  = {};
-    var toLoad = {};
-    var canvasRatio;
+    var canvas,
+        engine,
+        scene,
+        gameData,
+        loader,
+        tasks  = {},
+        toLoad = {},
+        canvasRatio;
 
     $(function () {
         canvas = document.getElementById("canvas");
@@ -63,7 +63,7 @@ require([
         $(window).resize(resizeCanvas);
 
         hud.init(canvas);
-        hud.createBGDoors();
+        hud.playButtonCallback = startLevel;
         loader = new BABYLON.AssetsManager(scene);
 
         $.getJSON("assets/levels/level0.json", function(data) {
@@ -77,6 +77,7 @@ require([
             }
 
             loader.onFinish = function () {
+                hud.createBGDoors();
                 hud.buildMainMenu();
             };
 
@@ -106,6 +107,7 @@ require([
     */
     function startLevel (level) {
         hud.openDoors();
+        hud.buildInGameHud();
         launch(tasks);
     }
 
