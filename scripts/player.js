@@ -70,7 +70,7 @@ define([
 
         this.motionlessElapsedTime = motionlessDuration;
 
-        addEntityCapabilities(this);
+        
     }
 
 
@@ -96,8 +96,10 @@ define([
 
 
     Player.prototype.init = function (scene, start, meshes) {
+        addEntityCapabilities(this);
         var player = this;
         this.dead  = false;
+        this.life  = this.maxLife;
         this.scene = scene;
         this.startPoint = start;
 
@@ -214,7 +216,7 @@ define([
 
     Player.prototype.kill = function() {
         this.dead = true;
-        console.log("%cYOU ARE DEEEAAAAD !!!!","color:red");
+        hud.gameoverFade();
     };
 
 
@@ -263,7 +265,7 @@ define([
     Player.prototype.launchThunderbolt = function () {
         this.isDoingThunderbolt       = true;
         this.thunderbolt.elapsedTime = 0;
-        this.thunderbolt.rechargeTime += 2;
+        this.thunderbolt.rechargeTime += 1;
         this.thunderbolt.mesh.checkCollisions = true;
         this.thunderbolt.particleSystem.start();
     };
@@ -283,6 +285,11 @@ define([
     =======================================*/
 
     Player.prototype.update = function (deltaTime) {
+
+        if (this.dead == true) { // placé un peu a l'arrache, a changer.
+            return;
+        }
+
         this.updateInvulnerability(deltaTime);
         this.physics.update(deltaTime);
         this.updateInputs(deltaTime);
@@ -312,10 +319,6 @@ define([
 
     Player.prototype.updateInputs = function (deltaTime) {
         if (this.motionlessElapsedTime < motionlessDuration) {
-            return;
-        }
-        
-        if (this.dead == true) {
             return;
         }
 
@@ -388,7 +391,7 @@ define([
         if (inputs.bottom && (this.physics.onGround || this.physics.onRoof) && this.thunderbolt.rechargeTime <= 2 && (this.thunderbolt.elapsedTime > thunderboltMinDelay)) {
             this.launchThunderbolt();
         }
-        this.thunderbolt.rechargeTime -= this.thunderbolt.rechargeTime <= 0 ? 0 : deltaTime;
+        this.thunderbolt.rechargeTime -= this.thunderbolt.rechargeTime <= 0 ? 0 : deltaTime*0.5;
         hud.updateThunder(this.thunderbolt.rechargeTime * 50);
     };
 
