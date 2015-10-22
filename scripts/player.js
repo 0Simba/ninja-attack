@@ -70,7 +70,6 @@ define([
 
         this.motionlessElapsedTime = motionlessDuration;
 
-        
     }
 
 

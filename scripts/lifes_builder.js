@@ -1,7 +1,8 @@
 define([
     'babylon',
-    './player'
-], function (BABYLON, player) {
+    './player',
+    './hud'
+], function (BABYLON, player, hud) {
     'use strict';
 
 
@@ -35,6 +36,7 @@ define([
             new BABYLON.ExecuteCodeAction({ 'trigger' : BABYLON.ActionManager.OnIntersectionEnterTrigger, parameter : player.mesh}, function () {
                 if (player.life < player.maxLife) {
                     player.life++;
+                    hud.updateHealth((player.life / player.maxLife) * 100);
                     that.mesh.dispose();
                 }
             }

@@ -6,7 +6,6 @@ define([
     return function (scene, walls) {
         var texture  = new BABYLON.Texture('./assets/wall.jpg', scene);
 
-
         for (var i = 0; i < walls.length; i++) {
 
             var wallConfig = walls[i];
@@ -16,12 +15,11 @@ define([
             wall.checkCollisions = true;
             wall.material        = new BABYLON.StandardMaterial('wall material', scene);
             wall.material.diffuseTexture = texture;
-            console.log(wallConfig.height);
-
 
             var wallRatio = wallConfig.width / wallConfig.height;
+
+            wall.material.diffuseTexture.vScale = wallConfig.height;
             wall.material.diffuseTexture.uScale = wallConfig.width;
-            wall.material.diffuseTexture.vScale = wallConfig.width / wallRatio;
         };
     }
 });

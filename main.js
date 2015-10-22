@@ -104,10 +104,10 @@ require([
         }
     }
 
-    /** public function to be used in hud.js 
-        
+    /** public function to be used in hud.js
+
         @param string level => key of the level to launch (unused for now)
-    
+
     */
     function startLevel (level) {
         hud.openDoors();
@@ -121,8 +121,8 @@ require([
         wallsBuilder(scene, gameData.walls);
         minY.set(gameData.walls);
 
-        initEndPoint(scene, gameData.end);
         player.init(scene, gameData.start, tasks.ninja);
+        var endPoint = initEndPoint(scene, gameData.end);
         ennemies.init(scene, gameData.monsters, tasks);
         camera.init(scene, player);
         mainLight.init(scene)
@@ -142,6 +142,7 @@ require([
             ennemies.update(deltaTime);
             player.update(deltaTime);
             camera.update(deltaTime);
+            endPoint.update(deltaTime);
             scene.render();
         });
     }

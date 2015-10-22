@@ -41,8 +41,8 @@ define([
     };
 
 
-    /** 
-        Main Menu build function 
+    /**
+        Main Menu build function
         creates and attaches events to the main menu's buttons.
     */
     Hud.prototype.buildMainMenu = function() {
@@ -66,11 +66,11 @@ define([
         .on("mousedown",function () {
         });
         var $mainTitle = $("<h1 class='mainTitle'>Ninja Attack</h1>").css({WebkitFilter: "drop-shadow(12px 7px 7px rgba(0,0,0,.5))", color:"brown", fontSize: "80px", fontFamily: "fantasy", position:"relative", textAlign:"center", margin:"auto", top:-500});
-        
+
         this.$hud.find(".menuButtons").prepend($mainTitle);
         this.$hud.find(".menuButtons").append(launchButton);
         //this.$hud.find(".menuButtons").append(levelSelectButton);  <<<<===== level select not finished
-        
+
         launchButton.find(".content").text("Play");
         levelSelectButton.find(".content").text("Select Level");
         launchButton.css({left:"-1000px", top: "60%"});
@@ -84,7 +84,7 @@ define([
 
     Hud.prototype.playButtonCallback = function() {};
 
-    /** 
+    /**
         Make the buttons slide left and right && removes' em.
     */
     Hud.prototype.fadeMainMenu = function() {
@@ -128,7 +128,7 @@ define([
     };
 
     Hud.prototype.buildInGameHud = function() {
-        /* 
+        /*
             health
             charge
             collectibles
@@ -171,7 +171,7 @@ define([
     Hud.prototype.updateCharge = function(percentage) {
         this.$hud.find(".chargeBar").css({height: percentage+"%"})
     };
-    
+
     Hud.prototype.updateThunder = function(percentage) {
         if (percentage >= 100) {
             this.$hud.find(".thunderBar").css({height: "100%"})
@@ -190,10 +190,10 @@ define([
         this.$hud.find(".doors").append(fadeOverlay);
         this.closeDoors();
         fadeOverlay.delay(400).animate({opacity: 1},700, function () {
-           that.buildMainMenu(); 
+           that.buildMainMenu();
         });
     };
-    
+
 
     /*==========================================
     =            RETURN (singleton)            =
