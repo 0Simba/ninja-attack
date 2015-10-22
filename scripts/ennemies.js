@@ -17,6 +17,10 @@ define([
         'venomoth'   : Venomoth
     };
 
+    var editorSkinToGameSkin = {
+        'rabit'   : 'rabit',
+        'scyther' : 'rabit'
+    }
 
 
     /*===============================
@@ -52,8 +56,8 @@ define([
             return;
         }
 
-
-        var rabit = new targetClass(params, this.scene, tasks[params.skin]);
+        var skinName = editorSkinToGameSkin[params.skin];
+        var rabit = new targetClass(params, this.scene, tasks[skinName]);
         this.list.push(rabit);
         addEnnemyProperties(rabit)
     };

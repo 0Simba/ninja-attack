@@ -106,7 +106,7 @@ require([
         minY.set(gameData.walls);
 
         initEndPoint(scene, gameData.end);
-        player.init(scene, gameData.start, tasks.ninja.loadedMeshes);
+        player.init(scene, gameData.start, tasks.ninja);
         ennemies.init(scene, gameData.monsters, tasks);
         camera.init(scene, player);
         mainLight.init(scene)
