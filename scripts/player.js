@@ -269,9 +269,13 @@ define([
 
         if (inputs.left) {
             this.physics.velocity.x -= acceleration * deltaTime;
+            this.forceDirection = 1;
         }
-        if (inputs.right) {
+        else if (inputs.right) {
             this.physics.velocity.x += acceleration * deltaTime;
+            this.forceDirection = -1;
+        } else {
+            this.forceDirection = 0;
         }
         if (inputs.up && (this.physics.onGround || this.physics.onRoof)) {
             this.jump();

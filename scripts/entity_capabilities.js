@@ -7,7 +7,10 @@ define([
     return function addEntityCapabilities (entity) {
         entity.direction = 1;
         entity.updateRotation = function (deltaTime) {
-            if (this.physics.velocity.x !== 0) {
+            if (this.forceDirection) {
+                this.direction = this.forceDirection;
+            }
+            else if (this.physics.velocity.x !== 0) {
                 this.direction = (this.physics.velocity.x > 0) ? -1 : 1;
             }
 
