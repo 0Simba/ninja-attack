@@ -20,10 +20,12 @@ define([
 
 
     function Collectible (scene, data) {
-        console.log(data);
-            
+        var material = new BABYLON.StandardMaterial("material", scene);
+        material.emissiveColor = new BABYLON.Color3(1, 1, 0);
+
         this.mesh = BABYLON.Mesh.CreateCylinder("collectible", 0.3, 0.3, 0.3, 20, scene);
         this.mesh.position = new BABYLON.Vector3(data.x, data.y, 0);
+        this.mesh.material = material;
     }
 
     return new CollectiblesBuilder();
