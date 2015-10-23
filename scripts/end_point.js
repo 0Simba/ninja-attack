@@ -1,7 +1,7 @@
 define([
     'babylon',
     './player',
-    './collectiblesBuilder'
+    './collectibles_builder'
 ], function (BABYLON, player, collectiblesBuilder) {
     'use strict';
 
