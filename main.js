@@ -134,7 +134,6 @@ require([
             if (player.dead) {
                 engine.stopRenderLoop();
                 destroy();
-                console.log("ded")
                 return;
             }
             var deltaTime = Math.min(engine.getDeltaTime() / 1000, maxDeltaTime);
@@ -150,7 +149,6 @@ require([
 
     function destroy () {
         scene.dispose();
-
     }
 
 

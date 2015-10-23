@@ -13,7 +13,6 @@ define([
         var endPoint = BABYLON.Mesh.CreateSphere("end point", 20, 1, scene);
         endPoint.position = new BABYLON.Vector3(position.x, position.y, 0);
         endPoint.material = new BABYLON.StandardMaterial("material", scene);
-        endPoint.material.diffuseTexture = texture;
 
         endPoint.actionManager = new BABYLON.ActionManager(scene);
         endPoint.actionManager.registerAction(
@@ -33,6 +32,15 @@ define([
         endPoint.update = function (deltaTime) {
             endPoint.elapsedTime += deltaTime;
 
+            if (collectiblesBuilder.picked.length === collectiblesBuilder.nbPicked) {
+                endPoint.move();
+            }
+        };
+
+
+        endPoint.move = function () {
+            endPoint.material.diffuseTexture = texture;
+
             var ratio = (endPoint.elapsedTime % animDuration) / animDuration;
             var angle = Math.PI * 2 * ratio * 5;
 
@@ -48,7 +56,7 @@ define([
                 endPoint.startPosition.y + offsetY,
                 endPoint.startPosition.z + offsetZ
             );
-        };
+        }
 
         return endPoint;
 
