@@ -10,15 +10,16 @@ define([
 
             var wallConfig = walls[i];
 
-            var wall = BABYLON.Mesh.CreateBox("wall", {height: wallConfig.height, width : wallConfig.width, length : 2}, scene);
+            var wall = BABYLON.Mesh.CreateBox("wall", {height: wallConfig.height, width : wallConfig.width, depth : 2}, scene);
             wall.position        = new BABYLON.Vector3(wallConfig.x, wallConfig.y, 0);
             wall.checkCollisions = true;
-            wall.material        = new BABYLON.StandardMaterial('wall material', scene);
+
+            wall.material = new BABYLON.StandardMaterial('wall material', scene);
             wall.material.diffuseTexture = texture;
 
             var wallRatio = wallConfig.width / wallConfig.height;
 
-            wall.material.diffuseTexture.vScale = wallConfig.height;
+            wall.material.diffuseTexture.vScale = 2;
             wall.material.diffuseTexture.uScale = wallConfig.width;
         };
     }
