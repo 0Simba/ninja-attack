@@ -24,14 +24,14 @@ require([
     './scripts/player',
     './scripts/skybox',
     './scripts/main_light',
-    './scripts/wallsBuilder',
-    './scripts/collectiblesBuilder',
+    './scripts/walls_builder',
+    './scripts/collectibles_builder',
     './scripts/lifes_builder',
     './scripts/hot_zones_checker',
     './scripts/ennemies',
     './scripts/hud',
-    './scripts/endPoint',
-    './scripts/minY',
+    './scripts/end_point',
+    './scripts/min_y',
     './scripts/inputs'
 ], function (BABYLON, $, camera, player, addSkybox, mainLight, wallsBuilder, collectiblesBuilder, lifesBuilder, hotZonesChecker, ennemies, hud, initEndPoint, minY) {
     'use strict';

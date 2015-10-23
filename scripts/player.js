@@ -2,9 +2,9 @@ define([
     'jquery',
     'babylon',
     './inputs',
-    './entityPhysics',
+    './entity_physics',
     './entity_capabilities',
-    './minY',
+    './min_y',
     './animator',
     './hud'
 ], function ($, BABYLON, inputs, EntityPhysics, addEntityCapabilities, minY, Animator, hud) {
