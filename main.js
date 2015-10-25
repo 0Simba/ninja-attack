@@ -56,39 +56,54 @@ require([
 
     $(function () {
         canvas = document.getElementById("canvas");
-        engine = new BABYLON.Engine(canvas);
-        scene  = new BABYLON.Scene(engine);
-
-        scene.collisionsEnabled = true;
-        // scene.debugLayer.show();
-
         canvasRatio = canvas.width / canvas.height;
         resizeCanvas();
         $(window).resize(resizeCanvas);
 
         hud.init(canvas);
         hud.playButtonCallback = startLevel;
-        loader = new BABYLON.AssetsManager(scene);
 
+        build();
+    });
+
+
+    function build () {
+        engine = new BABYLON.Engine(canvas);
+        scene  = new BABYLON.Scene(engine);
+
+        scene.collisionsEnabled = true;
         $.getJSON("assets/levels/level0.json", function(data) {
             gameDatas = data;
+            hud.createBGDoors();
+            hud.buildMainMenu();
 
-            toLoad.ninja      = loader.addMeshTask("ninja", "", "./assets/", "ninja.babylon");
-            toLoad.rabit      = loader.addMeshTask("rabit", "", "./assets/", "rabit.babylone");
-            toLoad.butterfree = loader.addMeshTask("butterfree", "", "./assets/", "blue.babylon");
-
-            for (var key in toLoad) {
-                toLoad[key].onSuccess = taskOnSuccessCallback(key);
-            }
-
-            loader.onFinish = function () {
-                hud.createBGDoors();
-                hud.buildMainMenu();
-            };
-
-            loader.load();
+            load();
         });
-    });
+    }
+
+
+    function load () {
+        loader = new BABYLON.AssetsManager(scene);
+
+        setMeshLoader();
+
+
+        loader.onFinish = function () {
+        };
+
+        loader.load();
+    }
+
+
+    function setMeshLoader () {
+        toLoad.ninja      = loader.addMeshTask("ninja", "", "./assets/", "ninja.babylon");
+        toLoad.rabit      = loader.addMeshTask("rabit", "", "./assets/", "rabit.babylone");
+        toLoad.butterfree = loader.addMeshTask("butterfree", "", "./assets/", "blue.babylon");
+
+        for (var key in toLoad) {
+            toLoad[key].onSuccess = taskOnSuccessCallback(key);
+        }
+    }
 
 
     function taskOnSuccessCallback (key) {
@@ -118,6 +133,7 @@ require([
 
 
     function launch (tasks) {
+        load();
         var levelIndex = parseInt(prompt('level index'));
         gameData = gameDatas.list[levelIndex];
         addSkybox(scene);
@@ -154,6 +170,8 @@ require([
 
     function destroy () {
         scene.dispose();
+        build();
+        hud.gameoverFade();
     }
 
 

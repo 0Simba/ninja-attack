@@ -18,9 +18,9 @@ define([
         endPoint.actionManager.registerAction(
             new BABYLON.ExecuteCodeAction({ 'trigger' : BABYLON.ActionManager.OnIntersectionEnterTrigger, parameter : player.mesh}, function () {
                 if (collectiblesBuilder.list.length === collectiblesBuilder.nbPicked) {
-                    console.log('You win');
+                    player.kill();
                 } else {
-                    alert('pas assez d\'etoiles');
+                    // alert('pas assez d\'etoiles');
                 }
             }
         ));

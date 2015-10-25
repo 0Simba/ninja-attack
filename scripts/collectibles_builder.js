@@ -14,6 +14,10 @@ define([
     }
 
     CollectiblesBuilder.prototype.build = function (scene, collectiblesData) {
+        this.list     = [];
+        this.picked   = [false, false, false, false, false];
+        this.nbPicked = 0;
+
         for (var i = 0; i < collectiblesData.length; i++) {
             var data        = collectiblesData[i];
             var collectible = new Collectible(scene, data);

@@ -69,7 +69,6 @@ define([
         this.chargeElapsedTime = 0;
 
         this.motionlessElapsedTime = motionlessDuration;
-
     }
 
 
@@ -120,8 +119,8 @@ define([
             }
         }
 
-
         this.initAnimator();
+        hud.updateHealth((this.life / this.maxLife) * 100);
     };
 
 
@@ -220,7 +219,6 @@ define([
 
     Player.prototype.kill = function() {
         this.dead = true;
-        hud.gameoverFade();
     };
 
 
@@ -258,6 +256,9 @@ define([
 
 
     Player.prototype.placeOnLastGroundPosition = function () {
+        if (!this.physics.lastGroundPosition) {
+            return;
+        }
         this.mesh.position.x = this.physics.lastGroundPosition.x;
         this.mesh.position.y = this.physics.lastGroundPosition.y + yOffsetRespawn;
 
