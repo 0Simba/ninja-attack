@@ -18,7 +18,7 @@ define([
     var acceleration = 20;
     var diameter     = 0.5;
     var height       = 1;
-    var jumpHeight   = 3;
+    var jumpHeight   = 3.5;
     var invulnerableDuration = 2;
 
         //charge attack

@@ -47,6 +47,7 @@ require([
     var canvas,
         engine,
         scene,
+        gameDatas,
         gameData,
         loader,
         tasks  = {},
@@ -70,7 +71,7 @@ require([
         loader = new BABYLON.AssetsManager(scene);
 
         $.getJSON("assets/levels/level0.json", function(data) {
-            gameData = data;
+            gameDatas = data;
 
             toLoad.ninja      = loader.addMeshTask("ninja", "", "./assets/", "ninja.babylon");
             toLoad.rabit      = loader.addMeshTask("rabit", "", "./assets/", "rabit.babylone");
@@ -117,6 +118,8 @@ require([
 
 
     function launch (tasks) {
+        var levelIndex = parseInt(prompt('level index'));
+        gameData = gameDatas.list[levelIndex];
         addSkybox(scene);
         wallsBuilder(scene, gameData.walls);
         minY.set(gameData.walls);
