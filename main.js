@@ -83,19 +83,18 @@ require([
             hud.createBGDoors();
             hud.buildMainMenu();
 
-            load();
+            load(function () {});
         });
     }
 
 
-    function load () {
+    function load (callback) {
         loader = new BABYLON.AssetsManager(scene);
 
         setMeshLoader();
 
 
-        loader.onFinish = function () {
-        };
+        loader.onFinish = callback;
 
         loader.load();
     }
@@ -139,40 +138,41 @@ require([
 
 
     function launch (tasks) {
-        load();
-        var levelIndex = parseInt(prompt('level index'));
-        gameData = gameDatas.list[levelIndex];
+        load(function () {
+            var levelIndex = parseInt(prompt('level index'));
+            gameData = gameDatas.list[levelIndex];
 
-        addSkybox(scene);
-        wallsBuilder(scene, gameData.walls);
-        minY.set(gameData.walls);
+            addSkybox(scene);
+            wallsBuilder(scene, gameData.walls);
+            minY.set(gameData.walls);
 
-        player.init(scene, gameData.start, tasks.ninja);
-        var endPoint = initEndPoint(scene, gameData.end);
-        ennemies.init(scene, gameData.monsters, tasks);
-        camera.init(scene, player);
-        mainLight.init(scene)
-        hotZonesChecker.init(gameData.hotZones);
-        collectiblesBuilder.build(scene, gameData.collectibles);
-        lifesBuilder.build(scene, gameData.lifes);
+            player.init(scene, gameData.start, tasks.ninja);
+            var endPoint = initEndPoint(scene, gameData.end);
+            ennemies.init(scene, gameData.monsters, tasks);
+            camera.init(scene, player);
+            mainLight.init(scene)
+            hotZonesChecker.init(gameData.hotZones);
+            collectiblesBuilder.build(scene, gameData.collectibles);
+            lifesBuilder.build(scene, gameData.lifes);
 
-        sounds.startGame();
+            sounds.startGame();
 
-        engine.runRenderLoop(function() {
-            if (player.dead) {
-                engine.stopRenderLoop();
-                destroy();
-                return;
-            }
-            var deltaTime = Math.min(engine.getDeltaTime() / 1000, maxDeltaTime);
+            engine.runRenderLoop(function() {
+                if (player.dead) {
+                    engine.stopRenderLoop();
+                    destroy();
+                    return;
+                }
+                var deltaTime = Math.min(engine.getDeltaTime() / 1000, maxDeltaTime);
 
-            collectiblesBuilder.update(deltaTime);
-            lifesBuilder.update(deltaTime);
-            ennemies.update(deltaTime);
-            player.update(deltaTime);
-            camera.update(deltaTime);
-            endPoint.update(deltaTime);
-            scene.render();
+                collectiblesBuilder.update(deltaTime);
+                lifesBuilder.update(deltaTime);
+                ennemies.update(deltaTime);
+                player.update(deltaTime);
+                camera.update(deltaTime);
+                endPoint.update(deltaTime);
+                scene.render();
+            });
         });
     }
 
