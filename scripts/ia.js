@@ -19,6 +19,10 @@ define([
         object.direction       = -1;
 
         object.ia = function (deltaTime) {
+            if (Math.abs(object.physics.velocity.x) > leftRightSpeed) {
+                return;
+            }
+
             object.moveElapsedTime += deltaTime;
             if (object.moveElapsedTime > object.moveDuration) {
                 this.direction *= -1;

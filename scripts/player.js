@@ -187,6 +187,7 @@ define([
 
     Player.prototype.onHitEnnemy = function (ennemy) {
         if (Math.abs(this.physics.velocity.x) > speedToBeCharging) {
+            ennemy.mesh.position.x    += (this.physics.velocity.x > 0) ? 1 : -1;
             ennemy.physics.velocity.x = this.physics.velocity.x * 2;
         }
         else {
