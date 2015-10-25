@@ -11,6 +11,7 @@ define([
 ], function ($, BABYLON, inputs, EntityPhysics, addEntityCapabilities, minY, Animator, hud, sounds) {
     'use strict';
 
+
     /*==============================
     =            CONFIG            =
     ==============================*/

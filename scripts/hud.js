@@ -1,7 +1,7 @@
 define([
     'jquery',
     './player'
-], function ($,player) {
+], function ($, player) {
     'use strict';
     var that;
 
@@ -127,13 +127,19 @@ define([
         console.log("building level select menu");
     };
 
+
+    var inGameHudBuilded = false;
     Hud.prototype.buildInGameHud = function() {
+        if (inGameHudBuilded) {
+            return;
+        }
+        inGameHudBuilded = true;
         /*
             health
             charge
             collectibles
         */
-        var $inGameHud = $("<div class='inGameHud' style='position:absolute; width:100%; height:100%;'></div>").prependTo(this.$hud);
+        this.$inGameHud = $("<div class='inGameHud' style='position:absolute; width:100%; height:100%;'></div>").prependTo(this.$hud);
         var $healthBarContainer = $("<div></div>").css({
             width           : "20%",
             height          : "5%",
@@ -141,7 +147,7 @@ define([
             margin          : "1%",
             border          : "5px black solid",
             position        : "absolute"
-        }).appendTo($inGameHud);
+        }).appendTo(this.$inGameHud);
         var $healthBar = $("<div class='healthBar'></div>").css({
             position        : "absolute",
             width           : "100%",
@@ -153,16 +159,31 @@ define([
             width       : "2%",
             height      : "25%",
             marginTop   : "5%"
-        }).appendTo($inGameHud);
+        }).appendTo(this.$inGameHud);
         $chargeBarContainer.children().remove();
         $healthBar.clone().removeClass().addClass("chargeBar").css({height:"0%", backgroundColor: "yellow"}).appendTo($chargeBarContainer);
 
-        var $thunderBarContainer = $chargeBarContainer.clone().css({marginLeft: "4%"}).appendTo($inGameHud);
+        var $thunderBarContainer = $chargeBarContainer.clone().css({marginLeft: "4%"}).appendTo(this.$inGameHud);
         $thunderBarContainer.children().remove();
         $healthBar.clone().removeClass().addClass("thunderBar").css({height:"0%", backgroundColor: "yellow"}).appendTo($thunderBarContainer);
         $healthBar.clone().removeClass().addClass("thunderBar2").css({height:"0%", backgroundColor: "red"}).appendTo($thunderBarContainer);
 
+        this.$collectibles = $("<div class='collectibles_container' id='collectibles_container'></div>").prependTo(this.$inGameHud);
     };
+
+
+    Hud.prototype.addCollectibles = function (number) {
+        this.$collectibles.html('');
+        for (var i = 0 ; i < number ; i++) {
+            this.$collectibles.append('<div class="collectible id_' + i + '"></div>');
+        };
+    };
+
+
+    Hud.prototype.pickCollectible = function (index) {
+        $('.collectible.id_' + index).addClass('picked');
+    };
+
 
     Hud.prototype.updateHealth = function(percentage) {
         this.$hud.find(".healthBar").css({width: percentage+"%"})

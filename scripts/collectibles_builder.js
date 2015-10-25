@@ -2,39 +2,44 @@ define([
     'babylon',
     './player',
     './entity_rotate_capabilities',
+    './hud',
     './sounds'
-], function (BABYLON, player, addEntityRotate, sounds) {
+], function (BABYLON, player, addEntityRotate, hud, sounds) {
     'use strict';
 
 
     function CollectiblesBuilder () {
         this.list     = [];
-        this.picked   = [false, false, false];
+        this.picked   = [];
         this.nbPicked = 0;
     }
 
     CollectiblesBuilder.prototype.build = function (scene, collectiblesData) {
         this.list     = [];
-        this.picked   = [false, false, false, false, false];
+        this.picked   = [];
         this.nbPicked = 0;
 
         for (var i = 0; i < collectiblesData.length; i++) {
             var data        = collectiblesData[i];
             var collectible = new Collectible(scene, data);
 
+            this.picked.push(false);
             this.list.push(collectible);
         };
+
+        hud.addCollectibles(this.list.length);
     };
 
 
     CollectiblesBuilder.prototype.pick = function (collectible) {
-        sounds.play('collectible');
         this.nbPicked++;
 
         var index = this.list.indexOf(collectible);
         this.picked[index] = true;
 
         collectible.mesh.dispose();
+        sounds.play('collectible');
+        hud.pickCollectible(index);
     };
 
 

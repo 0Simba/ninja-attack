@@ -142,6 +142,7 @@ require([
         load();
         var levelIndex = parseInt(prompt('level index'));
         gameData = gameDatas.list[levelIndex];
+
         addSkybox(scene);
         wallsBuilder(scene, gameData.walls);
         minY.set(gameData.walls);
