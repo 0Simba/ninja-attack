@@ -3,8 +3,7 @@ define([
 ], function (BABYLON) {
     'use strict';
 
-    return function (scene, walls) {
-        var texture  = new BABYLON.Texture('./assets/wall.jpg', scene);
+    return function (scene, walls, texture) {
         var z = 0;
 
         for (var i = 0; i < walls.length; i++) {

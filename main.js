@@ -92,7 +92,10 @@ require([
         loader = new BABYLON.AssetsManager(scene);
 
         setMeshLoader();
-
+        toLoad.wallTexture = loader.addTextureTask("wallTexture", "./assets/wall.jpg");
+        toLoad.wallTexture.onSuccess = function (task) {
+            tasks.wallTexture = task.texture;
+        };
 
         loader.onFinish = callback;
 
@@ -143,7 +146,7 @@ require([
             gameData = gameDatas.list[levelIndex];
 
             addSkybox(scene);
-            wallsBuilder(scene, gameData.walls);
+            wallsBuilder(scene, gameData.walls, tasks.wallTexture);
             minY.set(gameData.walls);
 
             player.init(scene, gameData.start, tasks.ninja);
