@@ -138,6 +138,8 @@ require([
             }
             var deltaTime = Math.min(engine.getDeltaTime() / 1000, maxDeltaTime);
 
+            collectiblesBuilder.update(deltaTime);
+            lifesBuilder.update(deltaTime);
             ennemies.update(deltaTime);
             player.update(deltaTime);
             camera.update(deltaTime);

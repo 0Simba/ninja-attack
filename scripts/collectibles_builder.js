@@ -1,8 +1,10 @@
 define([
     'babylon',
-    './player'
-], function (BABYLON, player) {
+    './player',
+    './entity_rotate_capabilities'
+], function (BABYLON, player, addEntityRotate) {
     'use strict';
+
 
 
     function CollectiblesBuilder () {
@@ -30,19 +32,31 @@ define([
         collectible.mesh.dispose();
     };
 
+
+    CollectiblesBuilder.prototype.update = function (deltaTime) {
+        for (var i = this.list.length - 1; i >= 0; i--) {
+            var collectible = this.list[i];
+            collectible.updateRotation(deltaTime);
+        };
+    };
+
+
     var collectiblesBuilder = new CollectiblesBuilder();
 
 
+
     function Collectible (scene, data) {
+        var texture  = new BABYLON.Texture('./assets/collectibles.jpg', scene);
         var material = new BABYLON.StandardMaterial("material", scene);
-        material.emissiveColor = new BABYLON.Color3(1, 1, 0);
+        material.diffuseTexture = texture;
 
         var that = this;
 
 
-        this.mesh = BABYLON.Mesh.CreateCylinder("collectible", 0.3, 0.3, 0.3, 20, scene);
-        this.mesh.position = new BABYLON.Vector3(data.x, data.y, 0);
-        this.mesh.material = material;
+        this.mesh = BABYLON.Mesh.CreateSphere("collectible", 10, 0.4, scene);
+        this.mesh.position   = new BABYLON.Vector3(data.x, data.y, 0);
+        this.mesh.material   = material;
+        this.mesh.visibility = 0.8;
 
         this.mesh.actionManager = new BABYLON.ActionManager(scene);
         this.mesh.actionManager.registerAction(
@@ -50,6 +64,8 @@ define([
                 collectiblesBuilder.pick(that);
             }
         ));
+
+        addEntityRotate(this);
     }
 
     return collectiblesBuilder;

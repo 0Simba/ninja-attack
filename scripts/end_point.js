@@ -28,6 +28,9 @@ define([
 
         endPoint.startPosition = new BABYLON.Vector3(position.x, position.y, 0);
         endPoint.elapsedTime   = 0;
+        endPoint.material.diffuseTexture = texture;
+        endPoint.visibility = 0.5;
+
 
         endPoint.update = function (deltaTime) {
             endPoint.elapsedTime += deltaTime;
@@ -39,7 +42,7 @@ define([
 
 
         endPoint.move = function () {
-            endPoint.material.diffuseTexture = texture;
+            this.visibility = 1;
 
             var ratio = (endPoint.elapsedTime % animDuration) / animDuration;
             var angle = Math.PI * 2 * ratio * 5;

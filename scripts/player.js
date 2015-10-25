@@ -208,9 +208,12 @@ define([
     Player.prototype.loseLife = function () {
         this.invulnerable = true;
         this.life--;
+
         hud.updateHealth((this.life / this.maxLife) * 100);
-        if (this.life <= 0)
+
+        if (this.life <= 0) {
             this.kill();
+        }
     };
 
 
