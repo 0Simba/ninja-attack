@@ -102,7 +102,7 @@ require([
 
     function setMeshLoader () {
         toLoad.ninja      = loader.addMeshTask("ninja", "", "./assets/", "ninja.babylon");
-        toLoad.rabit      = loader.addMeshTask("rabit", "", "./assets/", "rabit.babylone");
+        toLoad.rabit      = loader.addMeshTask("rabit", "", "./assets/", "rabit.babylon");
         toLoad.butterfree = loader.addMeshTask("butterfree", "", "./assets/", "blue.babylon");
 
         for (var key in toLoad) {
