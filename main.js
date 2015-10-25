@@ -24,14 +24,14 @@ require([
     './scripts/player',
     './scripts/skybox',
     './scripts/main_light',
-    './scripts/wallsBuilder',
-    './scripts/collectiblesBuilder',
+    './scripts/walls_builder',
+    './scripts/collectibles_builder',
     './scripts/lifes_builder',
     './scripts/hot_zones_checker',
     './scripts/ennemies',
     './scripts/hud',
-    './scripts/endPoint',
-    './scripts/minY',
+    './scripts/end_point',
+    './scripts/min_y',
     './scripts/inputs'
 ], function (BABYLON, $, camera, player, addSkybox, mainLight, wallsBuilder, collectiblesBuilder, lifesBuilder, hotZonesChecker, ennemies, hud, initEndPoint, minY) {
     'use strict';
@@ -40,13 +40,14 @@ require([
     =            CONFIG            =
     ==============================*/
 
-    var maxDeltaTime = 0.1;
+    var maxDeltaTime = 0.033;
 
 
 
     var canvas,
         engine,
         scene,
+        gameDatas,
         gameData,
         loader,
         tasks  = {},
@@ -70,7 +71,7 @@ require([
         loader = new BABYLON.AssetsManager(scene);
 
         $.getJSON("assets/levels/level0.json", function(data) {
-            gameData = data;
+            gameDatas = data;
 
             toLoad.ninja      = loader.addMeshTask("ninja", "", "./assets/", "ninja.babylon");
             toLoad.rabit      = loader.addMeshTask("rabit", "", "./assets/", "rabit.babylone");
@@ -104,10 +105,10 @@ require([
         }
     }
 
-    /** public function to be used in hud.js 
-        
+    /** public function to be used in hud.js
+
         @param string level => key of the level to launch (unused for now)
-    
+
     */
     function startLevel (level) {
         hud.openDoors();
@@ -117,12 +118,14 @@ require([
 
 
     function launch (tasks) {
+        var levelIndex = parseInt(prompt('level index'));
+        gameData = gameDatas.list[levelIndex];
         addSkybox(scene);
         wallsBuilder(scene, gameData.walls);
         minY.set(gameData.walls);
 
-        initEndPoint(scene, gameData.end);
         player.init(scene, gameData.start, tasks.ninja);
+        var endPoint = initEndPoint(scene, gameData.end);
         ennemies.init(scene, gameData.monsters, tasks);
         camera.init(scene, player);
         mainLight.init(scene)
@@ -134,14 +137,16 @@ require([
             if (player.dead) {
                 engine.stopRenderLoop();
                 destroy();
-                console.log("ded")
                 return;
             }
             var deltaTime = Math.min(engine.getDeltaTime() / 1000, maxDeltaTime);
 
+            collectiblesBuilder.update(deltaTime);
+            lifesBuilder.update(deltaTime);
             ennemies.update(deltaTime);
             player.update(deltaTime);
             camera.update(deltaTime);
+            endPoint.update(deltaTime);
             scene.render();
         });
     }
@@ -149,7 +154,6 @@ require([
 
     function destroy () {
         scene.dispose();
-
     }
 
 

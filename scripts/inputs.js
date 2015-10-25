@@ -12,7 +12,9 @@ define([
         'up'     : false,
         'right'  : false,
         'bottom' : false,
-        'space'  : false
+        'space'  : false,
+        'a'      : false,
+        'z'      : false
     };
 
 
@@ -27,7 +29,9 @@ define([
         38 : 'up',
         39 : 'right',
         40 : 'bottom',
-        32 : 'space'
+        32 : 'space',
+        65 : 'a',
+        90 : 'z'
     };
 
 

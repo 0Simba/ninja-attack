@@ -2,9 +2,9 @@ define([
     'jquery',
     'babylon',
     './inputs',
-    './entityPhysics',
+    './entity_physics',
     './entity_capabilities',
-    './minY',
+    './min_y',
     './animator',
     './hud'
 ], function ($, BABYLON, inputs, EntityPhysics, addEntityCapabilities, minY, Animator, hud) {
@@ -18,7 +18,7 @@ define([
     var acceleration = 20;
     var diameter     = 0.5;
     var height       = 1;
-    var jumpHeight   = 3;
+    var jumpHeight   = 3.5;
     var invulnerableDuration = 2;
 
         //charge attack
@@ -70,7 +70,6 @@ define([
 
         this.motionlessElapsedTime = motionlessDuration;
 
-        
     }
 
 
@@ -188,6 +187,7 @@ define([
 
     Player.prototype.onHitEnnemy = function (ennemy) {
         if (Math.abs(this.physics.velocity.x) > speedToBeCharging) {
+            ennemy.mesh.position.x    += (this.physics.velocity.x > 0) ? 1 : -1;
             ennemy.physics.velocity.x = this.physics.velocity.x * 2;
         }
         else {
@@ -209,10 +209,14 @@ define([
     Player.prototype.loseLife = function () {
         this.invulnerable = true;
         this.life--;
+
         hud.updateHealth((this.life / this.maxLife) * 100);
-        if (this.life <= 0)
+
+        if (this.life <= 0) {
             this.kill();
+        }
     };
+
 
     Player.prototype.kill = function() {
         this.dead = true;
@@ -367,7 +371,7 @@ define([
 
 
     Player.prototype.updateChargeAttack = function (deltaTime) {
-        if (inputs.space) {
+        if (inputs.space || inputs.a) {
             this.chargeElapsedTime += deltaTime;
             console.log()
             hud.updateCharge(Math.min((this.chargeElapsedTime / chargeMaxDuration) * 100,100));
@@ -388,7 +392,7 @@ define([
                 this.stopThunderbolt();
             }
         }
-        if (inputs.bottom && (this.physics.onGround || this.physics.onRoof) && this.thunderbolt.rechargeTime <= 2 && (this.thunderbolt.elapsedTime > thunderboltMinDelay)) {
+        if ((inputs.bottom || inputs.z) && (this.physics.onGround || this.physics.onRoof) && this.thunderbolt.rechargeTime <= 2 && (this.thunderbolt.elapsedTime > thunderboltMinDelay)) {
             this.launchThunderbolt();
         }
         this.thunderbolt.rechargeTime -= this.thunderbolt.rechargeTime <= 0 ? 0 : deltaTime*0.5;

@@ -7,7 +7,7 @@ define([
     =            CONFIG            =
     ==============================*/
 
-    var position  = new BABYLON.Vector3(0, 10, -2);
+    var position  = new BABYLON.Vector3(0, 30, -3);
     var direction = new BABYLON.Vector3(0, -1, 0.25)
     var color     = new BABYLON.Color3(1, 1, 1);
 
@@ -27,6 +27,7 @@ define([
 
         light.position = position;
         light.diffuse  = color;
+        light.specular = new BABYLON.Color3(0, 1, 0);
     };
 
 
