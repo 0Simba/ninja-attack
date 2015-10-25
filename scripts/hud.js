@@ -17,22 +17,24 @@ define([
     };
 
     Hud.prototype.createBGDoors = function() {
-        this.$hud.find(".doors").remove();
-        var target = this.$hud.append("<div class='doors' style='width: 100%; height: 100%; position:absolute;'></div>").find(".doors");
+        // this.$hud.find(".doors").remove();
+        // var target = this.$hud.append("<div class='doors' style='width: 100%; height: 100%; position:absolute;'></div>").find(".doors");
 
-        var $baseDiv = $("<img src=''>").css({position: "absolute", display: "block", height: "100%"});
-        $baseDiv.clone().attr("src","assets/menu/leftDoor.png").addClass("door-left").css({width: "50%"}).appendTo(target);
-        $baseDiv.clone().attr("src","assets/menu/rightDoor.png").addClass("door-right").css({width: "50%",marginLeft: "50%"}).appendTo(target);
-        $baseDiv.clone().attr("src","assets/menu/topDoor.png").addClass("door-top").css({width: "100%"}).appendTo(target);
+        // var $baseDiv = $("<img src=''>").css({position: "absolute", display: "block", height: "100%"});
+        // $baseDiv.clone().attr("src","assets/menu/leftDoor.png").addClass("door-left").css({width: "50%"}).appendTo(target);
+        // $baseDiv.clone().attr("src","assets/menu/rightDoor.png").addClass("door-right").css({width: "50%",marginLeft: "50%"}).appendTo(target);
+        // $baseDiv.clone().attr("src","assets/menu/topDoor.png").addClass("door-top").css({width: "100%"}).appendTo(target);
     };
 
     Hud.prototype.openDoors = function() {
+        $('#main_menu').fadeOut(500);
         $(".door-left").finish().animate({left: (-that.size.w)+"px"},1500);
         $(".door-right").finish().animate({left: (that.size.w)+"px"},1500);
         $(".door-top").finish().animate({top: -(that.size.h * 2)+"px"},1500);
     };
 
     Hud.prototype.closeDoors = function() {
+        $('#main_menu').fadeIn(500);
         $(".door-left").finish().animate({left: 0},400);
         $(".door-right").finish().animate({left: 0},400);
         $(".door-top").finish().animate({top: 0},400,function () {
@@ -45,41 +47,50 @@ define([
         Main Menu build function
         creates and attaches events to the main menu's buttons.
     */
-    Hud.prototype.buildMainMenu = function() {
-        $(".menuButtons").remove();
-        this.$hud.append("<div class='menuButtons' style='position:absolute; width: 100%; height:100%;'></div>");
-
-        var launchButton = this.createButton(250,80,25);
-        launchButton
-        .on("mouseup",function () {
-            that.playButtonCallback();
-            that.fadeMainMenu();
-        })
-        .on("mousedown",function () {
+    Hud.prototype.buildMainMenu = function (nbLevel, levelCallback) {
+        var $container = $('.levelContainer');
+        $container.html('');
+        for (var i = 0; i < nbLevel; i++) {
+            $container.append('<div class="level" data-id="' + i + '">' + (i + 1) + '</div>');
+        };
+        $('.level').on('click', function () {
+            var id = $(this).attr('data-id');
+            levelCallback(id);
         });
+       //  $(".menuButtons").remove();
+       //  this.$hud.append("<div class='menuButtons' style='position:absolute; width: 100%; height:100%;'></div>");
 
-        var levelSelectButton = this.createButton(250,80,25);
-        levelSelectButton
-        .on("mouseup",function () {
-            that.buildLevelSelectMenu();
-        })
-        .on("mousedown",function () {
-        });
-        var $mainTitle = $("<h1 class='mainTitle'>Ninja Attack</h1>").css({WebkitFilter: "drop-shadow(12px 7px 7px rgba(0,0,0,.5))", color:"brown", fontSize: "80px", fontFamily: "fantasy", position:"relative", textAlign:"center", margin:"auto", top:-500});
+       //  var launchButton = this.createButton(250,80,25);
+       //  launchButton
+       //  .on("mouseup",function () {
+       //      that.playButtonCallback();
+       //      that.fadeMainMenu();
+       //  })
+       //  .on("mousedown",function () {
+       //  });
 
-        this.$hud.find(".menuButtons").prepend($mainTitle);
-        this.$hud.find(".menuButtons").append(launchButton);
-        //this.$hud.find(".menuButtons").append(levelSelectButton);  <<<<===== level select not finished
+       //  var levelSelectButton = this.createButton(250,80,25);
+       //  levelSelectButton
+       //  .on("mouseup",function () {
+       //      that.buildLevelSelectMenu();
+       //  })
+       //  .on("mousedown",function () {
+       //  });
+       //  var $mainTitle = $("<h1 class='mainTitle'>Ninja Attack</h1>").css({WebkitFilter: "drop-shadow(12px 7px 7px rgba(0,0,0,.5))", color:"brown", fontSize: "80px", fontFamily: "fantasy", position:"relative", textAlign:"center", margin:"auto", top:-500});
 
-        launchButton.find(".content").text("Play");
-        levelSelectButton.find(".content").text("Select Level");
-        launchButton.css({left:"-1000px", top: "60%"});
-        levelSelectButton.css({left:"-1000px", top:"70%"});
+       //  this.$hud.find(".menuButtons").prepend($mainTitle);
+       //  this.$hud.find(".menuButtons").append(launchButton);
+       //  //this.$hud.find(".menuButtons").append(levelSelectButton);  <<<<===== level select not finished
 
-       $('.mainTitle').animate({top:"20%"},600);
-        $('.menuButtons').children().each(function (index) {
-            $(this).animate({left:$("#canvas").width()*0.5 - $(this).width() * 0.5},600);
-        });
+       //  launchButton.find(".content").text("Play");
+       //  levelSelectButton.find(".content").text("Select Level");
+       //  launchButton.css({left:"-1000px", top: "60%"});
+       //  levelSelectButton.css({left:"-1000px", top:"70%"});
+
+       // $('.mainTitle').animate({top:"20%"},600);
+       //  $('.menuButtons').children().each(function (index) {
+       //      $(this).animate({left:$("#canvas").width()*0.5 - $(this).width() * 0.5},600);
+       //  });
     };
 
     Hud.prototype.playButtonCallback = function() {};
@@ -211,7 +222,7 @@ define([
         this.$hud.find(".doors").append(fadeOverlay);
         this.closeDoors();
         fadeOverlay.delay(400).animate({opacity: 1},700, function () {
-           that.buildMainMenu();
+           // that.buildMainMenu();
         });
     };
 

@@ -52,6 +52,7 @@
         }
         .hudOverlay .collectible.picked {
             opacity : 1;
+            font-family: fantasy;
         }
         .menuButtons {
             font-size: 1.5em;
@@ -62,38 +63,68 @@
             box-shadow : 5px 5px 5px 0px #000;
         }
 
-        /* on garde les règles CSS au cas ou */
-       /* .triangle{
-            border: 400px solid;
-            border-color: rgba(0,0,0,0);
-            position: absolute;
+
+        .title {
+            color:brown;
+            font-size: 80px;
+            position:relative;
+            text-align:center;
+            text-shadow: 10px 10px 40px #000;
+        }
+        .content {
+            width : 100%;
+        }
+        .content .inputs {
+            width : 48%;
+            float : left;
+            font-size: 1.2em;
+        }
+        .level {
+            width  : 50px;
+            height : 50px;
+            float  : left;
+            cursor : pointer;
+            color  : white;
+            text-align : center;
+            line-height: 50px;
+            font-size  : 30px;
+            border-color : 3px solid black;
+            border-radius: 10px;
+            background-color: brown;
+            margin-right: 5px;
+            margin-top: 5px;
+        }
+        .level:hover {
+            background-color : #E22;
+        }
+        #main_menu {
+            top : 0px;
+            background-color : #EAEAEA;
+            width : 100%;
+            height : 100%;
+            position : absolute;
         }
 
-        .leftCorner{
-            top: -200px;
-            left: -450px;
-            border-bottom-color: #000;
-        }
-
-        .rightCorner{
-            top: -200px;
-            left: 450px;
-            border-bottom-color: #000;
-        }
-
-        .topTriangle{
-            left: -250px;
-            border-width: 650px;
-            border-top-color: #FFF;
-        }*/
     </style>
 </head>
 <body>
 <canvas id="canvas" width="1600" height="900"></canvas>
-<!-- <div id="debug">
-player life  : <span class="player_life">0</span><br />
-charge ratio : <span class="charge_ratio">0</span><br />
-</div> -->
-<div class="hudOverlay"></div>
+
+<div class="hudOverlay">
+    <div id="main_menu">
+        <h1 class="title">Ninja Attack</h1>
+        <div class="content">
+            <div class="inputs">
+                A ou ESPACE : Attaque charge <br />
+                Z ou flêche bas : Attaque éclair <br />
+                flêches gauche/droite : Déplacement <br />
+                flêche haut : Saut
+            </div>
+            <div class="levelContainer">
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

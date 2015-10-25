@@ -81,7 +81,9 @@ require([
         $.getJSON("assets/levels/level0.json", function(data) {
             gameDatas = data;
             hud.createBGDoors();
-            hud.buildMainMenu();
+            hud.buildMainMenu(gameDatas.list.length, function (loadLevelIndex) {
+                launch(loadLevelIndex);
+            });
 
             load(function () {});
         });
@@ -140,9 +142,10 @@ require([
     }
 
 
-    function launch () {
+    function launch (levelIndex) {
+        hud.openDoors();
+        hud.buildInGameHud();
         load(function () {
-            var levelIndex = parseInt(prompt('level index'));
             gameData = gameDatas.list[levelIndex];
 
             addSkybox(scene);
