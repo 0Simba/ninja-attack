@@ -133,11 +133,11 @@ require([
     function startLevel (level) {
         hud.openDoors();
         hud.buildInGameHud();
-        launch(tasks);
+        launch();
     }
 
 
-    function launch (tasks) {
+    function launch () {
         load(function () {
             var levelIndex = parseInt(prompt('level index'));
             gameData = gameDatas.list[levelIndex];

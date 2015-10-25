@@ -186,7 +186,7 @@ define([
         // this.thunderbolt.particleSystem.manualEmitCount = 300;
         this.thunderbolt.particleSystem.minAngularSpeed = 0;
         this.thunderbolt.particleSystem.maxAngularSpeed = 2;
-        this.thunderbolt.particleSystem.particleTexture = new BABYLON.Texture("../assets/thunderbolt.png", scene);
+        this.thunderbolt.particleSystem.particleTexture = new BABYLON.Texture("./assets/thunderbolt.png", scene);
 
     };
 
