@@ -155,7 +155,7 @@ define([
         this.thunderbolt.spawnPoint.position = thunderboltOffset;
         this.thunderbolt.spawnPoint.parent   = this.mesh;
 
-        this.thunderbolt.mesh            = BABYLON.Mesh.CreateBox("thunderbolt", {height: thunderboltOffset.y, width : 0.3, length : 0.1}, scene);
+        this.thunderbolt.mesh            = BABYLON.Mesh.CreateBox("thunderbolt", {height: thunderboltOffset.y, width : 1, depth : 0.2}, scene);
         this.thunderbolt.mesh.position   = new BABYLON.Vector3(thunderboltOffset.x, thunderboltOffset.y, thunderboltOffset.z);
         this.thunderbolt.mesh.position.y -= thunderboltOffset.y / 2;
         this.thunderbolt.mesh.parent     = this.mesh;
