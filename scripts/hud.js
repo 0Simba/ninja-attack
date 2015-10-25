@@ -111,6 +111,8 @@ define([
             width: "100%",
             textAlign: "center",
             pointerEvents: "none",
+            fontSize: "24px", 
+            fontFamily: "fantasy",
             WebkitTransform: "skew("+(-angle)+"deg)",
             MozTransform: "skew("+(-angle)+"deg)"
         })
