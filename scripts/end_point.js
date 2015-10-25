@@ -17,7 +17,7 @@ define([
         endPoint.actionManager = new BABYLON.ActionManager(scene);
         endPoint.actionManager.registerAction(
             new BABYLON.ExecuteCodeAction({ 'trigger' : BABYLON.ActionManager.OnIntersectionEnterTrigger, parameter : player.mesh}, function () {
-                if (collectiblesBuilder.picked.length === collectiblesBuilder.nbPicked) {
+                if (collectiblesBuilder.list.length === collectiblesBuilder.nbPicked) {
                     console.log('You win');
                 } else {
                     alert('pas assez d\'etoiles');
@@ -35,7 +35,7 @@ define([
         endPoint.update = function (deltaTime) {
             endPoint.elapsedTime += deltaTime;
 
-            if (collectiblesBuilder.picked.length === collectiblesBuilder.nbPicked) {
+            if (collectiblesBuilder.list.length === collectiblesBuilder.nbPicked) {
                 endPoint.move();
             }
         };
