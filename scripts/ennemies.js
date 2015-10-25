@@ -3,8 +3,9 @@ define([
     './ennemies/rabit',
     './ennemies/scyther',
     './ennemies/butterfree',
-    './ennemies/venomoth'
-], function (BABYLON, Rabit, Scyther, Butterfree, Venomoth) {
+    './ennemies/venomoth',
+    './sounds'
+], function (BABYLON, Rabit, Scyther, Butterfree, Venomoth, sounds) {
     'use strict';
 
 
@@ -77,6 +78,7 @@ define([
             ennemy.mesh.dispose();
             this.list.splice(ennemyIndex, 1);
         }
+        sounds.play('kill');
     }
 
     var ennemies = new Ennemies;

@@ -1,8 +1,9 @@
 require.config({
     urlArgs: window.location.hostname === 'localhost' ? 'bust=' + Date.now() : '',
     paths: {
-        jquery: './libs/jquery',
-        babylon: './libs/babylon'
+        jquery : './libs/jquery',
+        babylon: './libs/babylon',
+        howler : './libs/howler'
     },
     shim: {
         jquery: {
@@ -10,6 +11,9 @@ require.config({
         },
         babylon: {
             exports : 'BABYLON'
+        },
+        howler: {
+            exports : 'Howler'
         }
     }
 });
@@ -32,8 +36,10 @@ require([
     './scripts/hud',
     './scripts/end_point',
     './scripts/min_y',
+    './scripts/sounds',
+
     './scripts/inputs'
-], function (BABYLON, $, camera, player, addSkybox, mainLight, wallsBuilder, collectiblesBuilder, lifesBuilder, hotZonesChecker, ennemies, hud, initEndPoint, minY) {
+], function (BABYLON, $, camera, player, addSkybox, mainLight, wallsBuilder, collectiblesBuilder, lifesBuilder, hotZonesChecker, ennemies, hud, initEndPoint, minY, sounds) {
     'use strict';
 
     /*==============================
@@ -149,6 +155,8 @@ require([
         collectiblesBuilder.build(scene, gameData.collectibles);
         lifesBuilder.build(scene, gameData.lifes);
 
+        sounds.startGame();
+
         engine.runRenderLoop(function() {
             if (player.dead) {
                 engine.stopRenderLoop();
@@ -169,6 +177,7 @@ require([
 
 
     function destroy () {
+        sounds.endGame();
         scene.dispose();
         build();
         hud.gameoverFade();

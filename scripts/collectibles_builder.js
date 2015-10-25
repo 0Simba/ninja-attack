@@ -1,10 +1,10 @@
 define([
     'babylon',
     './player',
-    './entity_rotate_capabilities'
-], function (BABYLON, player, addEntityRotate) {
+    './entity_rotate_capabilities',
+    './sounds'
+], function (BABYLON, player, addEntityRotate, sounds) {
     'use strict';
-
 
 
     function CollectiblesBuilder () {
@@ -28,6 +28,7 @@ define([
 
 
     CollectiblesBuilder.prototype.pick = function (collectible) {
+        sounds.play('collectible');
         this.nbPicked++;
 
         var index = this.list.indexOf(collectible);

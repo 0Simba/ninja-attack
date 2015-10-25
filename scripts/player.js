@@ -6,8 +6,9 @@ define([
     './entity_capabilities',
     './min_y',
     './animator',
-    './hud'
-], function ($, BABYLON, inputs, EntityPhysics, addEntityCapabilities, minY, Animator, hud) {
+    './hud',
+    './sounds'
+], function ($, BABYLON, inputs, EntityPhysics, addEntityCapabilities, minY, Animator, hud, sounds) {
     'use strict';
 
     /*==============================
@@ -44,6 +45,10 @@ define([
     // animations
     var walkSpeed = 0.3;
     var runSpeed  = 3.4;
+
+    // step sounds
+    var walkStepDelta = 0.5;
+    var runStepDelta  = 0.3;
 
     var maxLife = 3;
 
@@ -110,6 +115,7 @@ define([
         this.setChildsMeshes(meshes);
         this.initThunderboltAttack(scene);
 
+        this.stepElapsedTime = 0;
 
 
         this.physics = new EntityPhysics(this);
@@ -188,6 +194,7 @@ define([
         if (Math.abs(this.physics.velocity.x) > speedToBeCharging) {
             ennemy.mesh.position.x    += (this.physics.velocity.x > 0) ? 1 : -1;
             ennemy.physics.velocity.x = this.physics.velocity.x * 2;
+            sounds.play('eject');
         }
         else {
             this.physics.velocity.y = this.jumpForce / 2;
@@ -206,6 +213,7 @@ define([
 
 
     Player.prototype.loseLife = function () {
+        sounds.play('hit');
         this.invulnerable = true;
         this.life--;
 
@@ -226,6 +234,7 @@ define([
         this.physics.velocity.y = this.jumpForce;
         if (!this.physics.onRoof) {
             this.animator.play('jump');
+            sounds.play('jump');
         }
     };
 
@@ -236,6 +245,8 @@ define([
         this.chargeElapsedTime = 0;
         this.physics.velocity.x = chargeMaxVelocity.x * ratio * -this.direction;
         this.physics.velocity.y += chargeMaxVelocity.y * ratio;
+
+        sounds.play('charge');
     };
 
 
@@ -268,6 +279,7 @@ define([
 
 
     Player.prototype.launchThunderbolt = function () {
+        sounds.play('thunderbolt');
         this.isDoingThunderbolt       = true;
         this.thunderbolt.elapsedTime = 0;
         this.thunderbolt.rechargeTime += 1;
@@ -302,6 +314,7 @@ define([
         this.updateChargeAttack(deltaTime);
         this.updateThunderboltAttack(deltaTime);
         this.checkFallDeath(deltaTime);
+        this.updateStepSound(deltaTime);
         this.updateAnimations();
     };
 
@@ -420,6 +433,32 @@ define([
         }
         else {
             this.animator.play('idle');
+        }
+    };
+
+
+    Player.prototype.updateStepSound = function (deltaTime) {
+        if (!(this.physics.onRoof || this.physics.onGround || this.physics.lastFrameOnGround)) {
+            return;
+        }
+
+        var absOfXVel = Math.abs(this.physics.velocity.x);
+        if (absOfXVel > runSpeed) {
+            this.stepElapsedTime += deltaTime;
+            if (this.stepElapsedTime > runStepDelta) {
+                this.stepElapsedTime -= runStepDelta;
+                sounds.play('step');
+            }
+        }
+        else if (absOfXVel > walkSpeed) {
+            this.stepElapsedTime += deltaTime;
+            if (this.stepElapsedTime > walkStepDelta) {
+                this.stepElapsedTime -= walkStepDelta;
+                sounds.play('step');
+            }
+        }
+        else {
+            this.stepElapsedTime = 0;
         }
     };
 
