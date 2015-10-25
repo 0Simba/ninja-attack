@@ -37,7 +37,10 @@ define([
         this.childsMeshes = [];
 
         for (var i = 1; i < meshes.length; i++) {
-            var mesh = meshes[i].clone();
+            var mesh     = meshes[i].clone();
+            var material = meshes[i].material.clone();
+
+            mesh.material = material;
             mesh.parent = this.mesh;
 
             mesh.scaling.x = 0.02;

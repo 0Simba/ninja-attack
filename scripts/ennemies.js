@@ -46,6 +46,10 @@ define([
 
     Ennemies.prototype.update = function (deltaTime) {
         for (var i = this.list.length - 1; i >= 0; i--) {
+            if (!this.list[i]) {
+                return;
+            }
+
             this.list[i].update(deltaTime);
         };
     };

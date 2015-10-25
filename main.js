@@ -40,7 +40,7 @@ require([
     =            CONFIG            =
     ==============================*/
 
-    var maxDeltaTime = 0.1;
+    var maxDeltaTime = 0.033;
 
 
 
