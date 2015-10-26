@@ -1,7 +1,10 @@
 define([
     'babylon',
-    './player'
-], function (BABYLON, player) {
+    './entity_rotate_capabilities',
+    './player',
+    './hud',
+    './sounds'
+], function (BABYLON, addEntityRotate, player, hud, sounds) {
     'use strict';
 
 
@@ -19,26 +22,40 @@ define([
     };
 
 
+    LifesBuilder.prototype.update = function (deltaTime) {
+        for (var i = this.list.length - 1; i >= 0; i--) {
+            var life = this.list[i];
+            life.updateRotation(deltaTime);
+        };
+    };
+
 
     function Lifes (scene, data) {
+        var texture  = new BABYLON.Texture('./assets/life.jpg', scene);
         var material = new BABYLON.StandardMaterial("material", scene);
-        material.emissiveColor = new BABYLON.Color3(0, 1, 1);
+        material.diffuseTexture = texture;
 
         var that = this;
 
-        this.mesh = BABYLON.Mesh.CreateCylinder("life", 0.3, 0.3, 0.3, 20, scene);
+        this.mesh = BABYLON.Mesh.CreateSphere("life", 10, 0.4, scene);
         this.mesh.position = new BABYLON.Vector3(data.x, data.y, 0);
         this.mesh.material = material;
+        this.mesh.visibility = 0.8;
 
         this.mesh.actionManager = new BABYLON.ActionManager(scene);
         this.mesh.actionManager.registerAction(
             new BABYLON.ExecuteCodeAction({ 'trigger' : BABYLON.ActionManager.OnIntersectionEnterTrigger, parameter : player.mesh}, function () {
                 if (player.life < player.maxLife) {
+                    sounds.play('life');
                     player.life++;
+                    hud.updateHealth((player.life / player.maxLife) * 100);
                     that.mesh.dispose();
                 }
             }
         ));
+
+
+        addEntityRotate(this);
     }
 
     return new LifesBuilder();

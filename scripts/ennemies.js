@@ -3,8 +3,9 @@ define([
     './ennemies/rabit',
     './ennemies/scyther',
     './ennemies/butterfree',
-    './ennemies/venomoth'
-], function (BABYLON, Rabit, Scyther, Butterfree, Venomoth) {
+    './ennemies/venomoth',
+    './sounds'
+], function (BABYLON, Rabit, Scyther, Butterfree, Venomoth, sounds) {
     'use strict';
 
 
@@ -46,6 +47,10 @@ define([
 
     Ennemies.prototype.update = function (deltaTime) {
         for (var i = this.list.length - 1; i >= 0; i--) {
+            if (!this.list[i]) {
+                return;
+            }
+
             this.list[i].update(deltaTime);
         };
     };
@@ -73,6 +78,7 @@ define([
             ennemy.mesh.dispose();
             this.list.splice(ennemyIndex, 1);
         }
+        sounds.play('kill');
     }
 
     var ennemies = new Ennemies;

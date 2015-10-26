@@ -2,13 +2,15 @@ define([
     'jquery',
     'babylon',
     './inputs',
-    './entityPhysics',
+    './entity_physics',
     './entity_capabilities',
-    './minY',
+    './min_y',
     './animator',
-    './hud'
-], function ($, BABYLON, inputs, EntityPhysics, addEntityCapabilities, minY, Animator, hud) {
+    './hud',
+    './sounds'
+], function ($, BABYLON, inputs, EntityPhysics, addEntityCapabilities, minY, Animator, hud, sounds) {
     'use strict';
+
 
     /*==============================
     =            CONFIG            =
@@ -18,7 +20,7 @@ define([
     var acceleration = 20;
     var diameter     = 0.5;
     var height       = 1;
-    var jumpHeight   = 3;
+    var jumpHeight   = 3.5;
     var invulnerableDuration = 2;
 
         //charge attack
@@ -45,6 +47,10 @@ define([
     var walkSpeed = 0.3;
     var runSpeed  = 3.4;
 
+    // step sounds
+    var walkStepDelta = 0.5;
+    var runStepDelta  = 0.3;
+
     var maxLife = 3;
 
 
@@ -69,8 +75,6 @@ define([
         this.chargeElapsedTime = 0;
 
         this.motionlessElapsedTime = motionlessDuration;
-
-        
     }
 
 
@@ -112,6 +116,7 @@ define([
         this.setChildsMeshes(meshes);
         this.initThunderboltAttack(scene);
 
+        this.stepElapsedTime = 0;
 
 
         this.physics = new EntityPhysics(this);
@@ -121,8 +126,8 @@ define([
             }
         }
 
-
         this.initAnimator();
+        hud.updateHealth((this.life / this.maxLife) * 100);
     };
 
 
@@ -156,7 +161,7 @@ define([
         this.thunderbolt.spawnPoint.position = thunderboltOffset;
         this.thunderbolt.spawnPoint.parent   = this.mesh;
 
-        this.thunderbolt.mesh            = BABYLON.Mesh.CreateBox("thunderbolt", {height: thunderboltOffset.y, width : 0.3, length : 0.1}, scene);
+        this.thunderbolt.mesh            = BABYLON.Mesh.CreateBox("thunderbolt", {height: thunderboltOffset.y, width : 1, depth : 0.2}, scene);
         this.thunderbolt.mesh.position   = new BABYLON.Vector3(thunderboltOffset.x, thunderboltOffset.y, thunderboltOffset.z);
         this.thunderbolt.mesh.position.y -= thunderboltOffset.y / 2;
         this.thunderbolt.mesh.parent     = this.mesh;
@@ -188,7 +193,9 @@ define([
 
     Player.prototype.onHitEnnemy = function (ennemy) {
         if (Math.abs(this.physics.velocity.x) > speedToBeCharging) {
+            ennemy.mesh.position.x    += (this.physics.velocity.x > 0) ? 1 : -1;
             ennemy.physics.velocity.x = this.physics.velocity.x * 2;
+            sounds.play('eject');
         }
         else {
             this.physics.velocity.y = this.jumpForce / 2;
@@ -207,16 +214,20 @@ define([
 
 
     Player.prototype.loseLife = function () {
+        sounds.play('hit');
         this.invulnerable = true;
         this.life--;
+
         hud.updateHealth((this.life / this.maxLife) * 100);
-        if (this.life <= 0)
+
+        if (this.life <= 0) {
             this.kill();
+        }
     };
+
 
     Player.prototype.kill = function() {
         this.dead = true;
-        hud.gameoverFade();
     };
 
 
@@ -224,6 +235,7 @@ define([
         this.physics.velocity.y = this.jumpForce;
         if (!this.physics.onRoof) {
             this.animator.play('jump');
+            sounds.play('jump');
         }
     };
 
@@ -234,6 +246,8 @@ define([
         this.chargeElapsedTime = 0;
         this.physics.velocity.x = chargeMaxVelocity.x * ratio * -this.direction;
         this.physics.velocity.y += chargeMaxVelocity.y * ratio;
+
+        sounds.play('charge');
     };
 
 
@@ -254,6 +268,9 @@ define([
 
 
     Player.prototype.placeOnLastGroundPosition = function () {
+        if (!this.physics.lastGroundPosition) {
+            return;
+        }
         this.mesh.position.x = this.physics.lastGroundPosition.x;
         this.mesh.position.y = this.physics.lastGroundPosition.y + yOffsetRespawn;
 
@@ -263,6 +280,7 @@ define([
 
 
     Player.prototype.launchThunderbolt = function () {
+        sounds.play('thunderbolt');
         this.isDoingThunderbolt       = true;
         this.thunderbolt.elapsedTime = 0;
         this.thunderbolt.rechargeTime += 1;
@@ -297,6 +315,7 @@ define([
         this.updateChargeAttack(deltaTime);
         this.updateThunderboltAttack(deltaTime);
         this.checkFallDeath(deltaTime);
+        this.updateStepSound(deltaTime);
         this.updateAnimations();
     };
 
@@ -367,7 +386,7 @@ define([
 
 
     Player.prototype.updateChargeAttack = function (deltaTime) {
-        if (inputs.space) {
+        if (inputs.space || inputs.a) {
             this.chargeElapsedTime += deltaTime;
             console.log()
             hud.updateCharge(Math.min((this.chargeElapsedTime / chargeMaxDuration) * 100,100));
@@ -388,7 +407,7 @@ define([
                 this.stopThunderbolt();
             }
         }
-        if (inputs.bottom && (this.physics.onGround || this.physics.onRoof) && this.thunderbolt.rechargeTime <= 2 && (this.thunderbolt.elapsedTime > thunderboltMinDelay)) {
+        if ((inputs.bottom || inputs.z) && (this.physics.onGround || this.physics.onRoof) && this.thunderbolt.rechargeTime <= 2 && (this.thunderbolt.elapsedTime > thunderboltMinDelay)) {
             this.launchThunderbolt();
         }
         this.thunderbolt.rechargeTime -= this.thunderbolt.rechargeTime <= 0 ? 0 : deltaTime*0.5;
@@ -415,6 +434,32 @@ define([
         }
         else {
             this.animator.play('idle');
+        }
+    };
+
+
+    Player.prototype.updateStepSound = function (deltaTime) {
+        if (!(this.physics.onRoof || this.physics.onGround || this.physics.lastFrameOnGround)) {
+            return;
+        }
+
+        var absOfXVel = Math.abs(this.physics.velocity.x);
+        if (absOfXVel > runSpeed) {
+            this.stepElapsedTime += deltaTime;
+            if (this.stepElapsedTime > runStepDelta) {
+                this.stepElapsedTime -= runStepDelta;
+                sounds.play('step');
+            }
+        }
+        else if (absOfXVel > walkSpeed) {
+            this.stepElapsedTime += deltaTime;
+            if (this.stepElapsedTime > walkStepDelta) {
+                this.stepElapsedTime -= walkStepDelta;
+                sounds.play('step');
+            }
+        }
+        else {
+            this.stepElapsedTime = 0;
         }
     };
 

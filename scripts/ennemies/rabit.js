@@ -9,7 +9,7 @@ define([
 
         this.mesh = BABYLON.Mesh.CreateBox("rabit", {height: 0.8, width : 0.5, length : 0.1}, scene);
         this.mesh.position = new BABYLON.Vector3(data.x, data.y, 0);
-        this.mesh.ellipsoid = new BABYLON.Vector3(0.25, 0.25, 0.25);
+        this.mesh.ellipsoid = new BABYLON.Vector3(0.5, 0.25, 0.25);
         this.mesh.isVisible = false;
 
         this.setChildsMeshes(rabitMeshes);
@@ -37,7 +37,10 @@ define([
         this.childsMeshes = [];
 
         for (var i = 1; i < meshes.length; i++) {
-            var mesh = meshes[i].clone();
+            var mesh     = meshes[i].clone();
+            var material = meshes[i].material.clone();
+
+            mesh.material = material;
             mesh.parent = this.mesh;
 
             mesh.scaling.x = 0.02;

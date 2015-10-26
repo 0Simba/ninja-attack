@@ -1,5 +1,5 @@
 define([
-    '../entityPhysics',
+    '../entity_physics',
     '../entity_capabilities',
 ], function (EntityPhysics, addEntityCapabilities) {
     'use strict';
