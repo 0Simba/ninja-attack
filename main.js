@@ -82,6 +82,7 @@ require([
             }
 
             loader.onFinish = function () {
+                hud.retrieveGameData(gameDatas);
                 hud.createBGDoors();
                 hud.buildMainMenu();
             };
@@ -106,20 +107,18 @@ require([
     }
 
     /** public function to be used in hud.js
-
         @param string level => key of the level to launch (unused for now)
-
     */
     function startLevel (level) {
-        hud.openDoors();
+        setTimeout(hud.openDoors, 1500); 
         hud.buildInGameHud();
-        launch(tasks);
+        var activeLevel = level || 0;
+        launch(tasks,activeLevel);
     }
 
 
-    function launch (tasks) {
-        var levelIndex = parseInt(prompt('level index'));
-        gameData = gameDatas.list[levelIndex];
+    function launch (tasks,level) {
+        gameData = gameDatas.list[level];
         addSkybox(scene);
         wallsBuilder(scene, gameData.walls);
         minY.set(gameData.walls);
