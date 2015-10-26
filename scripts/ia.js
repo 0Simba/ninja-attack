@@ -14,7 +14,7 @@ define([
     var leftRightSpeed = 3;
 
     ia.addLeftRightIA = function (object) {
-        object.moveDuration    = object.iaValue / leftRightSpeed;
+        object.moveDuration    = object.iaValue / leftRightSpeed * 4; // 4 adapt original game error
         object.moveElapsedTime = 0;
         object.direction       = -1;
 
