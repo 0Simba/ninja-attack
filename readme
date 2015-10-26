@@ -1,0 +1,18 @@
+Concept
+    Le jeu est une reprise du jeu Pikachu Attack -> http://baptistedersoir.name/project/pikachuAttack/
+    Le joueur dois rammasser des sphères jaunes afin d'activer la porte de sortie.
+
+Auteurs
+    Florian François
+    Théo Touaty
+    Baptiste Dersoir
+
+Controles
+    A ou ESPACE   = Attaque charge
+    Z ou BAS      = Attaque éclair
+    GAUCHE DROITE = Déplacements
+    HAUT          = Sauter
+
+
+Bug Connus
+    Les collisions entre le joueur et les ennemis se produisent parfois mal (très rare et aléatoire).
