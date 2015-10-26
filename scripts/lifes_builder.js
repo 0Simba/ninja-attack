@@ -2,8 +2,9 @@ define([
     'babylon',
     './entity_rotate_capabilities',
     './player',
-    './hud'
-], function (BABYLON, addEntityRotate, player, hud) {
+    './hud',
+    './sounds'
+], function (BABYLON, addEntityRotate, player, hud, sounds) {
     'use strict';
 
 
@@ -45,6 +46,7 @@ define([
         this.mesh.actionManager.registerAction(
             new BABYLON.ExecuteCodeAction({ 'trigger' : BABYLON.ActionManager.OnIntersectionEnterTrigger, parameter : player.mesh}, function () {
                 if (player.life < player.maxLife) {
+                    sounds.play('life');
                     player.life++;
                     hud.updateHealth((player.life / player.maxLife) * 100);
                     that.mesh.dispose();

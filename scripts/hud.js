@@ -1,7 +1,7 @@
 define([
     'jquery',
     './player'
-], function ($,player) {
+], function ($, player) {
     'use strict';
     var that;
 
@@ -32,12 +32,14 @@ define([
     };
 
     Hud.prototype.openDoors = function() {
+        $('#main_menu').fadeOut(500);
         $(".door-left").finish().animate({left: (-that.size.w)+"px"},1500);
         $(".door-right").finish().animate({left: (that.size.w)+"px"},1500);
         $(".door-top").finish().animate({top: -(that.size.h * 2)+"px"},1500);
     };
 
     Hud.prototype.closeDoors = function() {
+        $('#main_menu').fadeIn(500);
         $(".door-left").finish().animate({left: 0},400);
         $(".door-right").finish().animate({left: 0},400);
         $(".door-top").finish().animate({top: 0},400,function () {
@@ -149,7 +151,7 @@ define([
     Hud.prototype.buildLevelSelectMenu = function() {
         $('.levelSelectContainer').remove();
         var levelSelectContainer = $("<div class='fullDiv levelSelectContainer'></div>").appendTo(this.$hud);
-        var levelSelector = $("<div class='levelSelector'></div>").appendTo(levelSelectContainer);
+        var levelSelector = $("<div class='levelSelector'><div class='inner' style='width: 15000px;'></div></div>").appendTo(levelSelectContainer);
 
         levelSelector.css({
             position:"relative",
@@ -179,13 +181,41 @@ define([
         levelSelector.animate({top:"30%"},600);
 
         for (var i = 0; i < this.gameData.list.length; i++) {
-            var newBox = levelBox.clone().appendTo(levelSelector).delay(600 + i* 50).animate({top:0},200);
+            var newBox = levelBox.clone().appendTo(levelSelector.find(".inner")).delay(600 + i* 50).animate({top:0},200);
             newBox.find(".text").text("Level "+i);
+            newBox.data("level",i);
             newBox.on('mouseup',function () {
                 that.fadeLevelSelectMenu();
-                that.playButtonCallback(i); 
+                that.playButtonCallback(parseInt($(this).data("level"),10)); 
             });
         };
+
+        var leftButton = that.createButton(50,50,-10).addClass("leftButton")
+        .on("mouseup",function () {
+            var offset = parseInt($(".levelBox").first().position().left,10);
+            if (Math.abs(offset) < $(".levelBox").first().outerWidth(true) * ($(".levelBox").length - 4)) 
+                $(".levelBox").animate({left: "-="+$(".levelBox").first().outerWidth(true)+"px"},250);
+        }).css({
+            top: "50%",
+            left: "-110%",
+        });
+        leftButton.find(".content").text("<");
+        levelSelectContainer.append(leftButton);
+        leftButton.animate({left:"15%"},400);
+
+        var rightButton = that.createButton(50,50,10).addClass("rightButton")
+        .on("mouseup",function () {
+            var offset = parseInt($(".levelBox").first().position().left,10);
+            if (offset < 0) 
+                $(".levelBox").animate({left: "+="+$(".levelBox").first().outerWidth(true)+"px"},250);
+        }).css({
+            top: "50%",
+            left: "110%", 
+        });
+        levelSelectContainer.append(rightButton);
+        rightButton.find(".content").text(">");
+        rightButton.animate({left:"85%"},400);
+
 
         var returnButton = that.createButton(250,80,25)
         .on("mouseup",function () {
@@ -323,11 +353,17 @@ define([
         });
     };
 
+
+    var inGameHudBuilded = false;
     Hud.prototype.buildInGameHud = function() {
+        if (inGameHudBuilded) {
+            return;
+        }
+        inGameHudBuilded = true;
         /*
             collectibles
         */
-        var $inGameHud = $("<div class='inGameHud' style='position:absolute; width:100%; height:100%;'></div>").prependTo(this.$hud);
+        this.$inGameHud = $("<div class='inGameHud' style='position:absolute; width:100%; height:100%;'></div>").prependTo(this.$hud);
         var $healthBarContainer = $("<div></div>").css({
             width           : "20%",
             height          : "5%",
@@ -335,7 +371,7 @@ define([
             margin          : "1%",
             border          : "5px black solid",
             position        : "absolute"
-        }).appendTo($inGameHud);
+        }).appendTo(this.$inGameHud);
         var $healthBar = $("<div class='healthBar'></div>").css({
             position        : "absolute",
             width           : "100%",
@@ -347,16 +383,31 @@ define([
             width       : "2%",
             height      : "25%",
             marginTop   : "5%"
-        }).appendTo($inGameHud);
+        }).appendTo(this.$inGameHud);
         $chargeBarContainer.children().remove();
         $healthBar.clone().removeClass().addClass("chargeBar").css({height:"0%", backgroundColor: "yellow"}).appendTo($chargeBarContainer);
 
-        var $thunderBarContainer = $chargeBarContainer.clone().css({marginLeft: "4%"}).appendTo($inGameHud);
+        var $thunderBarContainer = $chargeBarContainer.clone().css({marginLeft: "4%"}).appendTo(this.$inGameHud);
         $thunderBarContainer.children().remove();
         $healthBar.clone().removeClass().addClass("thunderBar").css({height:"0%", backgroundColor: "yellow"}).appendTo($thunderBarContainer);
         $healthBar.clone().removeClass().addClass("thunderBar2").css({height:"0%", backgroundColor: "red"}).appendTo($thunderBarContainer);
 
+        this.$collectibles = $("<div class='collectibles_container' id='collectibles_container'></div>").prependTo(this.$inGameHud);
     };
+
+
+    Hud.prototype.addCollectibles = function (number) {
+        this.$collectibles.html('');
+        for (var i = 0 ; i < number ; i++) {
+            this.$collectibles.append('<div class="collectible id_' + i + '"></div>');
+        };
+    };
+
+
+    Hud.prototype.pickCollectible = function (index) {
+        $('.collectible.id_' + index).addClass('picked');
+    };
+
 
     Hud.prototype.updateHealth = function(percentage) {
         this.$hud.find(".healthBar").css({width: percentage+"%"})
@@ -386,7 +437,7 @@ define([
         this.$hud.find(".doors").append(fadeOverlay);
         this.closeDoors();
         fadeOverlay.delay(400).animate({opacity: 1},700, function () {
-           that.buildMainMenu();
+            that.buildMainMenu();
         });
     };
 

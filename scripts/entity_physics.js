@@ -20,6 +20,7 @@ define([
 
         this.parent.mesh.checkCollisions = true;
         this.onEntityCollide = onEntityCollide || function () {};
+        this.lastFrameOnGround = false;
 
         var entityPhysics = this;
 
@@ -51,6 +52,8 @@ define([
 
 
     EntityPhysics.prototype.update = function (deltaTime) {
+        this.lastFrameOnGround = this.onGround;
+
         this.currentProcessDirection = 'y';
         this.updatePositionAndVelocityY(deltaTime);
 
@@ -58,6 +61,7 @@ define([
         this.updatePositionAndVelocityX(deltaTime);
 
         this.currentProcessDirection = null;
+
     };
 
 

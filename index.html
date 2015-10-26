@@ -1,6 +1,7 @@
 <html>
 <head>
     <title>Ninja Attack</title>
+    <meta charset="UTF-8">
     <script type="text/javascript" data-main="main" src="./libs/require.js"></script>
     <script type="text/javascript" src="./libs/OIMO.js"></script>
 
@@ -40,18 +41,84 @@
             width: 100%;
             height: 100%;
         }
+        
+        .hudOverlay .collectibles_container {
+            position: absolute;
+            width: 100%;
+            margin-left: 8%;
+            margin-top: 6%;
+        }
 
-        .levelBox:hover{
+        .hudOverlay .collectible {
+            background: url(./assets/end_point.jpg) no-repeat center fixed;
+            -webkit-background-size: cover;
+            background-size        : cover;
+            border-radius   : 50%;
+            opacity         : 0.3;
+            box-shadow      : 5px 5px 5px 0px #000;
+            margin-left: 3px;
+            width : 25px;
+            height: 25px;
+            float : left;
+            border : 1px solid black;
+        }
+        .hudOverlay .collectible.picked {
+            opacity : 1;
+            font-family: fantasy;
+        }
+        
+        .levelBox:hover {
             -webkit-filter: brightness(180%);
         }
+
+        .title {
+            color:brown;
+            font-size: 80px;
+            position:relative;
+            text-align:center;
+            text-shadow: 10px 10px 40px #000;
+        }
+        .content {
+            width : 100%;
+        }
+        .content .inputs {
+            width : 48%;
+            float : left;
+            font-size: 1.2em;
+        }
+        .level {
+            width  : 50px;
+            height : 50px;
+            float  : left;
+            cursor : pointer;
+            color  : white;
+            text-align : center;
+            line-height: 50px;
+            font-size  : 30px;
+            border-color : 3px solid black;
+            border-radius: 10px;
+            background-color: brown;
+            margin-right: 5px;
+            margin-top: 5px;
+        }
+        .level:hover {
+            background-color : #E22;
+        }
+        #main_menu {
+            top : 0px;
+            background-color : #EAEAEA;
+            width : 100%;
+            height : 100%;
+            position : absolute;
+        }
+
     </style>
 </head>
 <body>
 <canvas id="canvas" width="1600" height="900"></canvas>
-<!-- <div id="debug">
-player life  : <span class="player_life">0</span><br />
-charge ratio : <span class="charge_ratio">0</span><br />
-</div> -->
-<div class="hudOverlay"></div>
+
+<div class="hudOverlay">
+</div>
+
 </body>
 </html>
