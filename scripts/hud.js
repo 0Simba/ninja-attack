@@ -193,8 +193,8 @@ define([
         var leftButton = that.createButton(50,50,-10).addClass("leftButton")
         .on("mouseup",function () {
             var offset = parseInt($(".levelBox").first().position().left,10);
-            if (Math.abs(offset) < $(".levelBox").first().outerWidth(true) * ($(".levelBox").length - 4)) 
-                $(".levelBox").animate({left: "-="+$(".levelBox").first().outerWidth(true)+"px"},250);
+            if (offset < -10) 
+                $(".levelBox").animate({left: "+="+$(".levelBox").first().outerWidth(true)+"px"},250);
         }).css({
             top: "50%",
             left: "-110%",
@@ -206,8 +206,9 @@ define([
         var rightButton = that.createButton(50,50,10).addClass("rightButton")
         .on("mouseup",function () {
             var offset = parseInt($(".levelBox").first().position().left,10);
-            if (offset < 0) 
-                $(".levelBox").animate({left: "+="+$(".levelBox").first().outerWidth(true)+"px"},250);
+            
+            if (Math.abs(offset) < $(".levelBox").first().outerWidth(true) * ($(".levelBox").length - 4)) 
+                $(".levelBox").animate({left: "-="+$(".levelBox").first().outerWidth(true)+"px"},250);
         }).css({
             top: "50%",
             left: "110%", 
